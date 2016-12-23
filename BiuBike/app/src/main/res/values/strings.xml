@@ -1,0 +1,17 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <string name="bybike">随行单车</string>
+    <string name="current_address">北京市海淀区海淀北二街8号中关村SOHO</string>
+    <string name="beijing">北京</string>
+    <string name="book">确定预约</string>
+    <string name="unlock">输码解锁</string>
+    <string name="unlock_auto">自动解锁</string>
+    <string name="bike_code">车辆编码</string>
+    <string name="book_countdown">保留倒计时</string>
+    <string name="bike_sound">车辆发声</string>
+    <string name="cancel_book">取消预约</string>
+    <string name="demo_title_location">demo_title_location</string>
+    <string name="demo_desc_location">demo_desc_location</string>
+    <string name="demo_title_geocode">demo_title_geocode</string>
+    <string name="demo_desc_geocode">demo_desc_geocode</string>
+</resources>

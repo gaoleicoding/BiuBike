@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.zhangyi.baidumap_test.MainActivity">
+    <item
+        android:id="@+id/id_map_common"
+        android:title="普通地图"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_site"
+        android:title="卫星地图"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_traffic"
+        android:title="实时交通(off)"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_mlocation"
+        android:title="我的位置"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_model_common"
+        android:title="普通模式"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_model_following"
+        android:title="跟随模式"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_map_model_compass"
+        android:title="罗盘模式"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,20 +1,20 @@
 package com.biubike;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,41 +38,61 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.RouteLine;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import overlayutil.OverlayManager;
+import overlayutil.WalkingRouteOverlay;
+
 import static com.biubike.BikeInfo.infos;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener, OnGetRoutePlanResultListener {
 
     private MapView mMapView = null;
-
-
-
     private BaiduMap mBaiduMap;
     private LocationClient mlocationClient;
     private MylocationListener mlistener;
     private Context context;
 
-    private double mLatitude;
-    private double mLongitude;
+    private double mLatitude,mLongitude,changeLatitude,changeLongitude;
     private float mCurrentX;
 
-    private ImageView mGetMylocationBN;
-    private TextView current_addr,book_bt,cancel_book;
-    private LinearLayout bike_layout,bike_distance_layout,bike_info_layout,confirm_cancel_layout;
-    private TextView bike_distance, bike_time,bike_code,book_countdown,prompt;
+    private ImageView btn_locale,btn_refresh;
+    private TextView current_addr, book_bt, cancel_book;
+    private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
+    private TextView bike_distance, bike_time, bike_code, book_countdown, prompt;
 
     //自定义图标
     private BitmapDescriptor mIconLocation, dragLocationIcon, bikeIcon, nearestIcon;
-
+    RoutePlanSearch mSearch = null;    // 搜索模块，也可去掉地图模块独立使用
     private MyOrientationListener myOrientationListener;
     //定位图层显示方式
     private MyLocationConfiguration.LocationMode locationMode;
-    private BikeInfo  bInfo;
+    private BikeInfo bInfo;
+
+    String cityName = "";
+    PlanNode startNodeStr, endNodeStr;
+    int nodeIndex = -1;
+    WalkingRouteResult nowResultwalk = null;
+    boolean useDefaultIcon = false,hasPlanRoute=false;
+    RouteLine route = null;
+    OverlayManager routeOverlay = null;
+    LatLng currentLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,16 +123,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
         mBaiduMap = mMapView.getMap();
 
         mBaiduMap.setOnMapStatusChangeListener(changeListener);
-        mGetMylocationBN = (ImageView) findViewById(R.id.id_bn_getMyLocation);
+        btn_locale = (ImageView) findViewById(R.id.btn_locale);
+        btn_refresh = (ImageView) findViewById(R.id.btn_refresh);
         book_bt = (TextView) findViewById(R.id.book_bt);
         book_bt.setOnClickListener(this);
         cancel_book.setOnClickListener(this);
-        mGetMylocationBN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getMyLocation();
-            }
-        });
+        btn_locale.setOnClickListener(this);
+        btn_refresh.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
 //      nearestIcon = BitmapDescriptorFactory.fromResource("R.mipmap.location_tips");
@@ -154,13 +171,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 mCurrentX = x;
             }
         });
-
+        mSearch = RoutePlanSearch.newInstance();
+        mSearch.setOnGetRoutePlanResultListener(this);
 
     }
-
-
-
-
 
     public void getMyLocation() {
         LatLng latLng = new LatLng(mLatitude, mLongitude);
@@ -206,9 +220,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.book_bt:
                 bike_info_layout.setVisibility(View.VISIBLE);
                 confirm_cancel_layout.setVisibility(View.VISIBLE);
@@ -226,7 +241,92 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 bike_distance_layout.setVisibility(View.VISIBLE);
                 book_bt.setVisibility(View.VISIBLE);
                 break;
+            case R.id.btn_locale:
+                getMyLocation();
+                break;
+            case R.id.btn_refresh:
+                addOverLayout(changeLatitude, changeLongitude);
+                drawPlanRoute(endNodeStr);
+                break;
         }
+    }
+
+    @Override
+    public void onGetWalkingRouteResult(WalkingRouteResult result) {
+        {
+            if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT).show();
+            }
+            if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
+                // 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
+                // result.getSuggestAddrInfo()
+                return;
+            }
+            if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+                nodeIndex = -1;
+//                mBtnPre.setVisibility(View.VISIBLE);
+//                mBtnNext.setVisibility(View.VISIBLE);
+
+                if (result.getRouteLines().size() > 1) {
+                    nowResultwalk = result;
+
+                    MyTransitDlg myTransitDlg = new MyTransitDlg(MainActivity.this,
+                            result.getRouteLines(),
+                            RouteLineAdapter.Type.WALKING_ROUTE);
+                    myTransitDlg.setOnItemInDlgClickLinster(new OnItemInDlgClickListener() {
+                        public void onItemClick(int position) {
+                            route = nowResultwalk.getRouteLines().get(position);
+                            WalkingRouteOverlay overlay = new MyWalkingRouteOverlay(mBaiduMap);
+                            mBaiduMap.setOnMarkerClickListener(overlay);
+                            routeOverlay = overlay;
+                            overlay.setData(nowResultwalk.getRouteLines().get(position));
+                            overlay.addToMap();
+                            overlay.zoomToSpan();
+                        }
+
+                    });
+                    myTransitDlg.show();
+
+                } else if (result.getRouteLines().size() == 1) {
+                    // 直接显示
+                    route = result.getRouteLines().get(0);
+                    WalkingRouteOverlay overlay = new MyWalkingRouteOverlay(mBaiduMap);
+                    mBaiduMap.setOnMarkerClickListener(overlay);
+                    routeOverlay = overlay;
+                    overlay.setData(result.getRouteLines().get(0));
+                    overlay.addToMap();
+                    overlay.zoomToSpan();
+//                    MapStatus.Builder builder = new MapStatus.Builder();
+//                    builder.target(currentLL).zoom(24.0f);
+//                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+                } else {
+                    Log.d("route result", "结果数<0");
+                    return;
+                }
+
+            }
+
+        }
+    }
+
+    public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+        System.out.print("");
+    }
+
+    public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
+        System.out.print("");
+    }
+
+    public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+        System.out.print("");
+    }
+
+    public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+        System.out.print("");
+    }
+
+    public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+        System.out.print("");
     }
 
 
@@ -251,6 +351,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
             * */
             mLatitude = bdLocation.getLatitude();
             mLongitude = bdLocation.getLongitude();
+            cityName = bdLocation.getCity();
+
             MyLocationData data = new MyLocationData.Builder()
                     .direction(mCurrentX)//设定图标方向
                     .accuracy(bdLocation.getRadius())//getRadius 获取定位精度,默认值0.0f
@@ -273,10 +375,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
             mBaiduMap.setMyLocationConfigeration(configuration);
             //判断是否为第一次定位,是的话需要定位到用户当前位置
             if (isFirstIn) {
-                LatLng ll = new LatLng(bdLocation.getLatitude(),
+                currentLL = new LatLng(bdLocation.getLatitude(),
                         bdLocation.getLongitude());
+                startNodeStr = PlanNode.withLocation(currentLL);
                 MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
+                builder.target(currentLL).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 //                //地理坐标基本数据结构
 //                LatLng latLng = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
@@ -287,7 +390,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 isFirstIn = false;
                 current_addr.setText(bdLocation.getAddrStr());
                 addOverLayout(mLatitude, mLongitude);
-
+//
             }
         }
     }
@@ -300,11 +403,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
             String _str = mapStatus.toString();
             String _regex = "target lat: (.*)\ntarget lng";
             String _regex2 = "target lng: (.*)\ntarget screen x";
-            Double _latitude = Double.parseDouble(latlng(_regex, _str));
-            Double _longitude = Double.parseDouble(latlng(_regex2, _str));
-            System.out.println(_latitude + "," + _longitude);
+            changeLatitude = Double.parseDouble(latlng(_regex, _str));
+            changeLongitude = Double.parseDouble(latlng(_regex2, _str));
 //            Toast.makeText(context, _latitude + "," + _longitude, Toast.LENGTH_SHORT).show();
-            addOverLayout(_latitude, _longitude);
+
 
         }
 
@@ -386,7 +488,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 //        nearestView.setPadding(30, 20, 30, 50);
 //        nearestView.setText("距离最近");
         nearestIcon = BitmapDescriptorFactory.fromResource(R.mipmap.nearest_icon);
-        if(mBaiduMap!=null) {
+        if (mBaiduMap != null) {
             Point p = mBaiduMap.getProjection().toScreenLocation(ll);
             Log.d("gaolei", "point------------" + p.toString());
             p.y -= 100;
@@ -403,18 +505,29 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private void updateBikeInfo(BikeInfo bikeInfo){
-        bike_layout.setVisibility(View.VISIBLE);
-        bike_time.setText(bikeInfo.getTime());
-        bike_distance.setText(bikeInfo.getDistance());
-        prompt.setVisibility(View.VISIBLE);
-        bInfo=bikeInfo;
+    private void updateBikeInfo(BikeInfo bikeInfo) {
+        if(!hasPlanRoute) {
+            bike_layout.setVisibility(View.VISIBLE);
+            bike_time.setText(bikeInfo.getTime());
+            bike_distance.setText(bikeInfo.getDistance());
+            prompt.setVisibility(View.VISIBLE);
+            bInfo = bikeInfo;
+            endNodeStr = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(),bikeInfo.getLongitude()));
+            drawPlanRoute(endNodeStr);
+//            hasPlanRoute=true;
+        }
     }
-    private CountDownTimer countDownTimer = new CountDownTimer(10*60*1000, 1000) {
+private void drawPlanRoute(PlanNode endNodeStr){
+
+if(endNodeStr!=null)
+    mSearch.walkingSearch((new WalkingRoutePlanOption())
+            .from(startNodeStr).to(endNodeStr));
+}
+    private CountDownTimer countDownTimer = new CountDownTimer(10 * 60 * 1000, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            book_countdown.setText(millisUntilFinished/60000+"分"+((millisUntilFinished/1000)%60)+"秒");
+            book_countdown.setText(millisUntilFinished / 60000 + "分" + ((millisUntilFinished / 1000) % 60) + "秒");
         }
 
         @Override
@@ -435,6 +548,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         mMapView.onPause();
         countDownTimer.cancel();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -446,7 +560,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         myOrientationListener.start();
 
     }
-    protected void onRestart(){
+
+    protected void onRestart() {
         super.onRestart();
         countDownTimer.start();
     }
@@ -460,6 +575,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         myOrientationListener.stop();
         countDownTimer.cancel();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -473,19 +589,80 @@ public class MainActivity extends Activity implements View.OnClickListener{
         return true;
     }
 
-        private void checkSystemWritePermission() {
-            boolean retVal = true;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                retVal = Settings.System.canWrite(this);
-                if(retVal){
-                    Toast.makeText(this, "Write allowed :-)", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(this, "Write not allowed :-(", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    startActivity(intent);
-                }
+
+    // 供路线选择的Dialog
+    class MyTransitDlg extends Dialog {
+
+        private List<? extends RouteLine> mtransitRouteLines;
+        private ListView transitRouteList;
+        private RouteLineAdapter mTransitAdapter;
+
+        OnItemInDlgClickListener onItemInDlgClickListener;
+
+        public MyTransitDlg(Context context, int theme) {
+            super(context, theme);
         }
+
+        public MyTransitDlg(Context context, List<? extends RouteLine> transitRouteLines, RouteLineAdapter.Type
+                type) {
+            this(context, 0);
+            mtransitRouteLines = transitRouteLines;
+            mTransitAdapter = new RouteLineAdapter(context, mtransitRouteLines, type);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_transit_dialog);
+
+            transitRouteList = (ListView) findViewById(R.id.transitList);
+            transitRouteList.setAdapter(mTransitAdapter);
+
+            transitRouteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    onItemInDlgClickListener.onItemClick( position);
+//                    mBtnPre.setVisibility(View.VISIBLE);
+//                    mBtnNext.setVisibility(View.VISIBLE);
+//                    dismiss();
+
+                }
+            });
+        }
+
+        public void setOnItemInDlgClickLinster(OnItemInDlgClickListener itemListener) {
+            onItemInDlgClickListener = itemListener;
+        }
+
     }
 
+    // 响应DLg中的List item 点击
+    interface OnItemInDlgClickListener {
+        public void onItemClick(int position);
+    }
+
+    private class MyWalkingRouteOverlay extends WalkingRouteOverlay {
+
+        public MyWalkingRouteOverlay(BaiduMap baiduMap) {
+            super(baiduMap);
+        }
+
+        @Override
+        public BitmapDescriptor getStartMarker() {
+            if (useDefaultIcon) {
+//                return BitmapDescriptorFactory.fromResource(R.drawable.icon_st);
+            }
+            return null;
+        }
+
+        @Override
+        public BitmapDescriptor getTerminalMarker() {
+            if (useDefaultIcon) {
+//                return BitmapDescriptorFactory.fromResource(R.drawable.icon_en);
+            }
+            return null;
+        }
+    }
 }

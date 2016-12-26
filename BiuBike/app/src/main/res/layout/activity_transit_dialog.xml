@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请点击选择所需路线，在地图中绘制"
+            android:textColor="#00ffff"
+            android:padding="15dp"/>
+
+
+
+    <ListView
+            android:id="@+id/transitList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="15dp"
+            android:divider="#00ffff"
+            android:dividerHeight="1px"
+            android:background="@color/background_floating_material_dark">
+    </ListView>
+
+</LinearLayout>

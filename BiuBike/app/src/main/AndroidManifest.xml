@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_icon"
         android:label="@string/bybike"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -22,6 +22,7 @@
             android:value="CpQ0QkQfXYSvf7Mb7spdNWHVYXmRPv1g" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,11 +9,16 @@
     <color name="color_cc343333">#cc343333</color>
     <color name="color_dd343333">#dd343333</color>
     <color name="white">#ffffff</color>
+    <color name="white_bb">#bbffffff</color>
+    <color name="white_dd">#ddffffff</color>
     <color name="white_cc">#ccffffff</color>
     <color name="black">#000000</color>
+    <color name="black_dd">#dd000000</color>
+    <color name="black_cc">#cc000000</color>
     <color name="black_99">#99000000</color>
     <color name="color_747474">#747474</color>
     <color name="color_dd747474">#dd747474</color>
     <color name="color_cdcdcd">#cdcdcd</color>
+    <color name="color_e2e2e2">#e2e2e2</color>
     <color name="color_f4f3f3">#f4f3f3</color>
 </resources>

@@ -19,20 +19,71 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/code_unlock_bg"
+        android:layout_margin="15dp"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
-        <EditText style="@style/code_edit_style" />
-        <EditText style="@style/code_edit_style" />
-        <EditText style="@style/code_edit_style" />
-        <EditText style="@style/code_edit_style" />
-        <EditText style="@style/code_edit_style" />
-        <EditText style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText1"
+            android:windowSoftInputMode="stateVisible"
+            style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText2"
+            style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText3"
+            style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText4"
+            style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText5"
+            style="@style/code_edit_style" />
+        <EditText
+            android:id="@+id/editText6"
+            style="@style/code_edit_style" />
 
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/code_prompt"
+        android:textColor="@color/black_dd"
+        android:textSize="16sp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/unlock_im"
+        android:textColor="@color/white_dd"
+        android:background="@drawable/bt_book_selector"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/flashlight_icon"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp"
+        android:onClick="switchFlashlight"
+         />
+</LinearLayout>
 </LinearLayout>

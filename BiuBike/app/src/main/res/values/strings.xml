@@ -12,6 +12,8 @@
     <string name="cancel_book">取消预约</string>
     <string name="cancel_book_toast">超过预约时间，系统已自动结束</string>
     <string name="code_unlock">输码解锁</string>
+    <string name="code_prompt">在车锁和车头位置，已有车辆编码</string>
+    <string name="unlock_im">立即解锁</string>
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
     <string name="demo_title_geocode">demo_title_geocode</string>

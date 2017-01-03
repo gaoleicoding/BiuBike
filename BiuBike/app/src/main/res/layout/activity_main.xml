@@ -76,7 +76,7 @@
                 <TextView
                     android:id="@+id/bike_time"
                     style="@style/text_style"
-                    android:text="5分钟" />
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -91,6 +91,7 @@
                     android:textColor="@color/color_747474" />
 
                 <TextView
+                    android:id="@+id/bike_price"
                     style="@style/text_style"
                     android:text="1元" />
 
@@ -111,7 +112,7 @@
                 <TextView
                     android:id="@+id/bike_distance"
                     style="@style/text_style"
-                    android:text="200米" />
+                     />
 
 
             </LinearLayout>

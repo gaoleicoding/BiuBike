@@ -25,7 +25,7 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/bybike"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="5CwCrj0MP0LsLMCH1WhajZ6C52FD3l1L" />

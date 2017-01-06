@@ -1,10 +1,11 @@
-package com.biubike;
+package com.biubike.util;
 
+import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
 import java.text.DecimalFormat;
 
-import static com.biubike.CodeUnlockActivity.imm;
+import static com.biubike.activity.CodeUnlockActivity.imm;
 
 /**
  * Created by gaolei on 16/12/30.
@@ -50,6 +51,14 @@ public class Utils {
             int minute1 = minute % 60;
             return hour + "小时" + minute1 + "分钟";
         }
+    }
+    public static int dp2px(Context context, int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
 
+    public static int px2dp(Context context, int px) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
     }
 }

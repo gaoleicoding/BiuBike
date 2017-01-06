@@ -6,30 +6,20 @@
     android:layout_height="match_parent">
 
 
-
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/id_bmapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true" />
-
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_height="54dp"
         android:background="@color/color_343333">
 
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
             android:clickable="true"
-            android:padding="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:src="@mipmap/menu_icon" />
 
         <TextView
@@ -40,6 +30,21 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/id_bmapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/title_layout"
+        android:clickable="true" />
+
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/title_layout"
+        android:clickable="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/bike_layout"

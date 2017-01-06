@@ -3,9 +3,12 @@ package com.biubike.custom;
 import android.content.Context;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.biubike.callback.AllInterface;
 
 /**
  * Created by gaolei on 17/1/5.
@@ -31,7 +34,14 @@ public class LeftDrawerLayout extends ViewGroup
     /**
      * drawer显示出来的占自身的百分比
      */
-    private float mLeftMenuOnScrren;
+    public float mLeftMenuOnScrren;
+    public static boolean isDrawerOpen=false;
+    AllInterface.OnMenuSlideListener onMenuSlideListener;
+
+    public void setListener(AllInterface.OnMenuSlideListener onMenuSlideListener){
+        this.onMenuSlideListener=onMenuSlideListener;
+
+    }
 
 
     public LeftDrawerLayout(Context context, AttributeSet attrs)
@@ -54,7 +64,6 @@ public class LeftDrawerLayout extends ViewGroup
             @Override
             public boolean tryCaptureView(View child, int pointerId)
             {
-
                 return child == mLeftMenuView;
             }
 
@@ -78,9 +87,15 @@ public class LeftDrawerLayout extends ViewGroup
             {
                 final int childWidth = changedView.getWidth();
                 float offset = (float) (childWidth + left) / childWidth;
+                Log.d("gaolei","offset-------------------"+offset);
+//                if(offset==0)
+//                    closeDrawer();
                 mLeftMenuOnScrren = offset;
                 //offset can callback here
-                changedView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
+                onMenuSlideListener.onMenuSlide(offset);
+
+
+                changedView.setVisibility(offset == 0 ? View.GONE : View.VISIBLE);
                 invalidate();
             }
 
@@ -180,6 +195,8 @@ public class LeftDrawerLayout extends ViewGroup
         View menuView = mLeftMenuView;
         mLeftMenuOnScrren = 0.f;
         mHelper.smoothSlideViewTo(menuView, -menuView.getWidth(), menuView.getTop());
+        invalidate();
+        isDrawerOpen=false;
     }
 
     public void openDrawer()
@@ -187,6 +204,9 @@ public class LeftDrawerLayout extends ViewGroup
         View menuView = mLeftMenuView;
         mLeftMenuOnScrren = 1.0f;
         mHelper.smoothSlideViewTo(menuView, 0, menuView.getTop());
+        invalidate();
+        isDrawerOpen=true;
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.biubike;
+package com.biubike.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;

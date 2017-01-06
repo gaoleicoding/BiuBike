@@ -1,4 +1,4 @@
-package com.biubike;
+package com.biubike.application;
 
 import android.app.Application;
 

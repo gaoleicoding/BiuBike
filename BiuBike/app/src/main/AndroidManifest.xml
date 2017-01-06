@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CodeUnlockActivity"
+            android:name=".activity.CodeUnlockActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"
             />
         <service

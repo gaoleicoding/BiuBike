@@ -1,4 +1,4 @@
-package com.biubike;
+package com.biubike.constant;
 
 /**
  * Created by gaolei on 16/12/28.

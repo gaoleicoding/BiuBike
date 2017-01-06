@@ -1,4 +1,4 @@
-package com.biubike;
+package com.biubike.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import com.biubike.R;
+import com.biubike.util.Utils;
 
 /**
  * Created by gaolei on 16/12/29.

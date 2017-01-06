@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -57,8 +58,15 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.biubike.activity.CodeUnlockActivity;
+import com.biubike.base.BaseActivity;
+import com.biubike.bean.BikeInfo;
+import com.biubike.callback.AllInterface;
 import com.biubike.custom.LeftDrawerLayout;
 import com.biubike.fragment.LeftMenuFragment;
+import com.biubike.map.MyOrientationListener;
+import com.biubike.map.RouteLineAdapter;
+import com.biubike.util.Utils;
 
 import java.util.List;
 import java.util.Random;
@@ -68,9 +76,9 @@ import java.util.regex.Pattern;
 import overlayutil.OverlayManager;
 import overlayutil.WalkingRouteOverlay;
 
-import static com.biubike.BikeInfo.infos;
+import static com.biubike.bean.BikeInfo.infos;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap;
@@ -81,7 +89,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private float mCurrentX;
 
-    private ImageView btn_locale, btn_refresh;
+    private ImageView btn_locale, btn_refresh, menu_icon;
     private TextView current_addr, book_bt, cancel_book;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
     private TextView bike_distance, bike_time, bike_price, bike_code, book_countdown, prompt;
@@ -104,7 +112,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     LatLng currentLL;
     LeftDrawerLayout mLeftDrawerLayout;
     LeftMenuFragment mMenuFragment;
-    private RelativeLayout title_layout;
+    private RelativeLayout title_layout, menu_layout,person_layout;
+    View shadowView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,45 +129,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        //5.0版本及以上
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.TRANSPARENT);
-        }
+
         this.context = this;
         initView();
         initLocation();
 
-        mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
 
         FragmentManager fm = getSupportFragmentManager();
         mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
-        if (mMenuFragment == null)
-        {
+        if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
 
-        findViewById(R.id.menu_icon).setOnClickListener(this);
     }
-    public void openMenu(){
+
+    public void openMenu() {
         mLeftDrawerLayout.openDrawer();
+        shadowView.setVisibility(View.VISIBLE);
+    }
+
+    public void closeMenu() {
+        mLeftDrawerLayout.closeDrawer();
+        shadowView.setVisibility(View.GONE);
 
     }
 
     private void initView() {
-        title_layout = (RelativeLayout) findViewById(R.id.title_layout);
-
-//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,54);
-//        layoutParams.setMargins(10,statusBarHeight,10,10);//4个参数按顺序分别是左上右下
-//
-//        title_layout.setLayoutParams(layoutParams);
-
         mMapView = (MapView) findViewById(R.id.id_bmapView);
         current_addr = (TextView) findViewById(R.id.current_addr);
         bike_layout = (LinearLayout) findViewById(R.id.bike_layout);
@@ -172,6 +168,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         book_countdown = (TextView) findViewById(R.id.book_countdown);
         prompt = (TextView) findViewById(R.id.prompt);
         cancel_book = (TextView) findViewById(R.id.cancel_book);
+        title_layout = (RelativeLayout) findViewById(R.id.title_layout);
+        person_layout = (RelativeLayout) findViewById(R.id.person_layout);
+        mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
+        shadowView = (View) findViewById(R.id.shadow);
+        menu_icon = (ImageView) findViewById(R.id.menu_icon);
+        menu_icon.setOnClickListener(this);
+        shadowView.setOnClickListener(this);
+        mLeftDrawerLayout.setListener(this);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(MainActivity.this,54));
+        Log.d("gaolei","statusBarHeight---------------"+statusBarHeight);
+        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
+        title_layout.setLayoutParams(layoutParams);
+        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        Log.d("gaolei","statusBarHeight---------------"+statusBarHeight);
+        layoutParams2.setMargins(0, statusBarHeight+Utils.dp2px(MainActivity.this,54), 0, 0);//4个参数按顺序分别是左上右下
+        person_layout.setLayoutParams(layoutParams2);
+
         String price = "1元";
         setSpannableStr(bike_price, price, 0, price.length() - 1);
 
@@ -185,6 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         cancel_book.setOnClickListener(this);
         btn_locale.setOnClickListener(this);
         btn_refresh.setOnClickListener(this);
+        mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
     }
@@ -314,20 +328,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 getMyLocation();
                 if (routeOverlay != null)
                     routeOverlay.removeFromMap();
-                Log.d("gaolei","currentLatitude-----btn_locale--------"+currentLatitude);
-                Log.d("gaolei","currentLongitude-----btn_locale--------"+currentLongitude);
-                addOverLayout(changeLatitude, changeLongitude);
+                Log.d("gaolei", "currentLatitude-----btn_locale--------" + currentLatitude);
+                Log.d("gaolei", "currentLongitude-----btn_locale--------" + currentLongitude);
+                addOverLayout(currentLatitude, currentLongitude);
                 break;
             case R.id.btn_refresh:
                 if (routeOverlay != null)
                     routeOverlay.removeFromMap();
-                Log.d("gaolei","changeLatitude-----btn_refresh--------"+changeLatitude);
-                Log.d("gaolei","changeLongitude-----btn_refresh--------"+changeLongitude);
+                Log.d("gaolei", "changeLatitude-----btn_refresh--------" + changeLatitude);
+                Log.d("gaolei", "changeLongitude-----btn_refresh--------" + changeLongitude);
                 addOverLayout(changeLatitude, changeLongitude);
 //                drawPlanRoute(endNodeStr);
                 break;
             case R.id.menu_icon:
+                Log.d("gaolei", "menu_icon-----click--------openMenu()");
+
                 openMenu();
+                break;
+            case R.id.shadow:
+                closeMenu();
+                Log.d("gaolei", "shadow-----click--------closeMenu()");
+
                 break;
 
         }
@@ -423,6 +444,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         System.out.print("");
     }
 
+    @Override
+    public void onMenuSlide(float offset) {
+        shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
+        int alpha = (int) Math.round(offset * 255 * 0.4);
+        String hex = Integer.toHexString(alpha).toUpperCase();
+//                Log.d("gaolei","hex-------------------"+hex);
+        Log.d("gaolei", "color------------" + "#" + hex + "000000");
+//String  color="#"+hex+"000000";
+        shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
+//        mLeftDrawerLayout.setBackgroundColor(Color.parseColor("#10000000"));
+
+    }
+
 
     //所有的定位信息都通过接口回调来实现
     public class MylocationListener implements BDLocationListener {
@@ -462,8 +496,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(currentLL).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-                Log.d("gaolei","currentLatitude-------------"+currentLatitude);
-                Log.d("gaolei","currentLongitude-------------"+currentLongitude);
+                Log.d("gaolei", "currentLatitude-------------" + currentLatitude);
+                Log.d("gaolei", "currentLongitude-------------" + currentLongitude);
                 isFirstIn = false;
                 current_addr.setText(bdLocation.getAddrStr());
                 addOverLayout(currentLatitude, currentLongitude);
@@ -482,9 +516,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             String _regex2 = "target lng: (.*)\ntarget screen x";
             changeLatitude = Double.parseDouble(latlng(_regex, _str));
             changeLongitude = Double.parseDouble(latlng(_regex2, _str));
-            startNodeStr = PlanNode.withLocation(currentLL);
-            Log.d("gaolei","changeLatitude-------------"+changeLatitude);
-            Log.d("gaolei","changeLongitude-------------"+changeLongitude);        }
+            LatLng changeLL = new LatLng(changeLatitude, changeLongitude);
+            startNodeStr = PlanNode.withLocation(changeLL);
+            Log.d("gaolei", "changeLatitude-----change--------" + changeLatitude);
+            Log.d("gaolei", "changeLongitude-----change--------" + changeLongitude);
+        }
 
         public void onMapStatusChange(MapStatus mapStatus) {
         }
@@ -562,7 +598,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initNearestBike(final BikeInfo bikeInfo, LatLng ll) {
-//
         ImageView nearestIcon = new ImageView(getApplicationContext());
         nearestIcon.setImageResource(R.mipmap.nearest_icon);
         InfoWindow.OnInfoWindowClickListener listener = null;
@@ -575,7 +610,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(nearestIcon), ll, -108, listener);
         mBaiduMap.showInfoWindow(mInfoWindow);
     }
-//
 
     private void updateBikeInfo(BikeInfo bikeInfo) {
 
@@ -593,9 +627,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void drawPlanRoute(PlanNode endNodeStr) {
         if (routeOverlay != null)
             routeOverlay.removeFromMap();
-        if (endNodeStr != null)
+        if (endNodeStr != null) {
+
+            Log.d("gaolei", "changeLatitude-----startNode--------" + startNodeStr.getLocation().latitude);
+            Log.d("gaolei", "changeLongitude-----startNode--------" + startNodeStr.getLocation().longitude);
             mSearch.walkingSearch((new WalkingRoutePlanOption())
                     .from(startNodeStr).to(endNodeStr));
+
+        }
     }
 
     private CountDownTimer countDownTimer = new CountDownTimer(10 * 60 * 1000, 1000) {
@@ -628,6 +667,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onStart() {
         super.onStart();
+//        Log.d("gaolei","menu_layout.getId()------------"+menu_layout.getId());
 
 
     }

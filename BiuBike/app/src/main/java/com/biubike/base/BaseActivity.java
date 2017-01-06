@@ -1,10 +1,12 @@
-package com.biubike;
+package com.biubike.base;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import com.biubike.R;
 
 import java.lang.reflect.Field;
 

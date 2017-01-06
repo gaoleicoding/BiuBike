@@ -1,4 +1,4 @@
-package com.biubike;
+package com.biubike.map;
 
 import android.content.Context;
 import android.hardware.Sensor;

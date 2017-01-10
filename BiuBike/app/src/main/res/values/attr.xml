@@ -5,4 +5,7 @@
         <attr name="border_color" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="SlidingMenu">
+        <attr name="rightPadding" format="dimension"/>
+    </declare-styleable>
 </resources>

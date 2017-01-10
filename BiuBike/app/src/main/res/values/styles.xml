@@ -6,28 +6,61 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionBar">false</item>
     </style>
+
     <style name="text_style">
 
-            <item name="android:layout_width">fill_parent</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:padding">2dip</item>
-            <item name="android:textSize">16sp</item>
-            <item name="android:gravity">center</item>
-            <item name="android:textColor">@color/color_747474</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">2dip</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_747474</item>
     </style>
+
+    <style name="menu_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_f2f2f2</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="menu_icon_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">20dp</item>
+    </style>
+
+    <style name="menu_divider_style">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/color_f2f2f2</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginLeft">12dp</item>
+    </style>
+
+    <style name="menu_right_arrow_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@mipmap/arrow_right</item>
+    </style>
+
     <style name="code_edit_style">
-            <item name="android:layout_width">0dp</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_weight">1</item>
-            <item name="android:paddingTop">20dip</item>
-            <item name="android:paddingBottom">20dip</item>
-            <item name="android:textSize">18sp</item>
-            <item name="android:gravity">center</item>
-            <item name="android:layout_margin">5dp</item>
-            <item name="android:singleLine">true</item>
-            <item name="android:inputType">number</item>
-            <item name="android:maxLength">1</item>
-            <item name="android:background">@drawable/code_edit_bg</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingTop">20dip</item>
+        <item name="android:paddingBottom">20dip</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:background">@drawable/code_edit_bg</item>
     </style>
 
 </resources>

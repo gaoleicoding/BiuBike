@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="50dp"
         android:background="@color/color_343333">
 
         <ImageView
@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"
             android:text="@string/bybike"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <com.baidu.mapapi.map.MapView
@@ -93,11 +93,13 @@
                 <TextView
                     style="@style/text_style"
                     android:text="步行"
-                    android:textColor="@color/color_747474" />
+                     />
 
                 <TextView
                     android:id="@+id/bike_time"
-                    style="@style/text_style" />
+                    style="@style/text_style"
+                    android:textColor="@color/color_393939"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -109,11 +111,13 @@
                 <TextView
                     style="@style/text_style"
                     android:text="每小时"
-                    android:textColor="@color/color_747474" />
+                     />
 
                 <TextView
                     android:id="@+id/bike_price"
                     style="@style/text_style"
+                    android:textColor="@color/color_393939"
+
                     android:text="1元" />
 
 
@@ -128,10 +132,11 @@
                 <TextView
                     style="@style/text_style"
                     android:text="距离"
-                    android:textColor="@color/color_747474" />
+                     />
 
                 <TextView
                     android:id="@+id/bike_distance"
+                    android:textColor="@color/color_393939"
                     style="@style/text_style" />
 
 
@@ -161,7 +166,6 @@
                     android:id="@+id/bike_code"
                     style="@style/text_style"
                     android:textColor="@color/color_393939"
-
                     android:textSize="18sp" />
 
 

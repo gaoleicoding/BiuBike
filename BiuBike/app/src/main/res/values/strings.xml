@@ -14,6 +14,14 @@
     <string name="code_unlock">输码解锁</string>
     <string name="code_prompt">在车锁和车头位置，已有车辆编码</string>
     <string name="unlock_im">立即解锁</string>
+    <string name="wallet">我的钱包</string>
+    <string name="route">我的行程</string>
+    <string name="invite_friend">邀请好友</string>
+    <string name="feedback">问题反馈</string>
+    <string name="guide">使用指南</string>
+    <string name="setting">设置</string>
+
+
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>
     <string name="demo_title_geocode">demo_title_geocode</string>

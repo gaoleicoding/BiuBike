@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,7 +82,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BaiduMap mBaiduMap;
     private LocationClient mlocationClient;
     private MylocationListener mlistener;
-    private Context context;
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private float mCurrentX;
@@ -112,7 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     LatLng currentLL;
     LeftDrawerLayout mLeftDrawerLayout;
     LeftMenuFragment mMenuFragment;
-    private RelativeLayout title_layout, menu_layout,person_layout;
+    private RelativeLayout title_layout, menu_layout, person_layout;
     View shadowView;
 
     @Override
@@ -121,26 +118,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        Window window = getWindow();
 
-        //4.4版本及以上
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-
-        this.context = this;
         initView();
         initLocation();
-
 
         FragmentManager fm = getSupportFragmentManager();
         mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
-
     }
 
     public void openMenu() {
@@ -176,17 +162,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         menu_icon.setOnClickListener(this);
         shadowView.setOnClickListener(this);
         mLeftDrawerLayout.setListener(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(MainActivity.this,54));
-        Log.d("gaolei","statusBarHeight---------------"+statusBarHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(MainActivity.this, 50));
         layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
         title_layout.setLayoutParams(layoutParams);
-        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        Log.d("gaolei","statusBarHeight---------------"+statusBarHeight);
-        layoutParams2.setMargins(0, statusBarHeight+Utils.dp2px(MainActivity.this,54), 0, 0);//4个参数按顺序分别是左上右下
-        person_layout.setLayoutParams(layoutParams2);
+        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Log.d("gaolei", "statusBarHeight---------------" + statusBarHeight);
+        layoutParams2.setMargins(40, statusBarHeight + Utils.dp2px(MainActivity.this, 50), 0, 0);//4个参数按顺序分别是左上右下
+//      person_layout.setLayoutParams(layoutParams2);
 
-        String price = "1元";
-        setSpannableStr(bike_price, price, 0, price.length() - 1);
+//        String price = "1元";
+//        setSpannableStr(bike_price, price, 0, price.length() - 1);
 
         mBaiduMap = mMapView.getMap();
 
@@ -241,7 +226,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mIconLocation = BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker);
 
-        myOrientationListener = new MyOrientationListener(context);
+        myOrientationListener = new MyOrientationListener(this);
         //通过接口回调来实现实时方向的改变
         myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
             @Override
@@ -323,6 +308,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 confirm_cancel_layout.setVisibility(View.GONE);
                 bike_distance_layout.setVisibility(View.VISIBLE);
                 book_bt.setVisibility(View.VISIBLE);
+                if (routeOverlay != null)
+                    routeOverlay.removeFromMap();
                 break;
             case R.id.btn_locale:
                 getMyLocation();
@@ -330,6 +317,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     routeOverlay.removeFromMap();
                 Log.d("gaolei", "currentLatitude-----btn_locale--------" + currentLatitude);
                 Log.d("gaolei", "currentLongitude-----btn_locale--------" + currentLongitude);
+                startNodeStr = PlanNode.withLocation(currentLL);
                 addOverLayout(currentLatitude, currentLongitude);
                 break;
             case R.id.btn_refresh:
@@ -403,8 +391,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 bike_time.setText(Utils.timeFormatter(totalTime));
                 String distanceStr = Utils.distanceFormatter(totalDistance);
                 String timeStr = Utils.timeFormatter(totalTime);
-                setSpannableStr(bike_time, timeStr, 0, timeStr.length() - 2);
-                setSpannableStr(bike_distance, distanceStr, 0, distanceStr.length() - 1);
+//                setSpannableStr(bike_time, timeStr, 0, timeStr.length() - 2);
+//                setSpannableStr(bike_distance, distanceStr, 0, distanceStr.length() - 1);
 
                 Log.d("gaolei", "totalDistance------------------" + totalDistance);
 
@@ -668,8 +656,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onStart() {
         super.onStart();
 //        Log.d("gaolei","menu_layout.getId()------------"+menu_layout.getId());
-
-
     }
 
     protected void onRestart() {

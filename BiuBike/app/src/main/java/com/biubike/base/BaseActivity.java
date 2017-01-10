@@ -10,15 +10,7 @@ import com.biubike.R;
 
 import java.lang.reflect.Field;
 
-/**
- * 当前类注释:
- * 项目名：ViewDragHelperTest
- * 包名：com.chinaztt.viewdrag
- * 作者：江清清 on 15/11/24 14:56
- * 邮箱：jiangqqlmj@163.com
- * QQ： 781931404
- * 公司：江苏中天科技软件技术有限公司
- */
+
 public class BaseActivity extends FragmentActivity {
 
    public int statusBarHeight=0;
@@ -26,6 +18,7 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

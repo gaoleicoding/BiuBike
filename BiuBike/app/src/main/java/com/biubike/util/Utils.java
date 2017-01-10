@@ -1,7 +1,15 @@
 package com.biubike.util;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -60,5 +68,24 @@ public class Utils {
     public static int px2dp(Context context, int px) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
+    }
+
+    public static int getScreenWidth(Context context)
+    {
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.widthPixels;
+    }
+
+    private void setSpannableStr(TextView textView, String str, int startIndex, int endIndex) {
+        SpannableString spannableString = new SpannableString(str);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#393939"));
+        spannableString.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(1.3f);
+        spannableString.setSpan(sizeSpan01, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannableString);
     }
 }

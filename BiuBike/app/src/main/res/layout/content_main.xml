@@ -195,24 +195,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/bt_book_selector"
-                android:clickable="true"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/bike_sound"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size" />
-
-
             <TextView
                 android:id="@+id/cancel_book"
                 android:layout_width="0dp"
@@ -222,13 +204,30 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bt_cancel_book_selector"
+                android:background="@drawable/book_cancel_selector"
                 android:clickable="true"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/cancel_book"
-                android:textColor="@color/white"
+                android:textColor="@color/color_323232"
                 android:textSize="@dimen/text_size" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/book_cancel_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/bike_sound"
+                android:textColor="@color/color_323232"
+                android:textSize="@dimen/text_size" />
+
         </LinearLayout>
 
 

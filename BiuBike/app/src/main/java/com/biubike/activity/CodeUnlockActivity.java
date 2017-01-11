@@ -1,6 +1,5 @@
 package com.biubike.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -9,29 +8,39 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.biubike.R;
+import com.biubike.base.BaseActivity;
 import com.biubike.util.Utils;
 
 /**
  * Created by gaolei on 16/12/29.
  */
 
-public class CodeUnlockActivity extends Activity {
+public class CodeUnlockActivity extends BaseActivity {
 
     private boolean isFlashOpen = false;
     private EditText editText1, editText2, editText3, editText4, editText5, editText6;
     private int currentEditIndex;
     public static InputMethodManager imm;
+    private RelativeLayout title_layout;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        showIMM();
+        title_layout = (RelativeLayout) findViewById(R.id.title_layout);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
+        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
+        title_layout.setLayoutParams(layoutParams);
+
         editText1 = (EditText) findViewById(R.id.editText1);
         editText2 = (EditText) findViewById(R.id.editText2);
         editText3 = (EditText) findViewById(R.id.editText3);

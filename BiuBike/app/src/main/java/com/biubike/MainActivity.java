@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         menu_icon.setOnClickListener(this);
         shadowView.setOnClickListener(this);
 //        mLeftDrawerLayout.setListener(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(MainActivity.this, 50));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
         layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
         title_layout.setLayoutParams(layoutParams);
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -437,11 +437,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
         String hex = Integer.toHexString(alpha).toUpperCase();
-//                Log.d("gaolei","hex-------------------"+hex);
         Log.d("gaolei", "color------------" + "#" + hex + "000000");
-//String  color="#"+hex+"000000";
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
-//        mLeftDrawerLayout.setBackgroundColor(Color.parseColor("#10000000"));
 
     }
 

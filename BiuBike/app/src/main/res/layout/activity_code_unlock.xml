@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f4f3f3"
+    android:background="@color/color_343333"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -10,16 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/color_343333">
+
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:clickable="true"
-
+            android:onClick="finishActivity"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:src="@mipmap/return_icon" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,71 +30,84 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/code_unlock_bg"
-        android:layout_margin="15dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_f4f3f3"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@drawable/code_unlock_bg"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editText1"
-            android:windowSoftInputMode="stateVisible"
-            style="@style/code_edit_style" />
-        <EditText
-            android:id="@+id/editText2"
-            style="@style/code_edit_style" />
-        <EditText
-            android:id="@+id/editText3"
-            style="@style/code_edit_style" />
-        <EditText
-            android:id="@+id/editText4"
-            style="@style/code_edit_style" />
-        <EditText
-            android:id="@+id/editText5"
-            style="@style/code_edit_style" />
-        <EditText
-            android:id="@+id/editText6"
-            style="@style/code_edit_style" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
+                <EditText
+                    android:id="@+id/editText1"
+                    style="@style/code_edit_style"
+                    android:windowSoftInputMode="stateVisible" />
+
+                <EditText
+                    android:id="@+id/editText2"
+                    style="@style/code_edit_style" />
+
+                <EditText
+                    android:id="@+id/editText3"
+                    style="@style/code_edit_style" />
+
+                <EditText
+                    android:id="@+id/editText4"
+                    style="@style/code_edit_style" />
+
+                <EditText
+                    android:id="@+id/editText5"
+                    style="@style/code_edit_style" />
+
+                <EditText
+                    android:id="@+id/editText6"
+                    style="@style/code_edit_style" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/code_prompt"
+                android:textColor="@color/black_dd"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bt_book_selector"
+                android:text="@string/unlock_im"
+                android:textColor="@color/white_dd"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:onClick="switchFlashlight"
+                android:src="@mipmap/flashlight_icon" />
+        </LinearLayout>
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/code_prompt"
-        android:textColor="@color/black_dd"
-        android:textSize="16sp" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/unlock_im"
-        android:textColor="@color/white_dd"
-        android:background="@drawable/bt_book_selector"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:textSize="18sp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@mipmap/flashlight_icon"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="15dp"
-        android:onClick="switchFlashlight"
-         />
-</LinearLayout>
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.biubike.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
@@ -63,4 +64,7 @@ public class BaseActivity extends FragmentActivity {
         return 0;
     }
 
+    public void finishActivity(View view){
+        finish();
+    }
 }

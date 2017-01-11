@@ -15,7 +15,7 @@ import com.biubike.R;
 
 public class LeftMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_menu,null);
+        View view=inflater.inflate(R.layout.menu_main,null);
         return view;
     }
 

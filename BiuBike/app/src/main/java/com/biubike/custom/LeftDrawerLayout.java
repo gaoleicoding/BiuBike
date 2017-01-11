@@ -1,10 +1,8 @@
 package com.biubike.custom;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +32,11 @@ public class LeftDrawerLayout extends ViewGroup {
     /**
      * drawer显示出来的占自身的百分比
      */
-    public float mLeftMenuOnScrren;
-    public static boolean isDrawerOpen = false;
-    AllInterface.OnMenuSlideListener onMenuSlideListener;
-    private boolean once;
+    private float mLeftMenuOnScrren;
+    public AllInterface.OnMenuSlideListener onMenuSlideListener;
 
-    public void setListener(AllInterface.OnMenuSlideListener onMenuSlideListener) {
-        this.onMenuSlideListener = onMenuSlideListener;
-
+    public void setOnMenuSlideListener(AllInterface.OnMenuSlideListener onMenuSlideListener){
+        this.onMenuSlideListener=onMenuSlideListener;
     }
 
 
@@ -81,18 +76,10 @@ public class LeftDrawerLayout extends ViewGroup {
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 final int childWidth = changedView.getWidth();
                 float offset = (float) (childWidth + left) / childWidth;
-//                Log.d("gaolei", "offset-------------------" + offset);
-//                if(offset==0)
-//                    closeDrawer();
                 mLeftMenuOnScrren = offset;
                 //offset can callback here
                 onMenuSlideListener.onMenuSlide(offset);
-                if (offset == 0)
-                    isDrawerOpen = false;
-                if (offset == 1)
-                    isDrawerOpen = true;
-
-                changedView.setVisibility(offset == 0 ? View.GONE : View.VISIBLE);
+                changedView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
                 invalidate();
             }
 
@@ -111,12 +98,12 @@ public class LeftDrawerLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        Log.d("gaolei", "onMeasure-------------------");
+
         setMeasuredDimension(widthSize, heightSize);
 
-        mLeftMenuView = getChildAt(1);
+        View leftMenuView = getChildAt(1);
         MarginLayoutParams lp = (MarginLayoutParams)
-                mLeftMenuView.getLayoutParams();
+                leftMenuView.getLayoutParams();
 
         final int drawerWidthSpec = getChildMeasureSpec(widthMeasureSpec,
                 mMinDrawerMargin + lp.leftMargin + lp.rightMargin,
@@ -124,16 +111,18 @@ public class LeftDrawerLayout extends ViewGroup {
         final int drawerHeightSpec = getChildMeasureSpec(heightMeasureSpec,
                 lp.topMargin + lp.bottomMargin,
                 lp.height);
-        mLeftMenuView.measure(drawerWidthSpec, drawerHeightSpec);
+        leftMenuView.measure(drawerWidthSpec, drawerHeightSpec);
 
-
-        mContentView = getChildAt(0);
-        lp = (MarginLayoutParams) mContentView.getLayoutParams();
+        View contentView = getChildAt(0);
+        lp = (MarginLayoutParams) contentView.getLayoutParams();
         final int contentWidthSpec = MeasureSpec.makeMeasureSpec(
                 widthSize - lp.leftMargin - lp.rightMargin, MeasureSpec.EXACTLY);
         final int contentHeightSpec = MeasureSpec.makeMeasureSpec(
                 heightSize - lp.topMargin - lp.bottomMargin, MeasureSpec.EXACTLY);
-        mContentView.measure(contentWidthSpec, contentHeightSpec);
+        contentView.measure(contentWidthSpec, contentHeightSpec);
+
+        mLeftMenuView = leftMenuView;
+        mContentView = contentView;
 
 
     }
@@ -142,7 +131,6 @@ public class LeftDrawerLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         View menuView = mLeftMenuView;
         View contentView = mContentView;
-        Log.d("gaolei", "onLayout-------------------");
 
         MarginLayoutParams lp = (MarginLayoutParams) contentView.getLayoutParams();
         contentView.layout(lp.leftMargin, lp.topMargin,
@@ -179,27 +167,17 @@ public class LeftDrawerLayout extends ViewGroup {
     }
 
     public void closeDrawer() {
-//      if (isDrawerOpen) {
         View menuView = mLeftMenuView;
         mLeftMenuOnScrren = 0.f;
-        if (mHelper.smoothSlideViewTo(menuView, -menuView.getWidth(), menuView.getTop())) {
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-        isDrawerOpen = false;
-//      }
+        mHelper.smoothSlideViewTo(menuView, -menuView.getWidth(), menuView.getTop());
+        invalidate();
     }
 
     public void openDrawer() {
-//      if (!isDrawerOpen) {
         View menuView = mLeftMenuView;
         mLeftMenuOnScrren = 1.0f;
-        if (mHelper.smoothSlideViewTo(menuView, 0, menuView.getTop())) {
-            // 注意：参数传递根ViewGroup
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-
-        isDrawerOpen = true;
-//        }
+        mHelper.smoothSlideViewTo(menuView, 0, menuView.getTop());
+        invalidate();
     }
 
     @Override

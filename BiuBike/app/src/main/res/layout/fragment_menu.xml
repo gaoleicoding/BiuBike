@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_343333"
+    android:background="@mipmap/menu_bg"
     android:clickable="true"
     android:orientation="vertical">
 
@@ -10,13 +10,13 @@
         android:id="@+id/person_layout"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="88dp">
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="80dp">
 
         <com.biubike.custom.CircleImageView
             android:id="@+id/user_photo"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -53,13 +53,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -68,14 +66,21 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/wallet" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -84,14 +89,21 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/route" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -100,14 +112,21 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/invite_friend" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -116,14 +135,21 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/feedback" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -132,14 +158,21 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/guide" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -148,10 +181,18 @@
             <TextView
                 style="@style/menu_text_style"
                 android:text="@string/setting" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                style="@style/menu_right_arrow_style"
+                 />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
-
 
     </LinearLayout>
 </LinearLayout>

@@ -82,10 +82,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BaiduMap mBaiduMap;
     private LocationClient mlocationClient;
     private MylocationListener mlistener;
-
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private float mCurrentX;
-
     private ImageView btn_locale, btn_refresh, menu_icon;
     private TextView current_addr, book_bt, cancel_book;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
@@ -124,6 +122,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         FragmentManager fm = getSupportFragmentManager();
         mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
+        mLeftDrawerLayout.setOnMenuSlideListener(this);
+
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         menu_icon = (ImageView) findViewById(R.id.menu_icon);
         menu_icon.setOnClickListener(this);
         shadowView.setOnClickListener(this);
-        mLeftDrawerLayout.setListener(this);
+//        mLeftDrawerLayout.setListener(this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(MainActivity.this, 50));
         layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
         title_layout.setLayoutParams(layoutParams);

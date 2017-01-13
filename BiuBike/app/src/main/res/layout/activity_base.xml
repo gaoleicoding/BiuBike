@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -28,5 +28,5 @@
             android:text="@string/bybike"
             android:textColor="@color/white"
             android:textSize="16sp" />
-    </RelativeLayout>
+    </RelativeLayout>-->
     </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.biubike.R;
 
@@ -39,7 +40,7 @@ public class BaseActivity extends FragmentActivity {
                 @Override
                 public void run() {
                     int titleHeight = linear_bar.getHeight();
-                    android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) linear_bar.getLayoutParams();
+                          RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linear_bar.getLayoutParams();
                     params.height = statusHeight + titleHeight;
                     linear_bar.setLayoutParams(params);
                 }

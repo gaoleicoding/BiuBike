@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-
+        setStatusBar();
         initView();
         initLocation();
 
@@ -154,7 +154,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         book_countdown = (TextView) findViewById(R.id.book_countdown);
         prompt = (TextView) findViewById(R.id.prompt);
         cancel_book = (TextView) findViewById(R.id.cancel_book);
-        title_layout = (RelativeLayout) findViewById(R.id.title_layout);
         person_layout = (RelativeLayout) findViewById(R.id.person_layout);
         mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
         shadowView = (View) findViewById(R.id.shadow);
@@ -164,7 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        mLeftDrawerLayout.setListener(this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
         layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
-        title_layout.setLayoutParams(layoutParams);
+//        title_layout.setLayoutParams(layoutParams);
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         Log.d("gaolei", "statusBarHeight---------------" + statusBarHeight);
         layoutParams2.setMargins(40, statusBarHeight + Utils.dp2px(MainActivity.this, 50), 0, 0);//4个参数按顺序分别是左上右下

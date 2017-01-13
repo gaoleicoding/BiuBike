@@ -8,10 +8,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.biubike.R;
@@ -35,11 +33,12 @@ public class CodeUnlockActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        title_layout = (RelativeLayout) findViewById(R.id.title_layout);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
-        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
-        title_layout.setLayoutParams(layoutParams);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
+//        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
+//        title_layout.setLayoutParams(layoutParams);
+        setStatusBar();
+
 
         editText1 = (EditText) findViewById(R.id.editText1);
         editText2 = (EditText) findViewById(R.id.editText2);

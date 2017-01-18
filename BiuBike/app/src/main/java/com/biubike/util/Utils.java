@@ -79,11 +79,11 @@ public class Utils {
         return outMetrics.widthPixels;
     }
 
-    private void setSpannableStr(TextView textView, String str, int startIndex, int endIndex) {
+    public static void setSpannableStr(TextView textView, String str, int startIndex, int endIndex,float proporation) {
         SpannableString spannableString = new SpannableString(str);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#393939"));
         spannableString.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(1.3f);
+        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(proporation);
         spannableString.setSpan(sizeSpan01, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         textView.setText(spannableString);

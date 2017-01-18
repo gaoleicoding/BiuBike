@@ -54,10 +54,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="35dp"
         android:orientation="vertical">
 
         <LinearLayout
-            style="@style/menu_layout_style">
+            style="@style/menu_layout_style"
+            android:onClick="gotoWallet">
 
             <ImageView
                 style="@style/menu_icon_style"

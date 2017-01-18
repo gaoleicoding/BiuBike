@@ -57,6 +57,7 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.biubike.activity.CodeUnlockActivity;
+import com.biubike.activity.WalletActivity;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
 import com.biubike.callback.AllInterface;
@@ -761,5 +762,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void gotoCodeUnlock(View view) {
         startActivity(new Intent(this, CodeUnlockActivity.class));
+    }
+    public void gotoWallet(View view) {
+        startActivity(new Intent(this, WalletActivity.class));
     }
 }

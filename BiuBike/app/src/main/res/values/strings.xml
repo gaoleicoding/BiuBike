@@ -20,6 +20,9 @@
     <string name="feedback">问题反馈</string>
     <string name="guide">使用指南</string>
     <string name="setting">设置</string>
+    <string name="account_ballance">账户余额&#160;0&#160;元</string>
+    <string name="transaction_type">请选择交易类型</string>
+    <string name="charge_im">马上充值</string>
 
 
     <string name="demo_title_location">demo_title_location</string>

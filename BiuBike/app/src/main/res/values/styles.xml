@@ -32,11 +32,12 @@
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/menu_item_selector</item>
     </style>
     <style name="menu_icon_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_gravity">center_vertical</item>
 
     </style>
@@ -46,14 +47,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
         <item name="android:background">@color/color_f2f2f2</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginRight">35dp</item>
     </style>
 
     <style name="menu_right_arrow_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">45dp</item>
         <item name="android:src">@mipmap/arrow_right_white</item>
     </style>
 
@@ -70,6 +68,11 @@
         <item name="android:inputType">number</item>
         <item name="android:maxLength">1</item>
         <item name="android:background">@drawable/code_edit_bg</item>
+    </style>
+    <style name="transaction_type_divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/color_ededed</item>
     </style>
 
 </resources>

@@ -32,7 +32,6 @@
             android:value="5CwCrj0MP0LsLMCH1WhajZ6C52FD3l1L" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +41,10 @@
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            />
+        <activity
+            android:name=".activity.WalletActivity"
             />
         <service
             android:name="com.baidu.location.f"

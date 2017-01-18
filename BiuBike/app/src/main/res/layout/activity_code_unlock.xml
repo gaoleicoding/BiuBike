@@ -41,8 +41,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_f4f3f3"
-        android:layout_below="@id/title_layout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,4 +120,4 @@
                 android:src="@mipmap/flashlight_icon" />
         </LinearLayout>
     </LinearLayout>
-    </RelativeLayout>
+</RelativeLayout>

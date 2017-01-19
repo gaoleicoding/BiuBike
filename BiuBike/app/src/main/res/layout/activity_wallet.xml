@@ -38,20 +38,21 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/charge_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
         android:layout_margin="15dp"
         android:background="@drawable/code_unlock_bg"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:id="@+id/ballance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/account_ballance"
             android:textColor="@color/color_9f9f9f"
@@ -62,8 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ballance"
+            android:fadingEdge="none"
             android:layout_margin="15dp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/trancaction_type_layout"
@@ -72,45 +74,69 @@
         android:layout_below="@id/charge_layout"
         android:layout_margin="15dp"
         android:background="@drawable/code_unlock_bg"
+        android:padding="2dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/trancaction_type"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="@string/transaction_type"
-            android:layout_margin="10dp"
-            android:textColor="@color/color_9f9f9f"
+            android:textColor="@color/color_343333"
             android:textSize="16sp" />
 
         <View style="@style/transaction_type_divider" />
 
         <RelativeLayout
+            android:id="@+id/wechat_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/type_item_selector">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:src="@mipmap/weixin" />
+                android:src="@mipmap/wechat" />
 
+            <ImageView
+                android:id="@+id/wechat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:src="@mipmap/type_select" />
 
         </RelativeLayout>
 
         <View style="@style/transaction_type_divider" />
 
         <RelativeLayout
+            android:id="@+id/alipay_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/type_item_selector">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:src="@mipmap/alipay" />
+
+            <ImageView
+                android:id="@+id/alipay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:src="@mipmap/type_unselect" />
 
         </RelativeLayout>
     </LinearLayout>

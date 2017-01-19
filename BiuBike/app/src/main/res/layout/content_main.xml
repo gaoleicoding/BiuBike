@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -50,7 +49,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/title_layout"
-        android:background="#55000000"
         android:clickable="true"
         android:visibility="gone" />
 
@@ -122,9 +120,7 @@
                     android:id="@+id/bike_price"
                     style="@style/text_style"
                     android:text="1元"
-
                     android:textColor="@color/color_393939" />
-
 
             </LinearLayout>
 
@@ -142,10 +138,7 @@
                     android:id="@+id/bike_distance"
                     style="@style/text_style"
                     android:textColor="@color/color_393939" />
-
-
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -203,7 +196,7 @@
             <TextView
                 android:id="@+id/cancel_book"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -212,14 +205,13 @@
                 android:background="@drawable/book_cancel_selector"
                 android:clickable="true"
                 android:gravity="center"
-                android:padding="10dp"
                 android:text="@string/cancel_book"
                 android:textColor="@color/color_323232"
                 android:textSize="@dimen/text_size" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -228,13 +220,18 @@
                 android:background="@drawable/book_cancel_selector"
                 android:clickable="true"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/bike_sound"
-                android:textColor="@color/color_323232"
-                android:textSize="@dimen/text_size" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/alarm2"
+                    android:gravity="center"
+                    android:text="@string/bike_sound"
+                    android:textColor="@color/color_323232"
+                    android:textSize="@dimen/text_size" />
+            </LinearLayout>
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/book_bt"

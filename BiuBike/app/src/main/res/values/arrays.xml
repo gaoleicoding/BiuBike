@@ -2,11 +2,11 @@
 <resources>
 
     <string-array name="amount">
-    　　        <item>5</item>
-    　　        <item>20</item>
-    　　        <item>50</item>
-    　　        <item>100</item>
-    　　        <item>200</item>
+    　　        <item>5元</item>
+    　　        <item>20元</item>
+    　　        <item>50元</item>
+    　　        <item>100元</item>
+    　　        <item>200元</item>
     　　        <item>其它金额</item>
 </string-array>
 </resources>

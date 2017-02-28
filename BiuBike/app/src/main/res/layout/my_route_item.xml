@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@drawable/edge_shadow_bg_selector">
+
+    <LinearLayout
+        android:id="@+id/route_detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bike_layout_margin"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_time"
+
+                style="@style/text_style"
+                android:text="@string/bike_time"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/bike_time"
+                style="@style/text_style"
+                android:textColor="@color/color_393939"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_distance"
+                style="@style/text_style"
+                android:text="@string/bike_distance"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/bike_distance"
+                style="@style/text_style"
+                android:textColor="@color/color_393939"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_price"
+                style="@style/text_style"
+                android:text="@string/bike_price"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/bike_price"
+                style="@style/text_style"
+                android:textColor="@color/color_393939"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/detail_divider"
+        style="@style/route_detail_divider"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/route_detail_layout"
+        />
+
+    <TextView
+        android:id="@+id/bike_date"
+        style="@style/text_style"
+        android:layout_width="wrap_content"
+        android:textSize="14sp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/detail_divider"
+        android:text="asdfadfasdf"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        />
+</RelativeLayout>

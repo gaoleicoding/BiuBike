@@ -28,6 +28,7 @@
                 android:src="@mipmap/menu_icon" />
 
             <TextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -58,8 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
         android:layout_margin="12dp"
-        android:background="@color/white"
+        android:background="@drawable/edge_shadow_bg"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/bike_layout_margin"
         android:visibility="gone">
 
         <TextView
@@ -76,9 +78,9 @@
             android:textSize="16sp" />
 
         <View
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
@@ -88,6 +90,7 @@
             android:id="@+id/bike_distance_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bike_layout_margin"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -97,8 +100,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textview_time"
+
                     style="@style/text_style"
-                    android:text="步行" />
+                    android:text="@string/foot" />
 
                 <TextView
                     android:id="@+id/bike_time"
@@ -106,23 +111,6 @@
                     android:textColor="@color/color_393939" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/text_style"
-                    android:text="每小时" />
-
-                <TextView
-                    android:id="@+id/bike_price"
-                    style="@style/text_style"
-                    android:text="1元"
-                    android:textColor="@color/color_393939" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -131,8 +119,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textview_distance"
+
                     style="@style/text_style"
-                    android:text="距离" />
+                    android:text="@string/distance" />
 
                 <TextView
                     android:id="@+id/bike_distance"
@@ -140,6 +130,23 @@
                     android:textColor="@color/color_393939" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_price"
+                    style="@style/text_style"
+                    android:text="@string/each_hour" />
+
+                <TextView
+                    android:id="@+id/bike_price"
+                    style="@style/text_style"
+                    android:textColor="@color/color_393939" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -197,7 +204,6 @@
                 android:id="@+id/cancel_book"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
@@ -212,7 +218,6 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
@@ -223,6 +228,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/bike_sound"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/alarm2"
@@ -237,7 +243,6 @@
             android:id="@+id/book_bt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
@@ -287,7 +292,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -305,8 +310,22 @@
             android:id="@+id/btn_locale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_refresh"
             android:layout_marginTop="15dp"
             android:clickable="true"
             android:src="@mipmap/get_location_icon" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_question"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/btn_refresh"
+            android:background="@drawable/flashlight_circle_bg"
+            android:text="@string/end"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:textColor="@color/white" />
+    </RelativeLayout>
 </RelativeLayout>

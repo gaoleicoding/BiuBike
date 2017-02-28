@@ -42,16 +42,15 @@
         android:layout_height="match_parent"
         android:background="@color/color_f4f3f3"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/title_layout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="8dp">
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/code_unlock_bg"
+            android:background="@drawable/edge_shadow_bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -108,15 +107,17 @@
                 android:background="@drawable/bt_book_selector"
                 android:text="@string/unlock_im"
                 android:textColor="@color/white_dd"
+                android:onClick="finishActivity"
                 android:textSize="18sp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="30dp"
                 android:onClick="switchFlashlight"
+                android:background="@drawable/flashlight_circle_bg"
                 android:src="@mipmap/flashlight_icon" />
         </LinearLayout>
     </LinearLayout>

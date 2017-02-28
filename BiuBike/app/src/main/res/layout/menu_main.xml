@@ -53,9 +53,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="35dp"
+        android:layout_marginTop="80dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -75,15 +75,15 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
+
         <LinearLayout
-            style="@style/menu_layout_style">
+            style="@style/menu_layout_style"
+            android:onClick="gotoMyRoute">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -98,15 +98,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout
-            style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -121,15 +118,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout
-            style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -144,15 +138,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout
-            style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -167,15 +158,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />
 
-        <LinearLayout
-            style="@style/menu_layout_style">
+        <LinearLayout style="@style/menu_layout_style">
 
             <ImageView
                 style="@style/menu_icon_style"
@@ -190,9 +178,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ImageView
-                style="@style/menu_right_arrow_style"
-                 />
+            <ImageView style="@style/menu_right_arrow_style" />
         </LinearLayout>
 
         <View style="@style/menu_divider_style" />

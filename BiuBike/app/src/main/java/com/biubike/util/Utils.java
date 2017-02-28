@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.biubike.activity.CodeUnlockActivity.imm;
 
@@ -87,5 +89,11 @@ public class Utils {
         spannableString.setSpan(sizeSpan01, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         textView.setText(spannableString);
+    }
+    public static String getDateFromMillisecond(Long millisecond){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(millisecond);
+        String dateStr = simpleDateFormat.format(date);
+        return dateStr;
     }
 }

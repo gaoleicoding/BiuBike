@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- layout background -->
+    <item>
+        <!-- show rectangle area -->
+        <shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+            <stroke
+                android:width="1dip"
+                android:color="@color/color_e2e2e2" />
+        </shape>
+    </item>
+    <!-- layout foreground -->
+    <item
+        android:bottom="2dp"
+        android:right="2dp">
+        <!-- show rectangle area -->
+        <shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>

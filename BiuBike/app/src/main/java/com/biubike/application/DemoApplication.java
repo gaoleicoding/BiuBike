@@ -1,6 +1,8 @@
 package com.biubike.application;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
 
@@ -9,8 +11,11 @@ import com.baidu.mapapi.SDKInitializer;
  */
 
 public class DemoApplication extends Application {
+
+    public static AlarmManager am;
     public void onCreate(){
         super.onCreate();
         SDKInitializer.initialize(getApplicationContext());
+        am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
     }
 }

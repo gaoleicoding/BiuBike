@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
         android:layout_margin="15dp"
-        android:background="@drawable/code_unlock_bg"
+        android:background="@drawable/edge_shadow_bg"
         android:orientation="vertical"
         >
 
@@ -63,7 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ballance"
-            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none"
             android:layout_margin="15dp" />
     </LinearLayout>
 
@@ -73,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/charge_layout"
         android:layout_margin="15dp"
-        android:background="@drawable/code_unlock_bg"
+        android:background="@drawable/edge_shadow_bg"
         android:padding="2dp"
         android:orientation="vertical">
 

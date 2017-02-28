@@ -30,9 +30,8 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="5CwCrj0MP0LsLMCH1WhajZ6C52FD3l1L" />
-        <activity
-            android:name=".MainActivity"
-            >
+
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,16 +40,29 @@
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            />
-        <activity
-            android:name=".activity.WalletActivity"
-            />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".activity.WalletActivity" />
+        <activity android:name=".activity.RouteDetailActivity" />
+        <activity android:name=".activity.MyRouteActivity" />
+
+        <receiver android:name=".MainActivity$LocationReceiver">
+            <intent-filter>
+                <action android:name="com.locationreceiver" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.biubike.service.RouteService$NetWorkReceiver"
+            android:label="NetworkConnection">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote">
-        </service>
+            android:process=":remote"></service>
+        <service android:name="com.biubike.service.RouteService"></service>
     </application>
 
 

@@ -27,18 +27,19 @@ public class CodeUnlockActivity extends BaseActivity {
     private int currentEditIndex;
     public static InputMethodManager imm;
     private RelativeLayout title_layout;
+    public static boolean unlockSuccess = false;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
+        Log.d("gaolei", "CodeUnlockActivity------------onCreate------------------");
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
 //        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
 //        title_layout.setLayoutParams(layoutParams);
         setStatusBar();
-
 
         editText1 = (EditText) findViewById(R.id.editText1);
         editText2 = (EditText) findViewById(R.id.editText2);
@@ -186,5 +187,35 @@ public class CodeUnlockActivity extends BaseActivity {
 
         imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
 
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.d("gaolei", "CodeUnlockActivity------------onPause------------------");
+    }
+
+    public void onStop() {
+        super.onStop();
+        Log.d("gaolei", "CodeUnlockActivity------------onStop------------------");
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        unlockSuccess = false;
+        Log.d("gaolei", "CodeUnlockActivity------------onDestroy------------------");
+    }
+
+    public void finishActivity(View view) {
+        unlockSuccess = true;
+        finish();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            unlockSuccess = true;
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

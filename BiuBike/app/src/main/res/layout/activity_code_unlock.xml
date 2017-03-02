@@ -107,7 +107,7 @@
                 android:background="@drawable/bt_book_selector"
                 android:text="@string/unlock_im"
                 android:textColor="@color/white_dd"
-                android:onClick="finishActivity"
+                android:onClick="unlockSucess"
                 android:textSize="18sp" />
 
             <ImageView

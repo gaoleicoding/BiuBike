@@ -4,6 +4,9 @@ package com.biubike.service;
  * Created by gaolei on 17/2/4.
  */
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -14,7 +17,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -26,6 +31,7 @@ import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
+import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.activity.RouteDetailActivity;
 import com.biubike.bean.RoutePoint;
@@ -74,6 +80,8 @@ public class RouteService extends Service {
     public static int totalDistance = 0;
     public static float totalPrice = 0;
     public static long beginTime = 0, totalTime = 0;
+    Notification notification;
+    RemoteViews contentView;
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
@@ -90,13 +98,23 @@ public class RouteService extends Service {
         totalDistance = 0;
         totalPrice = 0;
         routPointList.clear();
+
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("gaolei", "RouteService--------onStartCommand---------------");
         initLocation();//初始化LocationgClient
+        initNotification();
+        Utils.acquireWakeLock(this);
         // 开启轨迹记录线程
         return super.onStartCommand(intent, flags, startId);
+    }
+    private void initNotification(){
+        int icon = R.mipmap.bike_icon2;
+        contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        notification = new NotificationCompat.Builder(this).setContent(contentView).setSmallIcon(icon).build();
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     }
 
     private void initLocation() {
@@ -146,6 +164,36 @@ public class RouteService extends Service {
         myOrientationListener.start();
     }
 
+    private void startNotification(String time, String distance, String price) {
+        //定义一个notification
+//        int icon = R.mipmap.app_icon;
+//        CharSequence tickerText = "Notification01";
+//        long when = System.currentTimeMillis();
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        remoteViews.setTextViewText(R.id.bike_time, time);
+        remoteViews.setTextViewText(R.id.bike_distance, distance);
+        remoteViews.setTextViewText(R.id.bike_price, price);
+        Notification notification = new NotificationCompat.Builder(this).setContent(remoteViews).build();
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.contentIntent = contentIntent;
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+        mNotificationManager.notify(1, notification);
+//        startForeground(2, notification);
+    }
+
+    private void startNotifi(String time, String distance, String price) {
+
+
+        startForeground(1, notification);
+        contentView.setTextViewText(R.id.bike_time, time);
+        contentView.setTextViewText(R.id.bike_distance, distance);
+        contentView.setTextViewText(R.id.bike_price, price);
+    }
+
 
     public IBinder onBind(Intent intent) {
         Log.d("gaolei", "onBind-------------");
@@ -177,8 +225,8 @@ public class RouteService extends Service {
         startActivity(intent);
         if (routPointList.size() > 2)
             insertData(routeListStr);
-
-
+        Utils.releaseWakeLock();
+        stopForeground(true);
     }
 
 
@@ -207,15 +255,15 @@ public class RouteService extends Service {
 
                 } else {
 
-                LatLng lastLatLng = new LatLng(lastPoint.getRouteLat(),
-                        lastPoint.getRouteLng());
-                LatLng currentLatLng = new LatLng(routeLat, routeLng);
-                if (routeLat > 0 && routeLng > 0) {
-                    double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-                    Log.d("gaolei", "distantce--------------" + distantce);
+                    LatLng lastLatLng = new LatLng(lastPoint.getRouteLat(),
+                            lastPoint.getRouteLng());
+                    LatLng currentLatLng = new LatLng(routeLat, routeLng);
+                    if (routeLat > 0 && routeLng > 0) {
+                        double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
+                        Log.d("gaolei", "distantce--------------" + distantce);
                         if (distantce > 5) {
-                    routPointList.add(routePoint);
-                    totalDistance += distantce;
+                            routPointList.add(routePoint);
+                            totalDistance += distantce;
                         }
                     }
                 }
@@ -228,9 +276,8 @@ public class RouteService extends Service {
             Log.d("gaolei", "biginTime--------------" + beginTime);
             Log.d("gaolei", "totalTime--------------" + totalTime);
             Log.d("gaolei", "totalDistance--------------" + totalDistance);
-//
+            startNotifi(totalTime + "分钟", totalDistance + "米", totalPrice + "元");
             sendBroadcast(intent);
-//
         }
     }
 

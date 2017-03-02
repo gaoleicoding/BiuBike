@@ -206,8 +206,15 @@ public class CodeUnlockActivity extends BaseActivity {
     }
 
     public void finishActivity(View view) {
+
         unlockSuccess = true;
         finish();
+    }
+
+    public void unlockSucess(View view) {
+        unlockSuccess = true;
+        finish();
+
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

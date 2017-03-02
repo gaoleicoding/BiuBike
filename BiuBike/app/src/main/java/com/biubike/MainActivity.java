@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private long exitTime = 0;
     private View divider;
     private boolean isFirstIn = true;
+    public boolean mainActivityFinished = false;
 
     //自定义图标
     private BitmapDescriptor mIconLocation, dragLocationIcon, bikeIcon, nearestIcon;
@@ -334,6 +335,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.cancel_book:
                 bike_layout.setVisibility(View.GONE);
+                bike_time.setText("");
+                bike_distance.setText("");
+                bike_price.setText("");
                 prompt.setVisibility(View.GONE);
                 countDownTimer.cancel();
                 bike_info_layout.setVisibility(View.GONE);
@@ -365,7 +369,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.menu_icon:
                 Log.d("gaolei", "menu_icon-----click--------openMenu()");
-
                 openMenu();
                 break;
             case R.id.bike_sound:
@@ -736,7 +739,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void setOnItemInDlgClickLinster(OnItemInDlgClickListener itemListener) {
             onItemInDlgClickListener = itemListener;
         }
-
     }
 
     // 响应DLg中的List item 点击
@@ -794,9 +796,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     protected void onRestart() {
         super.onRestart();
-        countDownTimer.start();
         Log.d("gaolei", "MainActivity------------onRestart------------------");
-
         if (CodeUnlockActivity.unlockSuccess) {
             beginService();
         }
@@ -817,7 +817,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             prompt.setVisibility(View.GONE);
             bike_layout.setVisibility(View.GONE);
-            current_addr.setVisibility(View.GONE);
+            current_addr.setVisibility(View.VISIBLE);
             menu_icon.setVisibility(View.VISIBLE);
             book_bt.setVisibility(View.VISIBLE);
             unlock.setVisibility(View.VISIBLE);
@@ -835,6 +835,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void beginService() {
+        if (!Utils.isGpsOPen(this)) {
+            Utils.showDialog(this);
+            return;
+
+        }
+
         title.setText(getString(R.string.routing));
         textview_time.setText(getString(R.string.bike_time));
         textview_distance.setText(getString(R.string.bike_distance));
@@ -852,11 +858,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         bike_layout.setVisibility(View.VISIBLE);
         current_addr.setVisibility(View.GONE);
         menu_icon.setVisibility(View.GONE);
-        book_bt.setVisibility(View.GONE);
         unlock.setVisibility(View.GONE);
         divider.setVisibility(View.GONE);
         btn_refresh.setVisibility(View.GONE);
+
+        countDownTimer.cancel();
+        bike_info_layout.setVisibility(View.GONE);
+        confirm_cancel_layout.setVisibility(View.GONE);
+        bike_distance_layout.setVisibility(View.VISIBLE);
+        book_bt.setVisibility(View.GONE);
+        if (routeOverlay != null)
+            routeOverlay.removeFromMap();
+
         btn_locale.setVisibility(View.GONE);
+        bike_info_layout.setVisibility(View.GONE);
         btn_question.setVisibility(View.VISIBLE);
         mMapView.showZoomControls(false);
         mBaiduMap.clear();
@@ -891,8 +906,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
-                finish();
-                System.exit(0);
+//                finish();
+//                System.exit(0);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
             }
             return true;
         }
@@ -919,19 +938,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("gaolei", "onReceive-------location-------");
-//            BDLocation bdLocation = intent.getParcelableExtra("location");
-//            Bundle bundle = new Bundle();
-//            bundle = context.getIntent().getExtras();
-//            String totalTime=intent.getStringExtra("totalTime");
-//            String totalDistance=intent.getStringExtra("totalDistance");
-//            Log.d("gaolei", "onReceive-------totalTime-------"+totalTime);
-//            Log.d("gaolei", "onReceive-------totalDistance-------"+totalDistance);
-            long routeTime = RouteService.totalTime;
-            bike_time.setText(RouteService.totalTime + "分钟");
-            bike_distance.setText(RouteService.totalDistance + "米");
-            bike_price.setText(RouteService.totalPrice + "元");
-        }
+            if (Utils.isTopActivity(context)) {
+                bike_time.setText(RouteService.totalTime + "分钟");
+                bike_distance.setText(RouteService.totalDistance + "米");
+                bike_price.setText(RouteService.totalPrice + "元");
+                Log.d("gaolei", "MainActivity-------TopActivity---------true");
+            } else {
+                Log.d("gaolei", "MainActivity-------TopActivity---------false");
 
+            }
+        }
     }
 
     protected void toastDialog() {

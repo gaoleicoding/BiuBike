@@ -40,6 +40,10 @@
     <string name="routing_prompt">手动把车子锁上后，自动结束计费~</string>
     <string name="bike_exception_prompt">如果你发现车子有异常，点击取消</string>
     <string name="end">结束</string>
+    <string name="end_route">结束\n行程</string>
+    <string name="open_gps">请先打开GPS，提高定位准确度</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
 
 
     <string name="demo_title_location">demo_title_location</string>

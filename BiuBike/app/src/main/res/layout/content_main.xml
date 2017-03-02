@@ -317,12 +317,12 @@
 
         <TextView
             android:id="@+id/btn_question"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/btn_refresh"
             android:background="@drawable/flashlight_circle_bg"
-            android:text="@string/end"
+            android:text="@string/end_route"
             android:gravity="center"
             android:textSize="14sp"
             android:visibility="gone"

@@ -37,4 +37,7 @@
     <color name="color_989898">#989898</color>
     <color name="color_ededed">#ededed</color>
     <color name="color_858585">#858585</color>
+    <color name="color_cc858585">#cc858585</color>
+    <color name="transparent">#00000000</color>
+
 </resources>

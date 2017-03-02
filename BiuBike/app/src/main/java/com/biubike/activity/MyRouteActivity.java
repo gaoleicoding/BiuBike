@@ -46,7 +46,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     }
 
     public List<RouteRecord> getAllPoints() {
-        String sql = "select * from cycle_route";
+        String sql = "select * from cycle_route order by route_id DESC ";
         RouteDBHelper helper = new RouteDBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         routeList = new ArrayList<RouteRecord>();

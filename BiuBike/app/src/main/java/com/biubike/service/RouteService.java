@@ -5,7 +5,6 @@ package com.biubike.service;
  */
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -114,7 +113,8 @@ public class RouteService extends Service {
         contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
         notification = new NotificationCompat.Builder(this).setContent(contentView).setSmallIcon(icon).build();
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notificationIntent.putExtra("flag","notification");
+        notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     }
 
     private void initLocation() {
@@ -164,30 +164,7 @@ public class RouteService extends Service {
         myOrientationListener.start();
     }
 
-    private void startNotification(String time, String distance, String price) {
-        //定义一个notification
-//        int icon = R.mipmap.app_icon;
-//        CharSequence tickerText = "Notification01";
-//        long when = System.currentTimeMillis();
-
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        remoteViews.setTextViewText(R.id.bike_time, time);
-        remoteViews.setTextViewText(R.id.bike_distance, distance);
-        remoteViews.setTextViewText(R.id.bike_price, price);
-        Notification notification = new NotificationCompat.Builder(this).setContent(remoteViews).build();
-
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.contentIntent = contentIntent;
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-        mNotificationManager.notify(1, notification);
-//        startForeground(2, notification);
-    }
-
     private void startNotifi(String time, String distance, String price) {
-
-
         startForeground(1, notification);
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);

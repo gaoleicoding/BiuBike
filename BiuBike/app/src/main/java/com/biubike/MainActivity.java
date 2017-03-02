@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     PlanNode startNodeStr, endNodeStr;
     int nodeIndex = -1, distance;
     WalkingRouteResult nowResultwalk = null;
-    boolean useDefaultIcon = true, hasPlanRoute = false;
+    boolean useDefaultIcon = true, hasPlanRoute = false,isServiceLive=false;
     RouteLine routeLine = null;
     OverlayManager routeOverlay = null;
     LatLng currentLL;
@@ -125,6 +125,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private RelativeLayout title_layout, menu_layout, person_layout;
     View shadowView;
     RouteService routeService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setStatusBar();
         initView();
         initLocation();
+        isServiceLive=Utils.isServiceWork(this, "com.biubike.service.RouteService");
+        if (isServiceLive)
+            beginService();
 
         FragmentManager fm = getSupportFragmentManager();
         mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
@@ -146,6 +150,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
+
     }
 
 
@@ -250,7 +255,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        int span = 1000;
+        int span = 10000;
         mOption.setScanSpan(span);
         //设置 LocationClientOption
         mlocationClient.setLocOption(mOption);
@@ -491,26 +496,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //定位请求回调函数,这里面会得到定位信息
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-//            Log.d("gaolei", "bdLocation.getAddrStr()-----MainActivity--------" + bdLocation.getAddrStr());
-//            List<Poi> poiList = bdLocation.getPoiList();
-//            for (int i = 0; i < poiList.size(); i++) {
-//                Log.d("gaolei", "poiName-----------" + poiList.get(i).getName());
-//
-//            }
 
-            MyLocationData data = new MyLocationData.Builder()
-                    .direction(mCurrentX)//设定图标方向
-                    .accuracy(bdLocation.getRadius())//getRadius 获取定位精度,默认值0.0f
-                    .latitude(currentLatitude)//百度纬度坐标
-                    .longitude(currentLongitude)//百度经度坐标
-                    .build();
-            //设置定位数据, 只有先允许定位图层后设置数据才会生效，参见 setMyLocationEnabled(boolean)
-            mBaiduMap.setMyLocationData(data);
+             MyLocationData data = new MyLocationData.Builder()
+                     .direction(mCurrentX)//设定图标方向
+                     .accuracy(bdLocation.getRadius())//getRadius 获取定位精度,默认值0.0f
+                     .latitude(currentLatitude)//百度纬度坐标
+                     .longitude(currentLongitude)//百度经度坐标
+                     .build();
+             //设置定位数据, 只有先允许定位图层后设置数据才会生效，参见 setMyLocationEnabled(boolean)
+             mBaiduMap.setMyLocationData(data);
 
-            MyLocationConfiguration configuration
-                    = new MyLocationConfiguration(locationMode, true, mIconLocation);
-            //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生效，参见 setMyLocationEnabled(boolean)
-            mBaiduMap.setMyLocationConfigeration(configuration);
+             MyLocationConfiguration configuration
+                     = new MyLocationConfiguration(locationMode, true, mIconLocation);
+             //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生效，参见 setMyLocationEnabled(boolean)
+             mBaiduMap.setMyLocationConfigeration(configuration);
+
             //判断是否为第一次定位,是的话需要定位到用户当前位置
             if (isFirstIn) {
                 currentLatitude = bdLocation.getLatitude();
@@ -528,7 +528,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Log.d("gaolei", "currentLongitude-------------" + currentLongitude);
                 isFirstIn = false;
                 current_addr.setText(bdLocation.getAddrStr());
+            if(!isServiceLive) {
                 addOverLayout(currentLatitude, currentLongitude);
+            }
 
             }
         }
@@ -785,7 +787,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
-        countDownTimer.cancel();
     }
 
     @Override
@@ -796,6 +797,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     protected void onRestart() {
         super.onRestart();
+        mBaiduMap.setMyLocationEnabled(true);
+        mlocationClient.start();
+        myOrientationListener.start();
         Log.d("gaolei", "MainActivity------------onRestart------------------");
         if (CodeUnlockActivity.unlockSuccess) {
             beginService();
@@ -875,8 +879,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         btn_question.setVisibility(View.VISIBLE);
         mMapView.showZoomControls(false);
         mBaiduMap.clear();
+        if(isServiceLive)
+            mlocationClient.requestLocation();
         Intent intent = new Intent(this, RouteService.class);
         startService(intent);
+
+        MyLocationConfiguration configuration
+                = new MyLocationConfiguration(locationMode, true, mIconLocation);
+        //设置定位图层配置信息，只有先允许定位图层后设置定位图层配置信息才会生
     }
 
     @Override
@@ -886,7 +896,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mBaiduMap.setMyLocationEnabled(false);
         mlocationClient.stop();
         myOrientationListener.stop();
-        countDownTimer.cancel();
+
         Log.d("gaolei", "MainActivity------------onStop------------------");
 
     }
@@ -895,6 +905,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        countDownTimer.cancel();
         isFirstIn = true;
         Log.d("gaolei", "MainActivity------------onDestroy------------------");
 

@@ -148,7 +148,24 @@ public class Utils {
         }
         return false;
     }
-
+    public static boolean isServiceWork(Context mContext, String serviceName) {
+        boolean isWork = false;
+        ActivityManager myAM = (ActivityManager) mContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
+        if (myList.size() <= 0) {
+            return false;
+        }
+        int size = myList.size();
+        for (int i = 0; i < size; i++) {
+            String mName = myList.get(i).service.getClassName().toString();
+            if (mName.equals(serviceName)) {
+                isWork = true;
+                break;
+            }
+        }
+        return isWork;
+    }
     /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
      * @param context

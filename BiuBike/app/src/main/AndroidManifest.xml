@@ -68,7 +68,6 @@
             android:enabled="true"
             android:process=":remote"></service>
         <service android:name="com.biubike.service.RouteService"
-            android:process=":Daemon"
             ></service>
     </application>
 

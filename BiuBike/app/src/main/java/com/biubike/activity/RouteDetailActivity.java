@@ -70,10 +70,6 @@ public class RouteDetailActivity extends BaseActivity {
         }.getType());
 
 
-        total_time.setText("骑行时长：" + time + "分钟");
-        total_distance.setText("骑行距离：" + distance + "米");
-        total_price.setText("余额支付：" + price + "元");
-
         List<LatLng> points = new ArrayList<LatLng>();
 
         for (int i = 0; i < routePoints.size(); i++) {
@@ -89,17 +85,28 @@ public class RouteDetailActivity extends BaseActivity {
             routeBaiduMap.addOverlay(ooPolyline);
             RoutePoint startPoint = routePoints.get(0);
             LatLng startPosition = new LatLng(startPoint.getRouteLat(), startPoint.getRouteLng());
+
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(startPosition).zoom(18.0f);
+            routeBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
             RoutePoint endPoint = routePoints.get(routePoints.size() - 1);
             LatLng endPosition = new LatLng(endPoint.getRouteLat(), endPoint.getRouteLng());
             addOverLayout(startPosition, endPosition);
         }
+
+        total_time.setText("骑行时长：" + time + "分钟");
+        total_distance.setText("骑行距离：" + distance + "米");
+        total_price.setText("余额支付：" + price + "元");
+
+
     }
 
     private void initMap() {
 
         mlocationClient = new LocationClient(this);
-        mlistener = new MylocationListener();
-        mlocationClient.registerLocationListener(mlistener);
+//        mlistener = new MylocationListener();
+//        mlocationClient.registerLocationListener(mlistener);
 
         LocationClientOption mOption = new LocationClientOption();
         //设置坐标类型
@@ -128,13 +135,14 @@ public class RouteDetailActivity extends BaseActivity {
             //判断是否为第一次定位,是的话需要定位到用户当前位置
             if (isFirstIn) {
                 Log.d("gaolei", "onReceiveLocation----------RouteDetail-----" + bdLocation.getAddrStr());
-                LatLng currentLL = new LatLng(bdLocation.getLatitude(),
-                        bdLocation.getLongitude());
-//                startNodeStr = PlanNode.withLocation(currentLL);
-                MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(currentLL).zoom(18.0f);
-                routeBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+//                LatLng currentLL = new LatLng(bdLocation.getLatitude(),
+//                        bdLocation.getLongitude());
+////                startNodeStr = PlanNode.withLocation(currentLL);
+//                MapStatus.Builder builder = new MapStatus.Builder();
+//                builder.target(currentLL).zoom(18.0f);
+//                routeBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 isFirstIn = false;
+
             }
         }
     }

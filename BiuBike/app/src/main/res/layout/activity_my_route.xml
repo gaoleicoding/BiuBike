@@ -37,7 +37,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/recyclerview_route"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

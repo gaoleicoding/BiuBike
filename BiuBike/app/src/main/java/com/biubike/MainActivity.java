@@ -214,6 +214,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mBaiduMap.setMyLocationData(locData);
             currentLatitude = bdLocation.getLatitude();
             currentLongitude = bdLocation.getLongitude();
+            current_addr.setText(bdLocation.getAddrStr());
+            currentLL = new LatLng(bdLocation.getLatitude(),
+                    bdLocation.getLongitude());
+            startNodeStr = PlanNode.withLocation(currentLL);
             if (isFirstLoc) {
                 isFirstLoc = false;
                 LatLng ll = new LatLng(bdLocation.getLatitude(),
@@ -225,11 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 changeLatitude = bdLocation.getLatitude();
                 changeLongitude = bdLocation.getLongitude();
 
-                currentLL = new LatLng(bdLocation.getLatitude(),
-                        bdLocation.getLongitude());
-                startNodeStr = PlanNode.withLocation(currentLL);
 
-                current_addr.setText(bdLocation.getAddrStr());
                 if (!isServiceLive) {
                     addOverLayout(currentLatitude, currentLongitude);
                 }
@@ -373,7 +373,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     routeOverlay.removeFromMap();
                 Log.d("gaolei", "currentLatitude-----btn_locale--------" + currentLatitude);
                 Log.d("gaolei", "currentLongitude-----btn_locale--------" + currentLongitude);
-                startNodeStr = PlanNode.withLocation(currentLL);
+//                startNodeStr = PlanNode.withLocation(currentLL);
                 addOverLayout(currentLatitude, currentLongitude);
                 break;
             case R.id.btn_refresh:
@@ -894,10 +894,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void onReceive(Context context, Intent intent) {
             Log.d("gaolei", "onReceive-------location-------");
             if (Utils.isTopActivity(context)) {
-                bike_time.setText(RouteService.totalTime + "分钟");
-                bike_distance.setText(RouteService.totalDistance + "米");
-                bike_price.setText(RouteService.totalPrice + "元");
+
+                String time = intent.getStringExtra("totalTime");
+                String distance = intent.getStringExtra("totalDistance");
+                String price = intent.getStringExtra("totalPrice");
+                bike_time.setText(time);
+                bike_distance.setText(distance);
+                bike_price.setText(price);
                 Log.d("gaolei", "MainActivity-------TopActivity---------true");
+                Log.d("gaolei", "MainActivity-------time:"+time);
+                Log.d("gaolei", "MainActivity-------distance:"+distance);
+                Log.d("gaolei", "MainActivity-------price:"+price);
             } else {
                 Log.d("gaolei", "MainActivity-------TopActivity---------false");
             }

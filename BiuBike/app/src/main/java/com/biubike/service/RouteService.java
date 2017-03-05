@@ -75,9 +75,9 @@ public class RouteService extends Service {
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
-    public static int totalDistance = 0;
-    public static float totalPrice = 0;
-    public static long beginTime = 0, totalTime = 0;
+    public  int totalDistance = 0;
+    public  float totalPrice = 0;
+    public  long beginTime = 0, totalTime = 0;
     Notification notification;
     RemoteViews contentView;
 
@@ -249,15 +249,19 @@ public class RouteService extends Service {
                     }
                 }
             }
-            Intent intent = new Intent("com.locationreceiver");
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("location", bdLocation);
+
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
             totalPrice = (float) (Math.floor(totalTime / 30) * 0.5 + 0.5);
 //            Log.d("gaolei", "biginTime--------------" + beginTime);
-//            Log.d("gaolei", "totalTime--------------" + totalTime);
-//            Log.d("gaolei", "totalDistance--------------" + totalDistance);
+            Log.d("gaolei", "totalTime--------------" + totalTime);
+            Log.d("gaolei", "totalDistance--------------" + totalDistance);
             startNotifi(totalTime + "分钟", totalDistance + "米", totalPrice + "元");
+            Intent intent = new Intent("com.locationreceiver");
+            Bundle bundle = new Bundle();
+            bundle.putString("totalTime", totalTime + "分钟");
+            bundle.putString("totalDistance", totalDistance + "米");
+            bundle.putString("totalPrice", totalPrice + "元");
+            intent.putExtras(bundle);
             sendBroadcast(intent);
         }
     }

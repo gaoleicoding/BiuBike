@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile files('libs/baidumapapi_util_v4_1_1.jar')
     compile files('libs/gson-2.2.1.jar')
+    compile project(':xrecyclerview')
 }

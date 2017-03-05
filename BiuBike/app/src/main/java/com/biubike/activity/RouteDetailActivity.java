@@ -20,6 +20,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
@@ -103,7 +104,6 @@ public class RouteDetailActivity extends BaseActivity {
     }
 
     private void initMap() {
-
         mlocationClient = new LocationClient(this);
 //        mlistener = new MylocationListener();
 //        mlocationClient.registerLocationListener(mlistener);
@@ -123,6 +123,8 @@ public class RouteDetailActivity extends BaseActivity {
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
+        UiSettings settings=routeBaiduMap.getUiSettings();
+        settings.setScrollGesturesEnabled(true);
     }
 
     public class MylocationListener implements BDLocationListener {
@@ -183,4 +185,6 @@ public class RouteDetailActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
 }

@@ -19,7 +19,6 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -108,12 +107,13 @@ public class RouteService extends Service {
         // 开启轨迹记录线程
         return super.onStartCommand(intent, flags, startId);
     }
-    private void initNotification(){
+
+    private void initNotification() {
         int icon = R.mipmap.bike_icon2;
         contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
         notification = new NotificationCompat.Builder(this).setContent(contentView).setSmallIcon(icon).build();
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra("flag","notification");
+        notificationIntent.putExtra("flag", "notification");
         notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     }
 
@@ -215,7 +215,11 @@ public class RouteService extends Service {
         //定位请求回调函数,这里面会得到定位信息
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-
+            if (null == bdLocation) return;
+            //"4.9E-324"表示目前所处的环境（室内或者是网络状况不佳）造成无法获取到经纬度
+            if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) || "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {
+                return;
+            }//过滤百度定位失败
 
             Log.d("gaolei", "RouteService---------getAddrStr()-------------" + bdLocation.getAddrStr());
             double routeLat = bdLocation.getLatitude();
@@ -237,7 +241,7 @@ public class RouteService extends Service {
                     LatLng currentLatLng = new LatLng(routeLat, routeLng);
                     if (routeLat > 0 && routeLng > 0) {
                         double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-                        Log.d("gaolei", "distantce--------------" + distantce);
+//                        Log.d("gaolei", "distantce--------------" + distantce);
                         if (distantce > 5) {
                             routPointList.add(routePoint);
                             totalDistance += distantce;
@@ -250,9 +254,9 @@ public class RouteService extends Service {
 //            bundle.putParcelable("location", bdLocation);
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
             totalPrice = (float) (Math.floor(totalTime / 30) * 0.5 + 0.5);
-            Log.d("gaolei", "biginTime--------------" + beginTime);
-            Log.d("gaolei", "totalTime--------------" + totalTime);
-            Log.d("gaolei", "totalDistance--------------" + totalDistance);
+//            Log.d("gaolei", "biginTime--------------" + beginTime);
+//            Log.d("gaolei", "totalTime--------------" + totalTime);
+//            Log.d("gaolei", "totalDistance--------------" + totalDistance);
             startNotifi(totalTime + "分钟", totalDistance + "米", totalPrice + "元");
             sendBroadcast(intent);
         }
@@ -274,17 +278,17 @@ public class RouteService extends Service {
             if (wifiState != null && mobileState != null
                     && NetworkInfo.State.CONNECTED != wifiState
                     && NetworkInfo.State.CONNECTED == mobileState) {
-                Toast.makeText(context, context.getString(R.string.net_mobile), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, context.getString(R.string.net_mobile), Toast.LENGTH_SHORT).show();
                 // 手机网络连接成功
             } else if (wifiState != null && mobileState != null
                     && NetworkInfo.State.CONNECTED != wifiState
                     && NetworkInfo.State.CONNECTED != mobileState) {
-                Toast.makeText(context, context.getString(R.string.net_none), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, context.getString(R.string.net_none), Toast.LENGTH_SHORT).show();
 
                 // 手机没有任何的网络
             } else if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
                 // 无线网络连接成功
-                Toast.makeText(context, context.getString(R.string.net_wifi), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, context.getString(R.string.net_wifi), Toast.LENGTH_SHORT).show();
 
             }
         }

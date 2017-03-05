@@ -219,7 +219,7 @@ public class CodeUnlockActivity extends BaseActivity {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            unlockSuccess = true;
+//            unlockSuccess = true;
             finish();
             return true;
         }

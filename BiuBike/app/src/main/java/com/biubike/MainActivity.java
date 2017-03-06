@@ -240,29 +240,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-//    @Override
-//    protected void onPause() {
-//        mMapView.onPause();
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        mMapView.onResume();
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        // 退出时销毁定位
-//        mLocClient.stop();
-//        // 关闭定位图层
-//        mBaiduMap.setMyLocationEnabled(false);
-//        mMapView.onDestroy();
-//        mMapView = null;
-//        super.onDestroy();
-//    }
-
 
     public void openMenu() {
         mLeftDrawerLayout.openDrawer();
@@ -354,18 +331,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 countDownTimer.start();
                 break;
             case R.id.cancel_book:
-                bike_layout.setVisibility(View.GONE);
-                bike_time.setText("");
-                bike_distance.setText("");
-                bike_price.setText("");
-                prompt.setVisibility(View.GONE);
-                countDownTimer.cancel();
-                bike_info_layout.setVisibility(View.GONE);
-                confirm_cancel_layout.setVisibility(View.GONE);
-                bike_distance_layout.setVisibility(View.VISIBLE);
-                book_bt.setVisibility(View.VISIBLE);
-                if (routeOverlay != null)
-                    routeOverlay.removeFromMap();
+                cancelBook();
                 break;
             case R.id.btn_locale:
                 getMyLocation();
@@ -404,7 +370,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         }
     }
-
+private void cancelBook(){
+    bike_layout.setVisibility(View.GONE);
+    bike_time.setText("");
+    bike_distance.setText("");
+    bike_price.setText("");
+    prompt.setVisibility(View.GONE);
+    countDownTimer.cancel();
+    bike_info_layout.setVisibility(View.GONE);
+    confirm_cancel_layout.setVisibility(View.GONE);
+    bike_distance_layout.setVisibility(View.VISIBLE);
+    book_bt.setVisibility(View.VISIBLE);
+    if (routeOverlay != null)
+        routeOverlay.removeFromMap();
+}
     @Override
     public void onGetWalkingRouteResult(final WalkingRouteResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
@@ -869,6 +848,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if(bike_layout.getVisibility()==View.VISIBLE){
+                cancelBook();
+                return true;
+            }
+
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();

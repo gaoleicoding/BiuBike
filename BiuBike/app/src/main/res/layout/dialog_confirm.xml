@@ -17,7 +17,7 @@
 
     <View style="@style/menu_divider_style" />
 
-    <Button
+    <TextView
         android:id="@+id/confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,6 +25,8 @@
         android:padding="18dp"
         android:text="@string/confirm"
         android:textColor="@color/white"
+        android:clickable="true"
+        android:background="@drawable/dialog_confirm_selector"
         android:textSize="18sp" />
 
 

@@ -30,7 +30,7 @@ dependencies {
     compile files('libs/baidumapapi_base_v4_1_1.jar')
     compile files('libs/baidumapapi_map_v4_1_1.jar')
     compile files('libs/nineoldandroids-2.4.0.jar')
-    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
     compile files('libs/baidumapapi_util_v4_1_1.jar')
     compile files('libs/gson-2.2.1.jar')
     compile project(':xrecyclerview')

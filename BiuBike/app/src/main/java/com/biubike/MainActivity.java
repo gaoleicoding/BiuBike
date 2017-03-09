@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
-        SDKInitializer.initialize(getApplicationContext());
+        SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
         setContentView(R.layout.activity_main);
         Log.d("gaolei", "MainkActivity------------onCreate---------" + System.currentTimeMillis());
         initMap();
@@ -172,14 +172,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);
-        option.setIsNeedAddress(true);
+        option.setScanSpan(5000);//设置onReceiveLocation()获取位置的频率
+        option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
         mlocationClient.start();
         mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
-
-        mBaiduMap
-                .setMyLocationConfigeration(new MyLocationConfiguration(
+        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                         mCurrentMode, true, null));
         myOrientationListener = new MyOrientationListener(this);
         //通过接口回调来实现实时方向的改变
@@ -218,25 +216,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             currentLL = new LatLng(bdLocation.getLatitude(),
                     bdLocation.getLongitude());
             startNodeStr = PlanNode.withLocation(currentLL);
+            //option.setScanSpan(5000)，每隔5000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
                 LatLng ll = new LatLng(bdLocation.getLatitude(),
                         bdLocation.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
+                //地图缩放比设置为18
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
                 changeLatitude = bdLocation.getLatitude();
                 changeLongitude = bdLocation.getLongitude();
-
-
                 if (!isServiceLive) {
                     addOverLayout(currentLatitude, currentLongitude);
                 }
             }
-        }
-
-        public void onReceivePoi(BDLocation poiLocation) {
         }
     }
 

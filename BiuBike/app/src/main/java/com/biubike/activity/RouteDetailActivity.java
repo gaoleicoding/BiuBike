@@ -185,6 +185,4 @@ public class RouteDetailActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
 }

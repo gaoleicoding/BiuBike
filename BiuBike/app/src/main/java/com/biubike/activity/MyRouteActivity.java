@@ -60,7 +60,6 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
         routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         routeRecyclerView.setPullRefreshEnabled(false);
-
 //        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup)findViewById(android.R.id.content),false);
 //        routeRecyclerView.addHeaderView(header);
 

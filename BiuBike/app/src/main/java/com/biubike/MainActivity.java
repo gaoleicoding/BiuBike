@@ -141,7 +141,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
         setContentView(R.layout.activity_main);
-        Log.d("gaolei", "MainkActivity------------onCreate---------" + System.currentTimeMillis());
         initMap();
         setStatusBar();
         initView();
@@ -157,7 +156,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
-
     }
 
     private void initMap() {

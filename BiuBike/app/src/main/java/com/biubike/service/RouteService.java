@@ -86,7 +86,6 @@ public class RouteService extends Service {
     }
 
     public void onCreate() {
-        Log.d("gaolei", "RouteService--------onCreate-------------");
         super.onCreate();
         beginTime = System.currentTimeMillis();
 //        RouteDBHelper dbHelper = new RouteDBHelper(this);

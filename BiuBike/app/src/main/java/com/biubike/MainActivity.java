@@ -843,6 +843,7 @@ private void cancelBook(){
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if(bike_layout.getVisibility()==View.VISIBLE){
+                if(!Utils.isServiceWork(this, "com.biubike.service.RouteService"))
                 cancelBook();
                 return true;
             }

@@ -138,7 +138,7 @@ public class IndoorRouteOverlay extends OverlayManager {
     }
 
 //    private BitmapDescriptor getIconForStep(IndoorRouteLine.TransitStep step) {
-//        switch (step.getVehileType()) {
+//        switch(step.getVehileType()) {
 //            case ESTEP_WALK:
 //                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png");
 //            case ESTEP_TRAIN:

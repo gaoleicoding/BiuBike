@@ -123,7 +123,7 @@ public class RouteDetailActivity extends BaseActivity {
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
-        UiSettings settings=routeBaiduMap.getUiSettings();
+        UiSettings settings = routeBaiduMap.getUiSettings();
         settings.setScrollGesturesEnabled(true);
     }
 

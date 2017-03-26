@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/menu_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:clickable="true"
                 android:paddingLeft="15dp"
@@ -35,6 +35,17 @@
                 android:text="@string/bybike"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_alignParentRight="true"
+                android:onClick="gotoNavigation"
+                android:src="@mipmap/search" />
         </RelativeLayout>
     </LinearLayout>
 

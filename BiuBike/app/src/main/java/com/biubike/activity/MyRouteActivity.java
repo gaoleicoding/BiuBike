@@ -52,7 +52,6 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
             routeAdapter = new MyRouteAdapter(this, routeList);
             routeRecyclerView.setAdapter(routeAdapter);
             routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
-
             routeAdapter.setOnClickListener(this);
         }
 

@@ -28,11 +28,6 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
         this.list = list;
     }
 
-    public void setSelectPosition(int selectPosition) {
-        this.selectPosition = selectPosition;
-        notifyDataSetChanged();
-    }
-
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.my_route_item, null);
         MyViewHolder holder = new MyViewHolder(view);
@@ -51,12 +46,11 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        holder.bike_time.setText(list.get(position).getCycle_time()+"分钟");
-        holder.bike_distance.setText(list.get(position).getCycle_distance()+"米");
-        holder.bike_price.setText(list.get(position).getCycle_price()+"元");
-        holder.bike_date.setText(list.get(position).getCycle_date());
-
-
+        RouteRecord routeRecord=list.get(position);
+        holder.bike_time.setText(routeRecord.getCycle_time()+"分钟");
+        holder.bike_distance.setText(routeRecord.getCycle_distance()+"米");
+        holder.bike_price.setText(routeRecord.getCycle_price()+"元");
+        holder.bike_date.setText(routeRecord.getCycle_date());
     }
 
     @Override

@@ -1,44 +1,46 @@
 package com.biubike.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baidu.mapapi.search.sug.SuggestionResult.SuggestionInfo;
 import com.biubike.R;
+
+import java.util.List;
 
 /**
  * Created by gaolei on 17/1/18.
  */
 
-public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapter.MyViewHolder> {
+public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdapter.MyViewHolder> {
 
     public Context context;
-    String[] accountArr;
-    int selectPosition = 0;
     OnItemClickListener listener;
+    private List<SuggestionInfo> list;
 
-    public ChargeAmountAdapter(Context context) {
+    public PoiSuggestionAdapter(Context context, List<SuggestionInfo> list) {
         this.context = context;
-        accountArr = context.getResources().getStringArray(R.array.amount);
+        this.list = list;
     }
 
-    public void setSelectPosition(int selectPosition) {
-        this.selectPosition = selectPosition;
+    public void changeData(List<SuggestionInfo> list) {
+        if (list == null)
+            this.list.clear();
+        else
+            this.list = list;
         notifyDataSetChanged();
     }
 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.charge_amount_item, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.poi_suggestion_item, null);
         MyViewHolder holder = new MyViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 int position = (int) view.getTag();
                 if (listener != null) {
                     listener.onItemClick(view, position);
@@ -49,30 +51,25 @@ public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapte
     }
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.textView.setText(accountArr[position]);
-        Log.d("gaolei","onBindViewHolder---Charage----"+position);
-
+        SuggestionInfo info = list.get(position);
+        holder.place.setText(info.key);
+        holder.district.setText(info.city + " " + info.district);
         holder.itemView.setTag(position);
-        if (position == selectPosition) {
-            holder.textView.setTextColor(Color.parseColor("#343333"));
-            holder.textView.setBackgroundResource(R.drawable.charge_amount_select);
-        } else {
-            holder.textView.setTextColor(Color.parseColor("#989898"));
-            holder.textView.setBackgroundResource(R.drawable.charge_amount_unselect);
-        }
+
     }
 
     @Override
     public int getItemCount() {
-        return accountArr.length;
+        return list.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView place, district;
 
         public MyViewHolder(View view) {
             super(view);
-            textView = (TextView) view.findViewById(R.id.acount);
+            place = (TextView) view.findViewById(R.id.place);
+            district = (TextView) view.findViewById(R.id.district);
         }
     }
 

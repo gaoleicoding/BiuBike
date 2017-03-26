@@ -25,7 +25,7 @@ public class CodeUnlockActivity extends BaseActivity {
     private boolean isFlashOpen = false;
     private EditText editText1, editText2, editText3, editText4, editText5, editText6;
     private int currentEditIndex;
-    public static InputMethodManager imm;
+
     private RelativeLayout title_layout;
     public static boolean unlockSuccess = false;
 
@@ -34,7 +34,7 @@ public class CodeUnlockActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
         Log.d("gaolei", "CodeUnlockActivity------------onCreate------------------");
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
 
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(this, 50));
 //        layoutParams.setMargins(0, statusBarHeight, 0, 0);//4个参数按顺序分别是左上右下
@@ -68,7 +68,7 @@ public class CodeUnlockActivity extends BaseActivity {
         editText4.setOnKeyListener(keyListener);
         editText5.setOnKeyListener(keyListener);
         editText6.setOnKeyListener(keyListener);
-        Utils.showIMM();
+        new Utils(this).showIMM();
 //        ShowKeyboard(editText1);
     }
 

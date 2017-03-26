@@ -44,6 +44,11 @@
     <string name="open_gps">请先打开GPS，提高定位准确度</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
+    <string name="navigation">导航</string>
+    <string name="begin_navigation">开始导航</string>
+    <string name="my_position">我的位置</string>
+    <string name="input_start_place">输入起点</string>
+    <string name="input_destination">输入终点</string>
 
 
     <string name="demo_title_location">demo_title_location</string>

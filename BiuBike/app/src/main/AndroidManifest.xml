@@ -49,6 +49,7 @@
         <activity android:name=".activity.WalletActivity" />
         <activity android:name=".activity.RouteDetailActivity" />
         <activity android:name=".activity.MyRouteActivity" />
+        <activity android:name=".activity.NavigationActivity" />
         <activity android:name=".activity.LocationDemo" />
 
         <receiver android:name=".MainActivity$LocationReceiver">

@@ -39,5 +39,11 @@
     <color name="color_858585">#858585</color>
     <color name="color_cc858585">#cc858585</color>
     <color name="transparent">#00000000</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
+    <color name="color_c8cacc">#c8cacc</color>
+    <color name="color_d7d8d9">#d7d8d9</color>
+    <color name="color_2c6edf">#2c6edf</color>
+    <color name="color_cc2c6edf">#cc2c6edf</color>
+    <color name="color_303030">#303030</color>
 
 </resources>

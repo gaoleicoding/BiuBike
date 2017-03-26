@@ -1,5 +1,6 @@
 package com.biubike.util;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -29,21 +30,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static com.biubike.activity.CodeUnlockActivity.imm;
-
 /**
  * Created by gaolei on 16/12/30.
  */
 
 public class Utils {
     private static PowerManager.WakeLock mWakeLock;
-
-    public static void hideIMM() {
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+    public static InputMethodManager imm;
+    Activity activity;
+    public Utils(Activity activity){
+        this.activity=activity;
+        if(imm==null)
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+    public  void hideIMM() {
+        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    public static void showIMM() {
+    public  void showIMM() {
         imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_selector"
+    android:layout_height="wrap_content"
     android:clickable="true"
+    android:background="@drawable/bg_selector"
     >
     <ImageView
         android:id="@+id/icon"
@@ -15,23 +15,21 @@
         android:src="@mipmap/position"/>
     <TextView
         android:id="@+id/place"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/icon"
-        android:gravity="center"
         android:padding="5dp"
         android:textColor="@color/color_303030"
         android:textSize="16sp"
         />
     <TextView
         android:id="@+id/district"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/icon"
         android:layout_below="@id/place"
-        android:gravity="center"
         android:padding="5dp"
         android:textColor="@color/color_989898"
         android:textSize="14sp"

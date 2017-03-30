@@ -71,17 +71,16 @@
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/green_circle_bg" />
 
-            <EditText
+            <TextView
                 android:id="@+id/start_place_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@null"
                 android:clickable="true"
-                android:editable="false"
-                android:onClick="showInputStart"
                 android:padding="10dp"
                 android:text="@string/my_position"
+                android:onClick="showInputStart"
                 android:textColor="@color/black_cc"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -108,15 +107,14 @@
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/red_circle_bg" />
 
-            <EditText
+            <TextView
                 android:id="@+id/destination_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="10dp"
                 android:background="@null"
                 android:clickable="true"
-                android:editable="false"
+                android:padding="10dp"
                 android:text="@string/input_destination"
                 android:onClick="showInputDestination"
                 android:textColor="@color/color_989898"
@@ -133,6 +131,7 @@
         android:layout_margin="15dp"
         android:background="@drawable/bt_book_selector"
         android:clickable="true"
+        android:onClick="startNavigation"
         android:gravity="center"
         android:padding="12dp"
         android:paddingBottom="1dp"
@@ -187,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
-                    android:src="@mipmap/search" />
+                    android:src="@mipmap/search_gray" />
 
                 <EditText
                     android:id="@+id/place_edit"

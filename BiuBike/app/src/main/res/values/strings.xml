@@ -30,6 +30,7 @@
     <string name="price">0.5元</string>
     <string name="route_detail">行程详情</string>
     <string name="my_route">我的行程</string>
+    <string name="no_route">您还没有行程</string>
     <string name="net_wifi">现已链接到Wi-Fi网络</string>
     <string name="net_mobile">现已连接到移动网络</string>
     <string name="net_none">现已进入无网世界</string>
@@ -49,6 +50,11 @@
     <string name="my_position">我的位置</string>
     <string name="input_start_place">输入起点</string>
     <string name="input_destination">输入终点</string>
+    <string name="please_input_start_place">请输入起点</string>
+    <string name="please_input_destination">请输入终点</string>
+    <string name="inner_navi">内置导航</string>
+    <string name="baidu_navi">百度地图</string>
+    <string name="gaode_navi">高德地图</string>
 
 
     <string name="demo_title_location">demo_title_location</string>

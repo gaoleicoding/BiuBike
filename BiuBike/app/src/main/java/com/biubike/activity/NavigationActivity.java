@@ -12,7 +12,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
@@ -21,12 +23,14 @@ import com.biubike.R;
 import com.biubike.adapter.PoiSuggestionAdapter;
 import com.biubike.adapter.RecyclerViewDivider;
 import com.biubike.base.BaseActivity;
+import com.biubike.util.LocationManager;
+import com.biubike.util.NavUtil;
 import com.biubike.util.Utils;
 
 import java.util.List;
 
 /**
- * Created by gaolei on 16/12/29.
+ * Created by gaolei on 17/3/29.
  */
 
 public class NavigationActivity extends BaseActivity implements
@@ -34,28 +38,31 @@ public class NavigationActivity extends BaseActivity implements
 
     LinearLayout place_search_layout;
     RelativeLayout title_content_layout;
-    EditText start_place_edit, destination_edit, place_edit;
+    EditText place_edit;
+    TextView start_place_edit, destination_edit;
     RecyclerView recyclerview_position;
     private List<SuggestionResult.SuggestionInfo> suggestionInfoList;
     private SuggestionSearch mSuggestionSearch = null;
     PoiSuggestionAdapter sugAdapter;
     boolean firstSetAdapter = true, isStartPoi = true;
-    String start_place,destination;
+    String currentAddress,start_place, destination;
+    LatLng startLL, endLL,tempLL;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         setStatusBar();
+        //想使用内置导航，必须初始化导航， NavUtil.initNavi(this);
+        NavUtil.initNavi(this);
+        currentAddress=LocationManager.getInstance().getAddress();
         place_search_layout = (LinearLayout) findViewById(R.id.place_search_layout);
         title_content_layout = (RelativeLayout) findViewById(R.id.title_content_layout);
-        start_place_edit = (EditText) findViewById(R.id.start_place_edit);
-        destination_edit = (EditText) findViewById(R.id.destination_edit);
+        start_place_edit = (TextView) findViewById(R.id.start_place_edit);
+        destination_edit = (TextView) findViewById(R.id.destination_edit);
         place_edit = (EditText) findViewById(R.id.place_edit);
         recyclerview_position = (RecyclerView) findViewById(R.id.recyclerview_position_history);
 
-
         recyclerview_position.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerview_position.addItemDecoration(new RecyclerViewDivider(
                 this, LinearLayoutManager.HORIZONTAL, 1, ContextCompat.getColor(this, R.color.color_c8cacc)));
         // 初始化建议搜索模块，注册建议搜索事件监听
@@ -69,12 +76,10 @@ public class NavigationActivity extends BaseActivity implements
             @Override
             public void afterTextChanged(Editable arg0) {
             }
-
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1,
                                           int arg2, int arg3) {
             }
-
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2,
                                       int arg3) {
@@ -90,16 +95,45 @@ public class NavigationActivity extends BaseActivity implements
             }
         });
     }
+
+    public void startNavigation(View view) {
+
+        if(start_place_edit.getText().toString().equals(getString(R.string.my_position)))
+            startLL= LocationManager.getInstance().getCurrentLL();
+        if (startLL == null) {
+            Toast.makeText(this, getString(R.string.please_input_start_place), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (endLL == null) {
+            Toast.makeText(this, getString(R.string.please_input_destination), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (startLL != null && endLL != null) {
+            String startAddr=start_place_edit.getText().toString();
+            String start=startAddr.equals(getString(R.string.my_position))?currentAddress:startAddr;
+            String endAddr=destination_edit.getText().toString();
+            String end=endAddr.equals(getString(R.string.my_position))?currentAddress:endAddr;
+            NavUtil.showChoiceNaviWayDialog(this, startLL, endLL,start,end);
+        }
+    }
+
     public void switchPoi(View view) {
-        start_place=start_place_edit.getText().toString();
-        destination=destination_edit.getText().toString();
-        if(!destination_edit.getText().toString().equals(getString(R.string.input_destination)))
+        tempLL=startLL;
+        startLL=endLL;
+        endLL=tempLL;
+        start_place = start_place_edit.getText().toString();
+        destination = destination_edit.getText().toString();
+        if (!destination_edit.getText().toString().equals(getString(R.string.input_destination)))
             start_place_edit.setText(destination);
         else
             start_place_edit.setText(getString(R.string.input_start_place));
-
+        if (!start_place_edit.getText().toString().equals(getString(R.string.input_start_place)))
             destination_edit.setText(start_place);
+        else
+            destination_edit.setText(getString(R.string.input_destination));
+
     }
+
     public void showInputStart(View view) {
         place_edit.requestFocus();
         new Utils(this).showIMM();
@@ -121,21 +155,15 @@ public class NavigationActivity extends BaseActivity implements
     }
 
     public void backFromSearchPlace(View view) {
+        setStatusBar();
         new Utils(this).hideIMM();
         place_edit.setText("");
-        if(sugAdapter!=null)
-        sugAdapter.changeData(null);
+        if (sugAdapter != null)
+            sugAdapter.changeData(null);
         title_content_layout.setVisibility(View.VISIBLE);
         place_search_layout.setVisibility(View.GONE);
-        setStatusBar();
     }
 
-    public void confirmPoi(View view) {
-        if (isStartPoi)
-            start_place_edit.setText(place_edit.getText().toString());
-        else
-            destination_edit.setText(place_edit.getText().toString());
-    }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -154,7 +182,8 @@ public class NavigationActivity extends BaseActivity implements
         }
         suggestionInfoList = res.getAllSuggestions();
         if (firstSetAdapter) {
-            sugAdapter = new PoiSuggestionAdapter(this, suggestionInfoList);
+            String from = isStartPoi == true ? "start" : "detination";
+            sugAdapter = new PoiSuggestionAdapter(this, suggestionInfoList, from);
             recyclerview_position.setAdapter(sugAdapter);
             sugAdapter.setOnClickListener(this);
             firstSetAdapter = false;
@@ -164,12 +193,14 @@ public class NavigationActivity extends BaseActivity implements
     }
 
     @Override
-    public void onItemClick(View v, int position) {
-        TextView poi = (TextView) v.findViewById(R.id.place);
-        if (isStartPoi)
-            start_place_edit.setText(poi.getText().toString());
-        else
-            destination_edit.setText(poi.getText().toString());
+    public void onItemClick(View v, int position, String flag, SuggestionResult.SuggestionInfo info) {
+        if (isStartPoi) {
+            start_place_edit.setText(info.key);
+            startLL = info.pt;
+        } else {
+            destination_edit.setText(info.key);
+            endLL = info.pt;
+        }
         backFromSearchPlace(place_search_layout);
     }
 }

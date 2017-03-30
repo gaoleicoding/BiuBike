@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" 
+    android:padding="15dp"
+    android:background="@drawable/bg_selector"
+    android:gravity="center">
+
+
+      <ImageView
+            android:id="@+id/single_choice_dlg_select_tag_iv"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/radio_unselected"
+            android:scaleType="centerCrop" />
+    
+        <TextView
+            android:id="@+id/single_choice_dlg_text_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="18dip"
+            android:textColor="#333333"
+            android:layout_centerInParent="true"/>
+
+      
+</LinearLayout>

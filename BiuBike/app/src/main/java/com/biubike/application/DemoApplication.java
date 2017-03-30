@@ -1,10 +1,11 @@
 package com.biubike.application;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.content.Context;
+import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
+
+import java.io.File;
 
 /**
  * Created by gaolei on 16/12/28.
@@ -12,10 +13,29 @@ import com.baidu.mapapi.SDKInitializer;
 
 public class DemoApplication extends Application {
 
-    public static AlarmManager am;
-    public void onCreate(){
+    public static String mSDCardPath;
+    public static final String APP_FOLDER_NAME = "BiuBike";
+
+    public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(getApplicationContext());
-        am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        initDirs();
+    }
+
+    private boolean initDirs() {
+        mSDCardPath = Environment.getExternalStorageDirectory().toString();
+        if (mSDCardPath == null) {
+            return false;
+        }
+        File f = new File(mSDCardPath, APP_FOLDER_NAME);
+        if (!f.exists()) {
+            try {
+                f.mkdirs();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
     }
 }

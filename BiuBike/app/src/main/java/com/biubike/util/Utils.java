@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -232,5 +234,22 @@ public class Utils {
         selectDialog.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
         selectDialog.show();
 
+    }
+    public static final String APP_BAIDU_MAP = "com.baidu.BaiduMap";
+    public static final String APP_AMAP = "com.autonavi.minimap";
+    /**
+     * 检测是否有某个应用
+     * */
+    public static boolean hasApp(Context ctx, String packageName) {
+        PackageManager manager = ctx.getPackageManager();
+        List<PackageInfo> apps = manager.getInstalledPackages(0);
+        if (apps != null) {
+            for (int i = 0; i < apps.size(); i++) {
+                if (apps.get(i).packageName.equals(packageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

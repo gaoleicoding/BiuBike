@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.biubike.R;
 import com.biubike.adapter.MyRouteAdapter;
@@ -33,12 +34,14 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     int PageId = 0, PageSize = 10;
     long itemCount = 0;
     SQLiteDatabase db;
+    TextView no_route;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_route);
         setStatusBar();
         routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
+        no_route = (TextView) findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 //        routeList = getAllPoints();
@@ -53,6 +56,8 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
             routeRecyclerView.setAdapter(routeAdapter);
             routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
             routeAdapter.setOnClickListener(this);
+        }else{
+            no_route.setVisibility(View.VISIBLE);
         }
 
         routeRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);

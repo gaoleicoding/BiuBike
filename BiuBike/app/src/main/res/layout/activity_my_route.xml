@@ -45,6 +45,14 @@
         android:layout_margin="15dp"
         android:overScrollMode="never"
         android:scrollbars="none" />
-
+    <TextView
+        android:id="@+id/no_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:text="@string/no_route"
+        android:textColor="@color/color_989898"
+        android:textSize="16sp" />
 
 </RelativeLayout>

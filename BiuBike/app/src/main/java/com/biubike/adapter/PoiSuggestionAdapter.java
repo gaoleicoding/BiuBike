@@ -21,10 +21,12 @@ public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdap
     public Context context;
     OnItemClickListener listener;
     private List<SuggestionInfo> list;
+    String from;
 
-    public PoiSuggestionAdapter(Context context, List<SuggestionInfo> list) {
+    public PoiSuggestionAdapter(Context context, List<SuggestionInfo> list,String from) {
         this.context = context;
         this.list = list;
+        this.from=from;
     }
 
     public void changeData(List<SuggestionInfo> list) {
@@ -43,7 +45,7 @@ public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdap
             public void onClick(View view) {
                 int position = (int) view.getTag();
                 if (listener != null) {
-                    listener.onItemClick(view, position);
+                    listener.onItemClick(view, position,from,list.get(position));
                 }
             }
         });
@@ -74,7 +76,7 @@ public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdap
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View v, int position);
+        public void onItemClick(View v, int position,String flag,SuggestionInfo info);
     }
 
     public void setOnClickListener(OnItemClickListener listener) {

@@ -72,6 +72,7 @@ import com.biubike.fragment.LeftMenuFragment;
 import com.biubike.map.MyOrientationListener;
 import com.biubike.map.RouteLineAdapter;
 import com.biubike.service.RouteService;
+import com.biubike.util.LocationManager;
 import com.biubike.util.Utils;
 
 import java.util.List;
@@ -223,6 +224,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             current_addr.setText(bdLocation.getAddrStr());
             currentLL = new LatLng(bdLocation.getLatitude(),
                     bdLocation.getLongitude());
+            LocationManager.getInstance().setCurrentLL(currentLL);
+            LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);
             //option.setScanSpan(5000)，每隔5000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {

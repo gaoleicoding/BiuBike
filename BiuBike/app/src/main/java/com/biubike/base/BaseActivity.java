@@ -3,7 +3,7 @@ package com.biubike.base;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
 import static com.biubike.util.Utils.dp2px;
 
 
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends AppCompatActivity {
 
     public int statusBarHeight = 0,titleHeight;
 

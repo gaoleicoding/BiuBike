@@ -18,6 +18,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -159,13 +160,14 @@ public class Utils {
         boolean isWork = false;
         ActivityManager myAM = (ActivityManager) mContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(1000);
         if (myList.size() <= 0) {
             return false;
         }
         int size = myList.size();
         for (int i = 0; i < size; i++) {
             String mName = myList.get(i).service.getClassName().toString();
+            Log.d("gaolei","mName="+mName);
             if (mName.equals(serviceName)) {
                 isWork = true;
                 break;

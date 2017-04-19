@@ -39,6 +39,7 @@
     <string name="bike_distance">骑行距离</string>
     <string name="bike_price">费用计算</string>
     <string name="routing_prompt">手动把车子锁上后，自动结束计费~</string>
+    <string name="book_prompt">预约车辆在您靠近时，自动解锁~</string>
     <string name="bike_exception_prompt">如果你发现车子有异常，点击取消</string>
     <string name="end">结束</string>
     <string name="end_route">结束\n行程</string>

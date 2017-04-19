@@ -35,16 +35,15 @@ import static com.biubike.application.DemoApplication.mSDCardPath;
 
 /**
  * Created by GaoLei on 17/3/31.
+ * 这个工具类实现了调用内置导航和打开第三方App导航
  * 1.assets中的文件必须拷贝到项目
  * 2.想使用内置导航，必须初始化导航， NavUtil.initNavi(this);
  */
 public class NavUtil {
-
     public static final int BaiduNavi = 1, GaodeNavi = 2, InnerNavi = 0;
     public static List<Activity> activityList = new LinkedList<Activity>();
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
     static String authinfo = null;
-
     /**
      * 弹出导航选择dialog
      */
@@ -90,7 +89,6 @@ public class NavUtil {
     private static void launchNavigatorViaPoints(final Activity activity, LatLng startLL, LatLng endLL) {
         //这里给出一个起终点示例，实际应用中可以通过POI检索、外部POI来源等方式获取起终点坐标
 
-        activityList.add(activity);
         final BNRoutePlanNode sNode = new BNRoutePlanNode(startLL.longitude, startLL.latitude, null, "从这里开始", BNRoutePlanNode.CoordinateType.BD09LL);
         final BNRoutePlanNode eNode = new BNRoutePlanNode(endLL.longitude, endLL.latitude, null, "到这里结束", BNRoutePlanNode.CoordinateType.BD09LL);
         if (sNode != null && eNode != null) {

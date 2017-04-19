@@ -222,8 +222,16 @@
             style="@style/transaction_type_divider"
             android:layout_marginTop="10dp" />
              />
+
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_position_history"
+            android:id="@+id/recyclerview_poi_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_poi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"

@@ -70,7 +70,7 @@ public class RouteService extends Service {
     private MylocationListener mlistener;
     private BitmapDescriptor mIconLocation;
     private MyOrientationListener myOrientationListener;
-    private float mCurrentX;
+    private String rt_time, rt_distance, rt_price;
     //定位图层显示方式
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
@@ -150,7 +150,6 @@ public class RouteService extends Service {
         myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
             @Override
             public void onOrientationChanged(float x) {
-                mCurrentX = x;
             }
         });
 //        mSearch = RoutePlanSearch.newInstance();
@@ -168,6 +167,9 @@ public class RouteService extends Service {
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);
         contentView.setTextViewText(R.id.bike_price, price);
+        rt_time=time;
+        rt_distance=distance;
+        rt_price=price;
     }
 
 

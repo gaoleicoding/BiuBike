@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
-                android:text="15652009705"
+                android:text="156****9705"
                 android:textColor="@color/color_f2f2f2"
                 android:textSize="16sp" />
 

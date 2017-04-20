@@ -142,7 +142,7 @@ public class NavigationActivity extends BaseActivity implements
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_start_place));
         isStartPoi = true;
-        showHistoryPOI(true);
+        showHistoryPOI();
     }
 
     public void showInputDestination(View view) {
@@ -153,7 +153,7 @@ public class NavigationActivity extends BaseActivity implements
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_destination));
         isStartPoi = false;
-        showHistoryPOI(false);
+        showHistoryPOI();
     }
 
     public void backFromSearchPlace(View view) {
@@ -182,6 +182,7 @@ public class NavigationActivity extends BaseActivity implements
         if (res == null || res.getAllSuggestions() == null) {
             return;
         }
+        recyclerview_poi_history.setVisibility(View.GONE);
         suggestionInfoList = res.getAllSuggestions();
         if (firstSetAdapter) {
             String from = isStartPoi == true ? "start" : "detination";
@@ -194,8 +195,9 @@ public class NavigationActivity extends BaseActivity implements
         }
     }
 
-    private void showHistoryPOI(boolean isStart) {
+    private void showHistoryPOI() {
         try {
+            recyclerview_poi_history.setVisibility(View.VISIBLE);
             List<PoiObject> poiItems = providerUtil.getData();
             poiHostoryAdapter = new PoiHostoryAdapter(NavigationActivity.this, poiItems);
             recyclerview_poi_history.setAdapter(poiHostoryAdapter);

@@ -30,7 +30,8 @@
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/icon"
         android:layout_below="@id/place"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
         android:textColor="@color/color_989898"
         android:textSize="14sp"
         />

@@ -356,6 +356,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void cancelBook() {
         countDownTimer.cancel();
+        bike_layout.setVisibility(View.GONE);
         bike_info_layout.setVisibility(View.GONE);
         confirm_cancel_layout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);

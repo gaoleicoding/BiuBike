@@ -365,6 +365,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         book_bt.setVisibility(View.VISIBLE);
         if (routeOverlay != null)
             routeOverlay.removeFromMap();
+        MapStatus.Builder builder = new MapStatus.Builder();
+        //地图缩放比设置为18
+        builder.target(currentLL).zoom(18.0f);
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
     @Override

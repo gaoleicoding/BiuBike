@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 import java.io.File;
 
@@ -19,6 +21,8 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(getApplicationContext());
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=58f9ff61");
+
         initDirs();
     }
 

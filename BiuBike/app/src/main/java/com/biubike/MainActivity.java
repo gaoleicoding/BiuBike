@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -85,7 +87,7 @@ import static com.biubike.bean.BikeInfo.infos;
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView btn_locale, btn_refresh, menu_icon;
+    private ImageView splash_img, btn_locale, btn_refresh, menu_icon;
     public static TextView current_addr;
     private TextView title, book_bt, cancel_book, end_route;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
@@ -94,8 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public static TextView bike_distance, bike_time, bike_price;
     private long exitTime = 0;
     private View divider;
-    private boolean isFirstIn = true;
-    public boolean mainActivityFinished = false;
+    private boolean isFirstIn;
 
     //自定义图标
     private BitmapDescriptor mIconLocation, dragLocationIcon, bikeIcon, nearestIcon;
@@ -118,23 +119,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     LocationClient mlocationClient;
     public MyLocationListenner myListener = new MyLocationListenner();
     private MyLocationConfiguration.LocationMode mCurrentMode;
-    MyOrientationListener myOrientationListener;
-    MapView mMapView;
-    BaiduMap mBaiduMap;
+    private MyOrientationListener myOrientationListener;
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
     private float mCurrentX;
-    boolean isFirstLoc = true; // 是否首次定位
+    private boolean isFirstLoc = true; // 是否首次定位
+    private final int DISMISS_SPLASH = 0;
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DISMISS_SPLASH:
+                    splash_img.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
         setContentView(R.layout.activity_main);
-        Log.d("gaolei", "MainActivity---------onCreate---------------" );
+
+        Log.d("gaolei", "MainActivity---------onCreate---------------");
         initMap();
         setStatusBar();
         initView();
-//        initLocation();
         isServiceLive = Utils.isServiceWork(this, "com.biubike.service.RouteService");
         if (isServiceLive)
             beginService();
@@ -233,11 +243,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void closeMenu() {
         mLeftDrawerLayout.closeDrawer();
         shadowView.setVisibility(View.GONE);
-
     }
 
     private void initView() {
-//        mMapView = (MapView) findViewById(R.id.id_bmapView);
+//        new SpeechUtil(this).startSpeech("欢迎光临");
+        splash_img = (ImageView) findViewById(R.id.splash_img);
+//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.guide_1);
         current_addr = (TextView) findViewById(R.id.current_addr);
         bike_layout = (LinearLayout) findViewById(R.id.bike_layout);
         bike_distance_layout = (LinearLayout) findViewById(R.id.bike_distance_layout);
@@ -293,6 +304,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
+        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
     }
 
 
@@ -729,43 +741,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mlocationClient.requestLocation();
         isServiceLive = Utils.isServiceWork(this, "com.biubike.service.RouteService");
         Log.d("gaolei", "MainActivity------------onRestart------------------");
-        if (CodeUnlockActivity.unlockSuccess||isServiceLive) {
+        if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
             beginService();
         }
         if (RouteDetailActivity.completeRoute)
             backFromRouteDetail();
     }
 
-    private void backFromRouteDetail(){
-            isFirstIn = true;
-            title.setText(getString(R.string.bybike));
-            textview_time.setText(getString(R.string.foot));
-            textview_distance.setText(getString(R.string.distance));
-            textview_price.setText(getString(R.string.price));
+    private void backFromRouteDetail() {
+        isFirstIn = true;
+        title.setText(getString(R.string.bybike));
+        textview_time.setText(getString(R.string.foot));
+        textview_distance.setText(getString(R.string.distance));
+        textview_price.setText(getString(R.string.price));
 
-            textview_time.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            textview_distance.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            textview_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            bike_time.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            bike_distance.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            bike_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        textview_time.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        textview_distance.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        textview_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        bike_time.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        bike_distance.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        bike_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
-            bike_layout.setVisibility(View.GONE);
-            prompt.setVisibility(View.GONE);
-            current_addr.setVisibility(View.VISIBLE);
-            menu_icon.setVisibility(View.VISIBLE);
-            book_bt.setVisibility(View.VISIBLE);
-            unlock.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
-            btn_refresh.setVisibility(View.VISIBLE);
-            btn_locale.setVisibility(View.VISIBLE);
-            end_route.setVisibility(View.GONE);
-            mMapView.showZoomControls(true);
+        bike_layout.setVisibility(View.GONE);
+        prompt.setVisibility(View.GONE);
+        current_addr.setVisibility(View.VISIBLE);
+        menu_icon.setVisibility(View.VISIBLE);
+        book_bt.setVisibility(View.VISIBLE);
+        unlock.setVisibility(View.VISIBLE);
+        divider.setVisibility(View.VISIBLE);
+        btn_refresh.setVisibility(View.VISIBLE);
+        btn_locale.setVisibility(View.VISIBLE);
+        end_route.setVisibility(View.GONE);
+        mMapView.showZoomControls(true);
 
-            getMyLocation();
-            if (routeOverlay != null)
-                routeOverlay.removeFromMap();
-            addOverLayout(currentLatitude, currentLongitude);
+        getMyLocation();
+        if (routeOverlay != null)
+            routeOverlay.removeFromMap();
+        addOverLayout(currentLatitude, currentLongitude);
     }
 
     private void beginService() {

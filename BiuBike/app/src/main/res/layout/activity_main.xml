@@ -5,7 +5,7 @@
     android:background="@color/color_343333">
 
     <!--content-->
-    <include layout="@layout/content_main" />
+    <include layout="@layout/main_content" />
 
     <!--menu-->
     <FrameLayout

@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
-
 android {
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
     signingConfigs {
         config_release {
             keyAlias 'bike'
@@ -8,43 +11,56 @@ android {
             storeFile file('/Users/gaolei/Work/CompanyProject/Bike/BiuBike/BiuBike/biubike.jks')
             storePassword 'bikeup'
         }
-    }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
-    defaultConfig {
-        applicationId "com.biubike"
-        minSdkVersion 11
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        compileSdkVersion 25
+        buildToolsVersion "25.0.0"
+        defaultConfig {
+            applicationId "com.biubike"
+            minSdkVersion 11
+            targetSdkVersion 22
+            versionCode 1
+            versionName "1.0"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+        buildTypes {
+            release {
+                debuggable false
+                zipAlignEnabled true
+                shrinkResources true
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+                buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
+
+            }
+            debug {
+                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
+
+            }
+        }
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
         }
     }
-    lintOptions{
-        checkReleaseBuilds false
-        abortOnError false
-    }
-}
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/baidumapapi_base_v4_1_1.jar')
-    compile files('libs/baidumapapi_map_v4_1_1.jar')
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile files('libs/baidumapapi_util_v4_1_1.jar')
-    compile files('libs/gson-2.2.1.jar')
-    compile project(':xrecyclerview')
-    compile files('libs/BaiduNaviSDK_3.2.0.jar')
-    compile files('libs/httpmime-4.1.2.jar')
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        compile 'com.android.support:appcompat-v7:25.1.0'
+        testCompile 'junit:junit:4.12'
+        compile files('libs/baidumapapi_base_v4_1_1.jar')
+        compile files('libs/baidumapapi_map_v4_1_1.jar')
+        compile files('libs/nineoldandroids-2.4.0.jar')
+        compile 'com.android.support:recyclerview-v7:25.1.0'
+        compile files('libs/baidumapapi_util_v4_1_1.jar')
+        compile files('libs/gson-2.2.1.jar')
+        compile project(':xrecyclerview')
+        compile files('libs/BaiduNaviSDK_3.2.0.jar')
+        compile files('libs/httpmime-4.1.2.jar')
+        compile files('libs/Msc.jar')
+        compile files('libs/Sunflower.jar')
+    }
 }

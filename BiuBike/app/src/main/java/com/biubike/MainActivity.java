@@ -1,5 +1,7 @@
 package com.biubike;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -129,7 +131,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DISMISS_SPLASH:
-                    splash_img.setVisibility(View.GONE);
+                    Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
+                    animator.setTarget(splash_img);
+                    animator.start();
                     break;
             }
         }
@@ -140,10 +144,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
         setContentView(R.layout.activity_main);
-
         Log.d("gaolei", "MainActivity---------onCreate---------------");
-        initMap();
         setStatusBar();
+        initMap();
         initView();
         isServiceLive = Utils.isServiceWork(this, "com.biubike.service.RouteService");
         if (isServiceLive)
@@ -850,7 +853,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (bike_info_layout.getVisibility() == View.VISIBLE) {
+            if (bike_layout.getVisibility() == View.VISIBLE) {
                 if (!Utils.isServiceWork(this, "com.biubike.service.RouteService"))
                     cancelBook();
                 return true;

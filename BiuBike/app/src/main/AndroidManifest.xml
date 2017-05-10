@@ -44,7 +44,7 @@
         android:name=".application.DemoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
-        android:label="@string/bybike"
+        android:label="biubike"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data

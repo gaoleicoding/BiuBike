@@ -1,6 +1,7 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="bybike">随行单车</string>
+    <string name="findbike">找单车</string>
     <string name="current_address">北京市海淀区海淀北二街8号中关村SOHO</string>
     <string name="beijing">北京</string>
     <string name="foot">步行</string>

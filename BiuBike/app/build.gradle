@@ -8,7 +8,7 @@ android {
         config_release {
             keyAlias 'bike'
             keyPassword 'bikeup'
-            storeFile file('/Users/gaolei/Work/CompanyProject/Bike/BiuBike/BiuBike/biubike.jks')
+            storeFile file('/Users/gaolei/Work/Android/CompanyProject/Bike/BiuBike/BiuBike/biubike.jks')
             storePassword 'bikeup'
         }
 
@@ -25,18 +25,18 @@ android {
         buildTypes {
             release {
                 debuggable false
-                zipAlignEnabled true
-                shrinkResources true
-                minifyEnabled true
+                zipAlignEnabled false
+                shrinkResources false
+                minifyEnabled false
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
                 buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
 
             }
-            debug {
-                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
-
-            }
+//            debug {
+//                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
+//
+//            }
         }
         lintOptions {
             checkReleaseBuilds false

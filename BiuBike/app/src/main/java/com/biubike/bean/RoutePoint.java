@@ -10,10 +10,27 @@ import android.os.Parcelable;
 public class RoutePoint implements Parcelable {
 
     public int id;
-    double routeLat, routeLng;
+    public long time;
+    public double routeLat, routeLng, speed;
 
     public int getId() {
         return id;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public void setId(int id) {
@@ -45,6 +62,8 @@ public class RoutePoint implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeDouble(routeLat);
         parcel.writeDouble(routeLng);
+        parcel.writeDouble(speed);
+        parcel.writeLong(time);
         parcel.writeInt(id);
 
     }
@@ -56,6 +75,8 @@ public class RoutePoint implements Parcelable {
             routePoint.id = source.readInt();
             routePoint.routeLat = source.readDouble();
             routePoint.routeLng = source.readDouble();
+            routePoint.speed = source.readDouble();
+            routePoint.time = source.readLong();
             return routePoint;
         }
 

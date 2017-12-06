@@ -136,7 +136,7 @@ public class RouteService extends Service {
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        int span = 10000;
+        int span = 5000;
         mOption.setScanSpan(span);
         //设置 LocationClientOption
         mlocationClient.setLocOption(mOption);
@@ -242,8 +242,10 @@ public class RouteService extends Service {
                     LatLng currentLatLng = new LatLng(routeLat, routeLng);
                     if (routeLat > 0 && routeLng > 0) {
                         double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-//                        Log.d("gaolei", "distantce--------------" + distantce);
-                        if (distantce > 5) {
+//                        大于2米算作有效加入列表
+                        if (distantce > 2) {
+                            routePoint.speed = (int)(distantce/1000)/(5/60);
+                            routePoint.time=System.currentTimeMillis();
                             routPointList.add(routePoint);
                             totalDistance += distantce;
                         }

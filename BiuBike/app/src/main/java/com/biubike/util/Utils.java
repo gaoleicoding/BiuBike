@@ -104,6 +104,13 @@ public class Utils {
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.widthPixels;
     }
+    public static int getScreenHeight(Context context) {
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.heightPixels;
+    }
 
     public static void setSpannableStr(TextView textView, String str, int startIndex, int endIndex, float proporation) {
         SpannableString spannableString = new SpannableString(str);

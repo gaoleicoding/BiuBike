@@ -342,8 +342,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 addOverLayout(currentLatitude, currentLongitude);
                 break;
             case R.id.btn_refresh:
-//                Intent intent = new Intent(MainActivity.this, LocationDemo.class);
-//                startActivity(intent);
+//              Intent intent = new Intent(MainActivity.this, LocationDemo.class);
+//              startActivity(intent);
                 if (routeOverlay != null)
                     routeOverlay.removeFromMap();
                 Log.d("gaolei", "changeLatitude-----btn_refresh--------" + changeLatitude);

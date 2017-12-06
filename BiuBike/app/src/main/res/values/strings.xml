@@ -30,6 +30,7 @@
     <string name="routing">行程中</string>
     <string name="price">0.5元</string>
     <string name="route_detail">行程详情</string>
+    <string name="route_replay">轨迹回放</string>
     <string name="my_route">我的行程</string>
     <string name="no_route">您还没有行程</string>
     <string name="net_wifi">现已链接到Wi-Fi网络</string>

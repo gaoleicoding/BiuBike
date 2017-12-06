@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -14,7 +15,9 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:background="@color/color_343333">
+            >
 
             <ImageView
                 android:id="@+id/menu_icon"
@@ -28,6 +31,7 @@
                 android:src="@mipmap/return_icon" />
 
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -37,52 +41,139 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/replay_progress_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_below="@id/title_layout"
-        android:background="@drawable/edge_shadow_bg"
-        android:orientation="vertical"
+        android:background="@color/color_ededed"
         android:padding="5dp"
-        android:layout_margin="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/layout_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_replay"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="pauseReplay"
+                android:src="@mipmap/replay_start" />
+
+            <SeekBar
+                android:id="@+id/seekbar_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_toRightOf="@id/img_replay"
+                android:maxHeight="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="15dp"
+                android:max="100"
+                android:progressDrawable="@drawable/po_seekbar"
+                android:thumb="@drawable/detail_icon_schedule_ball" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_progressbar"
+            android:layout_margin="5dp"
+            android:paddingLeft="35dp"
+            android:text="24:00:00"
+            android:textColor="@color/color_747474"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_current_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_progressbar"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@id/tv_current_time"
+            android:text="24km/h"
+            android:textColor="@color/color_747474"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/route_mapview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_below="@id/replay_progress_layout">
 
         <com.baidu.mapapi.map.MapView
             android:id="@+id/route_detail_mapview"
-            android:layout_width="fill_parent"
-            android:layout_height="240dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:clickable="true" />
+
+        <TextView
+            android:id="@+id/tv_route_replay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/route_replay_bg"
+            android:onClick="startReplay"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:text="@string/route_replay"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/route_detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/route_mapview_layout"
+        android:layout_margin="10dp"
+        android:background="@drawable/edge_shadow_bg"
+        android:orientation="vertical"
+        android:padding="5dp">
+
         <TextView
             android:id="@+id/total_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_margin="14dp"
             android:text="@string/route_detail"
             android:textColor="@color/color_757575"
-            android:layout_margin="14dp"
             android:textSize="18sp" />
-        <View
-            style="@style/route_detail_divider"/>
+
+        <View style="@style/route_detail_divider" />
+
         <TextView
             android:id="@+id/total_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_margin="14dp"
             android:text="@string/route_detail"
             android:textColor="@color/color_757575"
-            android:layout_margin="14dp"
-
             android:textSize="18sp" />
-        <View
-            style="@style/route_detail_divider"/>
+
+        <View style="@style/route_detail_divider" />
+
         <TextView
             android:id="@+id/total_pricce"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_margin="14dp"
             android:text="@string/route_detail"
             android:textColor="@color/color_757575"
-            android:layout_margin="14dp"
-
             android:textSize="18sp" />
 
     </LinearLayout>

@@ -22,7 +22,8 @@ public class DemoApplication extends Application {
         super.onCreate();
         SDKInitializer.initialize(getApplicationContext());
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=58f9ff61");
-
+        CrashHandler crashHandler=CrashHandler.getInstance();
+        crashHandler.init(this);
         initDirs();
     }
 

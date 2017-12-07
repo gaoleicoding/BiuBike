@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -61,7 +62,7 @@ public class RouteDetailActivity extends BaseActivity {
     String time, distance, price, routePointsStr;
     RelativeLayout replay_progress_layout, route_mapview_layout;
     List<LatLng> points, subList;
-    int routePointsLength, currentIndex = 2;
+    int routePointsLength, currentIndex = 0, spanIndex = 0;
     boolean isInReplay = false, pauseReplay = false;
     ImageView img_replay;
     SeekBar seekbar_progress;
@@ -69,6 +70,7 @@ public class RouteDetailActivity extends BaseActivity {
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
+            currentIndex = currentIndex + spanIndex;
             Log.d("gaolei", "currentIndex------------" + currentIndex);
             routeBaiduMap.clear();
             subList = points.subList(0, currentIndex);
@@ -92,12 +94,15 @@ public class RouteDetailActivity extends BaseActivity {
                 tv_current_speed.setText(routePoints.get(currentIndex).speed + "km/h");
                 int progress = (int) currentIndex * 100 / routePointsLength;
                 seekbar_progress.setProgress(progress);
-            }
-            if (currentIndex < routePointsLength - 1) {
-                currentIndex = currentIndex + 2;
-                handler.sendEmptyMessageDelayed(1, 2000);
+
+                handler.sendEmptyMessageDelayed(1, 1000);
             } else {
+                OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                        .color(0xFF36D19D).points(points);
+                routeBaiduMap.addOverlay(ooPolyline);
                 seekbar_progress.setProgress(100);
+                handler.removeCallbacksAndMessages(null);
+                Toast.makeText(RouteDetailActivity.this, "轨迹回放结束", Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -132,6 +137,21 @@ public class RouteDetailActivity extends BaseActivity {
         routePoints = new Gson().fromJson(routePointsStr, new TypeToken<List<RoutePoint>>() {
         }.getType());
         routePointsLength = routePoints.size();
+/*
+        每2s采集一个点，下面是实际行驶时间和轨迹回放时间的对应策略
+*/
+        //实际2～100s-->播放1～25s
+        if (1 < routePointsLength && routePointsLength < 50) spanIndex = 2;
+        //实际100~200s-->播放12~25s
+        if (50 <= routePointsLength && routePointsLength < 100) spanIndex = 4;
+        //实际200~1000s-->播放16~83s
+        if (100 <= routePointsLength && routePointsLength < 500) spanIndex = 6;
+        //实际1000~4000s-->播放62~250s
+        if (500 <= routePointsLength && routePointsLength < 2000) spanIndex = 8;
+        //实际4000~20000s-->播放166~833s
+        if (2000 <= routePointsLength && routePointsLength < 10000) spanIndex = 12;
+        //实际10000~20000s-->播放156s
+        if (10000 <= routePointsLength ) spanIndex = 64;
         drawRoute();
 
         total_time.setText("骑行时长：" + time + "分钟");

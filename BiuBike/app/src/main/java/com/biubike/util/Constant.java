@@ -6,5 +6,6 @@ package com.biubike.util;
 
 public class Constant {
     public static final String  gaodeKey="4eeb3dc8226242574fa33daa767126b2";
+    public static final int span = 2000;
 
 }

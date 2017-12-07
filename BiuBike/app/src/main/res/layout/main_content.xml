@@ -333,7 +333,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/btn_refresh"
-            android:background="@drawable/flashlight_circle_bg"
+            android:background="@drawable/end_route_bg"
             android:text="@string/end_route"
             android:gravity="center"
             android:textSize="14sp"

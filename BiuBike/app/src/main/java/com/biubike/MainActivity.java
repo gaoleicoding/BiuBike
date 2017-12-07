@@ -65,6 +65,7 @@ import com.biubike.activity.MyRouteActivity;
 import com.biubike.activity.NavigationActivity;
 import com.biubike.activity.RouteDetailActivity;
 import com.biubike.activity.WalletActivity;
+import com.biubike.application.CrashHandler;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
 import com.biubike.callback.AllInterface;
@@ -85,6 +86,7 @@ import overlayutil.OverlayManager;
 import overlayutil.WalkingRouteOverlay;
 
 import static com.biubike.bean.BikeInfo.infos;
+import static com.biubike.util.Constant.span;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
@@ -173,7 +175,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);//设置onReceiveLocation()获取位置的频率
+        option.setScanSpan(span);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
         mlocationClient.start();
@@ -219,7 +221,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             LocationManager.getInstance().setCurrentLL(currentLL);
             LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);
-            //option.setScanSpan(5000)，每隔5000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
+            //option.setScanSpan(2000)，每隔2000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
                 LatLng ll = new LatLng(bdLocation.getLatitude(),
@@ -353,6 +355,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.end_route:
                 toastDialog();
+
                 break;
             case R.id.menu_icon:
                 Log.d("gaolei", "menu_icon-----click--------openMenu()");

@@ -41,6 +41,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import static com.biubike.util.Constant.span;
+
 
 //        当前位置:我的异常网» Android » Android使用百度LBS SDK（4）记录和显示行走轨迹
 //        Android使用百度LBS SDK（4）记录和显示行走轨迹
@@ -136,9 +138,8 @@ public class RouteService extends Service {
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        int span = 5000;
         mOption.setScanSpan(span);
-        //设置 LocationClientOption
+        //设置 LocationClientOptionƒ20
         mlocationClient.setLocOption(mOption);
 
         //初始化图标,BitmapDescriptorFactory是bitmap 描述信息工厂类.
@@ -244,7 +245,8 @@ public class RouteService extends Service {
                         double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
 //                        大于2米算作有效加入列表
                         if (distantce > 2) {
-                            routePoint.speed = (int)(distantce/1000)/(5/60);
+                            //distance单位是米 转化为km/h
+                            routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce/1000)*30));
                             routePoint.time=System.currentTimeMillis();
                             routPointList.add(routePoint);
                             totalDistance += distantce;

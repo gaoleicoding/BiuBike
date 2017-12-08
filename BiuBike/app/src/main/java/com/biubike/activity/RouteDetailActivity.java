@@ -123,6 +123,8 @@ public class RouteDetailActivity extends BaseActivity {
         seekbar_progress = (SeekBar) findViewById(R.id.seekbar_progress);
         replay_progress_layout = (RelativeLayout) findViewById(R.id.replay_progress_layout);
         route_mapview_layout = (RelativeLayout) findViewById(R.id.route_mapview_layout);
+        route_mapview_layout.requestDisallowInterceptTouchEvent(true);
+        route_detail_mapview.requestDisallowInterceptTouchEvent(true);
         routeBaiduMap = route_detail_mapview.getMap();
         route_detail_mapview.showZoomControls(false);
         startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);

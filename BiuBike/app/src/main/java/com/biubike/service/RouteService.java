@@ -246,7 +246,7 @@ public class RouteService extends Service {
 //                        大于2米算作有效加入列表
                         if (distantce > 2) {
                             //distance单位是米 转化为km/h
-                            routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce/1000)*30));
+                            routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce/1000)*30*60));
                             routePoint.time=System.currentTimeMillis();
                             routPointList.add(routePoint);
                             totalDistance += distantce;

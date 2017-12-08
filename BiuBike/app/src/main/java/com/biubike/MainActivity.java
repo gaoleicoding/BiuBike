@@ -4,11 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -73,6 +77,7 @@ import com.biubike.custom.LeftDrawerLayout;
 import com.biubike.fragment.LeftMenuFragment;
 import com.biubike.map.MyOrientationListener;
 import com.biubike.map.RouteLineAdapter;
+import com.biubike.service.JobSchedulerService;
 import com.biubike.service.RouteService;
 import com.biubike.util.LocationManager;
 import com.biubike.util.Utils;
@@ -101,7 +106,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private long exitTime = 0;
     private View divider;
     private boolean isFirstIn;
-
     //自定义图标
     private BitmapDescriptor mIconLocation, dragLocationIcon, bikeIcon, nearestIcon;
     RoutePlanSearch mSearch = null;    // 搜索模块，也可去掉地图模块独立使用

@@ -73,6 +73,7 @@ public class RouteDetailActivity extends BaseActivity {
             currentIndex = currentIndex + spanIndex;
             Log.d("gaolei", "currentIndex------------" + currentIndex);
             routeBaiduMap.clear();
+            if(currentIndex<routePointsLength)
             subList = points.subList(0, currentIndex);
             if (subList.size() >= 2) {
                 OverlayOptions ooPolyline = new PolylineOptions().width(10)

@@ -10,7 +10,7 @@ android {
         release {
             keyAlias 'biubike'
             keyPassword 'bikeup'
-            storeFile file('/Users/gaolei/Desktop/biubike.jks')
+            storeFile file('/Users/gaolei/gaolei/Work/Android/Company Project/BiuBike/BiuBike/biubike.jks')
             storePassword 'bikeup'
         }
         defaultConfig {

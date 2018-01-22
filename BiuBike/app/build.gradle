@@ -5,15 +5,14 @@ android {
         useNewCruncher = false
     }
     signingConfigs {
-        config_release {
-            keyAlias 'bike'
-            keyPassword 'bikeup'
-            storeFile file('/Users/gaolei/Work/Android/CompanyProject/Bike/BiuBike/BiuBike/biubike.jks')
-            storePassword 'bikeup'
-        }
-
         compileSdkVersion 25
         buildToolsVersion "25.0.2"
+        release {
+            keyAlias 'biubike'
+            keyPassword 'bikeup'
+            storeFile file('/Users/gaolei/Desktop/biubike.jks')
+            storePassword 'bikeup'
+        }
         defaultConfig {
             applicationId "com.biubike"
             minSdkVersion 16
@@ -24,24 +23,23 @@ android {
         }
         buildTypes {
             release {
+                signingConfig signingConfigs.release
                 debuggable false
                 zipAlignEnabled false
                 shrinkResources false
                 minifyEnabled false
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
                 buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
 
             }
-//            debug {
-//                buildConfigField "boolean", "isDebug", "true" //调试版开启调试
-//
-//            }
+
         }
+
         lintOptions {
             checkReleaseBuilds false
             abortOnError false
         }
+
     }
 
     dependencies {
@@ -63,4 +61,7 @@ android {
         compile files('libs/Msc.jar')
         compile files('libs/Sunflower.jar')
     }
+}
+
+dependencies {
 }

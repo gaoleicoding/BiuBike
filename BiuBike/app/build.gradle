@@ -20,20 +20,8 @@ android {
             versionCode 1
             versionName "1.0"
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        }
-        buildTypes {
-            release {
-                signingConfig signingConfigs.release
-                debuggable false
-                zipAlignEnabled false
-                shrinkResources false
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                buildConfigField "boolean", "IS_ARRIVING", "false"//发布版时关闭调试
-
+            javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true }}
             }
-
-        }
 
         lintOptions {
             checkReleaseBuilds false
@@ -41,27 +29,61 @@ android {
         }
 
     }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            zipAlignEnabled false
+            shrinkResources false
+            minifyEnabled false
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "1hu_${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
+                }
+            }
+        }
+    }
+    flavorDimensions "color"
+    productFlavors {
+        qihu360 {
+            dimension "color"
+        } // 360手机助手
+        yingyongbao {
+            dimension "color"
+        } // 腾讯应用宝
+        wandoujia {
+            dimension "color"
+        } // 豌豆荚
+    }
 
-    dependencies {
-        compile fileTree(include: ['*.jar'], dir: 'libs')
-        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-            exclude group: 'com.android.support', module: 'support-annotations'
-        })
-        compile 'com.android.support:appcompat-v7:25.1.0'
-        testCompile 'junit:junit:4.12'
-        compile files('libs/baidumapapi_base_v4_1_1.jar')
-        compile files('libs/baidumapapi_map_v4_1_1.jar')
-        compile files('libs/nineoldandroids-2.4.0.jar')
-        compile 'com.android.support:recyclerview-v7:25.1.0'
-        compile files('libs/baidumapapi_util_v4_1_1.jar')
-        compile files('libs/gson-2.2.1.jar')
-        compile project(':xrecyclerview')
-        compile files('libs/BaiduNaviSDK_3.2.0.jar')
-        compile files('libs/httpmime-4.1.2.jar')
-        compile files('libs/Msc.jar')
-        compile files('libs/Sunflower.jar')
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 }
 
-dependencies {
+def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
 }
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    testCompile 'junit:junit:4.12'
+    compile files('libs/baidumapapi_base_v4_1_1.jar')
+    compile files('libs/baidumapapi_map_v4_1_1.jar')
+    compile files('libs/nineoldandroids-2.4.0.jar')
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile files('libs/baidumapapi_util_v4_1_1.jar')
+    compile files('libs/gson-2.2.1.jar')
+    compile project(':xrecyclerview')
+    compile files('libs/BaiduNaviSDK_3.2.0.jar')
+    compile files('libs/httpmime-4.1.2.jar')
+    compile files('libs/Msc.jar')
+    compile files('libs/Sunflower.jar')
+}
+

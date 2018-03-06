@@ -5,8 +5,8 @@ android {
         useNewCruncher = false
     }
     signingConfigs {
-        compileSdkVersion 25
-        buildToolsVersion "25.0.2"
+        compileSdkVersion 26
+        buildToolsVersion "26.0.2"
         release {
             keyAlias 'biubike'
             keyPassword 'bikeup'
@@ -37,29 +37,29 @@ android {
             zipAlignEnabled false
             shrinkResources false
             minifyEnabled false
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "1hu_${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
-                }
-            }
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "1hu_${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
+//                }
+//            }
         }
     }
-    flavorDimensions "color"
-    productFlavors {
-        qihu360 {
-            dimension "color"
-        } // 360手机助手
-        yingyongbao {
-            dimension "color"
-        } // 腾讯应用宝
-        wandoujia {
-            dimension "color"
-        } // 豌豆荚
-    }
-
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
+//    flavorDimensions "color"
+//    productFlavors {
+//        qihu360 {
+//            dimension "color"
+//        } // 360手机助手
+//        yingyongbao {
+//            dimension "color"
+//        } // 腾讯应用宝
+//        wandoujia {
+//            dimension "color"
+//        } // 豌豆荚
+//    }
+//
+//    productFlavors.all {
+//        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//    }
 }
 
 def releaseTime() {
@@ -82,8 +82,6 @@ dependencies {
     compile files('libs/gson-2.2.1.jar')
     compile project(':xrecyclerview')
     compile files('libs/BaiduNaviSDK_3.2.0.jar')
-    compile files('libs/httpmime-4.1.2.jar')
     compile files('libs/Msc.jar')
-    compile files('libs/Sunflower.jar')
 }
 

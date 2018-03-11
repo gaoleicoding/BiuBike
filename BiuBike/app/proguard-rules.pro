@@ -24,18 +24,17 @@
 -verbose
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
-# 系统类不需要混淆
--keepattributes *Annotation*
--keep class * extends java.lang.annotation.Annotation { *; }
--keepattributes Signature
--keep public class * extends android.app.Fragment
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
+#Android的基本组件
+#-keep public class * extends android.app.Fragment
+#-keep public class * extends android.app.Activity
+#-keep public class * extends android.app.Application
+#-keep public class * extends android.app.Service
+#-keep public class * extends android.content.BroadcastReceiver
+#-keep public class * extends android.content.ContentProvider
+#keep public class * extends android.app.backup.BackupAgentHelper
+#-keep public class * extends android.preference.Preference
+#兼容库
+-dontwarn android.support.**
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.support.v7.**
 -dontwarn com.alipay.android.phone.mrpc.core**
@@ -45,6 +44,7 @@
 -keep class com.alipay.apmobilesecuritysdk.face.**{*;}
 
 #  百度导航的不需要混淆
+-dontwarn com.baidu.**
 -keep class com.baidu.** {*;}
 -keep class vi.com.** {*;}
 -keep class com.sinovoice.** {*;}
@@ -53,40 +53,43 @@
 -dontwarn vi.com.**
 -dontwarn pvi.com.**
 
-
-
-
-
--dontwarn com.sinovoice**
+-dontwarn com.sinovoice.**
 -keep class com.sinovoice.** { *; }
 
-# 百度地图相关不需要混淆
--dontwarn com.baidu**
--keep class com.baidu.** { *; }
--keep class vi.com.gdi.bgl.android.**{*;}
-
 # gson工具不需要混淆
--dontwarn com.google.gson**
+-dontwarn com.google.gson.**
 -keep class com.google.gson.**{*;}
 
 -dontwarn com.nineoldandroids.**
 -keep class com.nineoldandroids.**{*;}
 
--dontwarn org.apache.http**
--keep class org.apache.http.**{*;}
-
 -dontwarn com.jcodecraeer.xrecyclerview.**
 -keep class com.jcodecraeer.xrecyclerview.**{*;}
+
 # 自定义控件不需要混淆
 -dontwarn com.biubike.custom.**
 -keep class com.biubike.custom.**{*;}
 
+#所有View的子类及其子类的get、set方法都不进行混淆 淆
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+-dontwarn com.zhy.m.permission.**
+-keep class com.zhy.m.permission.**{*;}
+
 
 -printmapping mapping.txt #混淆后文件映射
 
-#-keep public class com.cheweishi.android.R$*{
-#    public static final int *;
-#}
+
+# 系统类不需要混淆
+-keepattributes *Annotation*
+-keep class * extends java.lang.annotation.Annotation { *; }
+
+#如果用到了反射需要加入 :
+-keepattributes Signature
+-keepattributes EnclosingMethod
 
 -keepclasseswithmembernames class * {
     native <methods>;

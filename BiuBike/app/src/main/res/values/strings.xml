@@ -59,6 +59,16 @@
     <string name="baidu_navi">百度地图</string>
     <string name="gaode_navi">高德地图</string>
 
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">一个未知异常出现，抱歉给您带来不便\n请先使用其它功能，我们会尽快修复！</string>
+    <string name="customactivityoncrash_error_activity_restart_app">重启</string>
+    <string name="customactivityoncrash_error_activity_close_app">关闭</string>
+    <string name="customactivityoncrash_error_activity_error_details">错误详情</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">错误详情</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">关闭</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">复制</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">已复制</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">错误信息</string>
+
 
     <string name="demo_title_location">demo_title_location</string>
     <string name="demo_desc_location">demo_desc_location</string>

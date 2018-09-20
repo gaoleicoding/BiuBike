@@ -67,44 +67,49 @@ public class RouteDetailActivity extends BaseActivity {
     ImageView img_replay;
     SeekBar seekbar_progress;
     TextView tv_current_time, tv_current_speed;
+    final int UPDATE_PROGRESS=1;
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            currentIndex = currentIndex + spanIndex;
-            Log.d("gaolei", "currentIndex------------" + currentIndex);
-            routeBaiduMap.clear();
-            if(currentIndex<routePointsLength)
-            subList = points.subList(0, currentIndex);
-            if (subList.size() >= 2) {
-                OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                        .color(0xFF36D19D).points(subList);
-                routeBaiduMap.addOverlay(ooPolyline);
-            }
-            if (subList.size() >= 1) {
-                LatLng latLng = points.get(subList.size() - 1);
-                MarkerOptions options = new MarkerOptions().position(latLng)
-                        .icon(currentBmp);
-                // 在地图上添加Marker，并显示
-                routeBaiduMap.addOverlay(options);
-                MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
-                // 移动到某经纬度
-                routeBaiduMap.animateMapStatus(update);
-            }
-            if (currentIndex < routePointsLength) {
-                tv_current_time.setText(Utils.getDateFromMillisecond(routePoints.get(currentIndex).time));
-                tv_current_speed.setText(routePoints.get(currentIndex).speed + "km/h");
-                int progress = (int) currentIndex * 100 / routePointsLength;
-                seekbar_progress.setProgress(progress);
+            switch (msg.what){
+                case UPDATE_PROGRESS:
+                    currentIndex = currentIndex + spanIndex;
+                    Log.d("gaolei", "currentIndex------------" + currentIndex);
+                    routeBaiduMap.clear();
+                    if(currentIndex<routePointsLength)
+                        subList = points.subList(0, currentIndex);
+                    if (subList.size() >= 2) {
+                        OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                                .color(0xFF36D19D).points(subList);
+                        routeBaiduMap.addOverlay(ooPolyline);
+                    }
+                    if (subList.size() >= 1) {
+                        LatLng latLng = points.get(subList.size() - 1);
+                        MarkerOptions options = new MarkerOptions().position(latLng)
+                                .icon(currentBmp);
+                        // 在地图上添加Marker，并显示
+                        routeBaiduMap.addOverlay(options);
+                        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+                        // 移动到某经纬度
+                        routeBaiduMap.animateMapStatus(update);
+                    }
+                    if (currentIndex < routePointsLength) {
+                        tv_current_time.setText(Utils.getDateFromMillisecond(routePoints.get(currentIndex).time));
+                        tv_current_speed.setText(routePoints.get(currentIndex).speed + "km/h");
+                        int progress = (int) currentIndex * 100 / routePointsLength;
+                        seekbar_progress.setProgress(progress);
 
-                handler.sendEmptyMessageDelayed(1, 1000);
-            } else {
-                OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                        .color(0xFF36D19D).points(points);
-                routeBaiduMap.addOverlay(ooPolyline);
-                seekbar_progress.setProgress(100);
-                handler.removeCallbacksAndMessages(null);
-                Toast.makeText(RouteDetailActivity.this, "轨迹回放结束", Toast.LENGTH_LONG).show();
+                        handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
+                    } else {
+                        OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                                .color(0xFF36D19D).points(points);
+                        routeBaiduMap.addOverlay(ooPolyline);
+                        seekbar_progress.setProgress(100);
+                        handler.removeCallbacksAndMessages(null);
+                        Toast.makeText(RouteDetailActivity.this, "轨迹回放结束", Toast.LENGTH_LONG).show();
+                    }
             }
+
         }
     };
 
@@ -174,6 +179,7 @@ public class RouteDetailActivity extends BaseActivity {
              */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                handler.removeCallbacksAndMessages(null);
             }
 
             /**
@@ -183,6 +189,7 @@ public class RouteDetailActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
                 currentIndex = (int) routePointsLength * progress / 100;
+                handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
 
             }
         });
@@ -289,7 +296,7 @@ public class RouteDetailActivity extends BaseActivity {
         } else {
             img_replay.setImageResource(R.mipmap.replay_start);
             pauseReplay = false;
-            handler.sendEmptyMessageDelayed(1, 1000);
+            handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
         }
     }
 
@@ -303,7 +310,7 @@ public class RouteDetailActivity extends BaseActivity {
         params.height = Utils.getScreenHeight(this) - statusBarHeight - titleHeight;
         route_mapview_layout.setLayoutParams(params);
 
-        handler.sendEmptyMessageDelayed(1, 1000);
+        handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
     }
 
     public void backFromReplay() {

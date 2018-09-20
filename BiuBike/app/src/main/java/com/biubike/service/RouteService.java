@@ -16,7 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -39,6 +39,7 @@ import com.biubike.map.MyOrientationListener;
 import com.biubike.util.Utils;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static com.biubike.util.Constant.span;
@@ -264,7 +265,13 @@ public class RouteService extends Service {
             Intent intent = new Intent("com.locationreceiver");
             Bundle bundle = new Bundle();
             bundle.putString("totalTime", totalTime + "分钟");
-            bundle.putString("totalDistance", totalDistance + "米");
+            if(totalDistance>1000) {
+                BigDecimal bd = new BigDecimal(totalDistance);
+                Double tem = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue();
+                bundle.putString("totalDistance", tem + "千米");
+            }else {
+                bundle.putString("totalDistance", totalDistance + "米");
+            }
             bundle.putString("totalPrice", totalPrice + "元");
             intent.putExtras(bundle);
             sendBroadcast(intent);

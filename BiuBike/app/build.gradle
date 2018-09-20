@@ -10,15 +10,15 @@ android {
         release {
             keyAlias 'biubike'
             keyPassword 'bikeup'
-            storeFile file(rootProject.getRootDir().getAbsolutePath() +'/biubike.jks')
+            storeFile file('biubike.jks')
             storePassword 'bikeup'
         }
         defaultConfig {
             applicationId "com.biubike"
             minSdkVersion 16
             targetSdkVersion 22
-            versionCode 1
-            versionName "1.0"
+            versionCode 210
+            versionName "2.1.0"
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
             javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true }}
             }
@@ -30,6 +30,10 @@ android {
 
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+
+        }
         release {
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -37,29 +41,19 @@ android {
             zipAlignEnabled true
             shrinkResources true
             minifyEnabled true
-//            android.applicationVariants.all { variant ->
-//                variant.outputs.all {
-//                    outputFileName = "1hu_${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
-//                }
-//            }
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def fileName = "Biubike" + "_V${defaultConfig.versionName}(${defaultConfig.versionCode})_" +
+                            variant.name +
+                            ".apk"
+                    outputFileName = fileName
+                }
+            }
+
         }
     }
-//    flavorDimensions "color"
-//    productFlavors {
-//        qihu360 {
-//            dimension "color"
-//        } // 360手机助手
-//        yingyongbao {
-//            dimension "color"
-//        } // 腾讯应用宝
-//        wandoujia {
-//            dimension "color"
-//        } // 豌豆荚
-//    }
-//
-//    productFlavors.all {
-//        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-//    }
+
 }
 
 def releaseTime() {
@@ -72,7 +66,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:26+'
     compile files('libs/baidumapapi_base_v4_1_1.jar')
     compile files('libs/baidumapapi_map_v4_1_1.jar')
     compile files('libs/nineoldandroids-2.4.0.jar')
@@ -83,5 +77,7 @@ dependencies {
     compile files('libs/BaiduNaviSDK_3.2.0.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Msc.jar')
+    api 'cat.ereza:customactivityoncrash:2.2.0'
+
 }
 

@@ -1,7 +1,5 @@
 [wangshibo@gerrit-server hqsb_android]$ cat .gitignore
 #Built application files
-*.apk
-*.ap_
 
 # Files for the Dalvik VM
 *.dex

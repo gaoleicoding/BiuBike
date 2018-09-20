@@ -8,6 +8,6 @@
 直接运行可能只显示网格不显示建筑，或者导航没有语音。不同电脑或环境 debug md5 不一样，如果用我的项目直接运行可能就会出现这种情况，因为你的电脑环境debug md5和我的电脑环境debug md5不一样。你可以打一个release包 因为release md5如果用同一个签名是不会变的。你也可以自己申请百度地图开放平台：http://lbsyun.baidu.com
 
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/2.gif)\n
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/1.png)
+![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.gif)
+![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/4.png)
 ![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.png)

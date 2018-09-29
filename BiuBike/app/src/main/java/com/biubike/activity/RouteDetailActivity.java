@@ -162,9 +162,9 @@ public class RouteDetailActivity extends BaseActivity {
         if (10000 <= routePointsLength ) spanIndex = 64;
         drawRoute();
 
-        total_time.setText("骑行时长：" + time + "分钟");
-        total_distance.setText("骑行距离：" + distance + "米");
-        total_price.setText("余额支付：" + price + "元");
+        total_time.setText("骑行时长：" + time );
+        total_distance.setText("骑行距离：" + distance );
+        total_price.setText("余额支付：" + price );
         seekbar_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             /**
              * 拖动条停止拖动的时候调用

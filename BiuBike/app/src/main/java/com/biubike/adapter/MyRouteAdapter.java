@@ -47,9 +47,9 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
         RouteRecord routeRecord=list.get(position);
-        holder.bike_time.setText(routeRecord.getCycle_time()+"分钟");
-        holder.bike_distance.setText(routeRecord.getCycle_distance()+"米");
-        holder.bike_price.setText(routeRecord.getCycle_price()+"元");
+        holder.bike_time.setText(routeRecord.getCycle_time());
+        holder.bike_distance.setText(routeRecord.getCycle_distance());
+        holder.bike_price.setText(routeRecord.getCycle_price());
         holder.bike_date.setText(routeRecord.getCycle_date());
     }
 

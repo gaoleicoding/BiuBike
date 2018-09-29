@@ -196,9 +196,9 @@ public class RouteService extends Service {
         String routeListStr = gson.toJson(routPointList);
         Log.d("gaolei", "RouteService----routeListStr-------------" + routeListStr);
         Bundle bundle = new Bundle();
-        bundle.putString("totalTime", totalTime + "");
-        bundle.putString("totalDistance", totalDistance + "");
-        bundle.putString("totalPrice", totalPrice + "");
+        bundle.putString("totalTime", showTime );
+        bundle.putString("totalDistance", showDistance );
+        bundle.putString("totalPrice", showPrice);
         bundle.putString("routePoints", routeListStr);
         Intent intent = new Intent(this, RouteDetailActivity.class);
         intent.putExtras(bundle);
@@ -279,7 +279,7 @@ public class RouteService extends Service {
         }
     }
 
-    private void showRouteInfo(String time,String price,String distance ){
+    private void showRouteInfo(String time,String distance,String price ){
         Intent intent = new Intent("com.locationreceiver");
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", time);

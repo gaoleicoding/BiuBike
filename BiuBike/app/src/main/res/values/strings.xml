@@ -28,7 +28,7 @@
     <string name="transaction_type">请选择交易类型</string>
     <string name="charge_im">马上充值</string>
     <string name="routing">行程中</string>
-    <string name="price">0.5元</string>
+    <string name="price">1元</string>
     <string name="route_detail">行程详情</string>
     <string name="route_replay">轨迹回放</string>
     <string name="my_route">我的行程</string>

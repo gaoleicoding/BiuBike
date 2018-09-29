@@ -78,9 +78,10 @@ public class RouteService extends Service {
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
-    public  int totalDistance = 0;
+    public  double totalDistance = 0;
     public  float totalPrice = 0;
     public  long beginTime = 0, totalTime = 0;
+    private String showDistance,showTime,showPrice;
     Notification notification;
     RemoteViews contentView;
 
@@ -257,25 +258,37 @@ public class RouteService extends Service {
             }
 
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-            totalPrice = (float) (Math.floor(totalTime / 30) * 0.5 + 0.5);
-//            Log.d("gaolei", "biginTime--------------" + beginTime);
+            totalPrice = (float) (Math.floor(totalTime / 60) * 1 + 1);
             Log.d("gaolei", "totalTime--------------" + totalTime);
             Log.d("gaolei", "totalDistance--------------" + totalDistance);
-            startNotifi(totalTime + "分钟", totalDistance + "米", totalPrice + "元");
-            Intent intent = new Intent("com.locationreceiver");
-            Bundle bundle = new Bundle();
-            bundle.putString("totalTime", totalTime + "分钟");
+            Log.d("gaolei", "totalPrice--------------" + totalPrice);
+
+
+//            String distance,time;
             if(totalDistance>1000) {
                 BigDecimal bd = new BigDecimal(totalDistance);
-                Double tem = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue();
-                bundle.putString("totalDistance", tem + "千米");
-            }else {
-                bundle.putString("totalDistance", totalDistance + "米");
+                showDistance = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue()+ "千米";
             }
-            bundle.putString("totalPrice", totalPrice + "元");
-            intent.putExtras(bundle);
-            sendBroadcast(intent);
+            else showDistance=totalDistance + "米";
+            if(totalTime>60) {
+                showTime=totalTime/60+"时"+totalTime%60+"分";
+            }
+            else showTime=totalTime + "分钟";
+            showPrice=totalPrice+ "元";
+            showRouteInfo(showDistance,showTime,showPrice);
         }
+    }
+
+    private void showRouteInfo(String time,String price,String distance ){
+        Intent intent = new Intent("com.locationreceiver");
+        Bundle bundle = new Bundle();
+        bundle.putString("totalTime", time);
+        bundle.putString("totalPrice", price);
+        bundle.putString("totalDistance", distance);
+        intent.putExtras(bundle);
+        sendBroadcast(intent);
+
+        startNotifi(time, distance, price);
     }
 
     public static class NetWorkReceiver extends BroadcastReceiver
@@ -314,9 +327,9 @@ public class RouteService extends Service {
         ContentValues values = new ContentValues();
         // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
         values.put("cycle_date", Utils.getDateFromMillisecond(beginTime));
-        values.put("cycle_time", totalTime);
-        values.put("cycle_distance", totalDistance);
-        values.put("cycle_price", totalPrice);
+        values.put("cycle_time", showTime);
+        values.put("cycle_distance", showDistance);
+        values.put("cycle_price", showPrice);
         values.put("cycle_points", routeListStr);
         // 创建DatabaseHelper对象
         RouteDBHelper dbHelper = new RouteDBHelper(this);

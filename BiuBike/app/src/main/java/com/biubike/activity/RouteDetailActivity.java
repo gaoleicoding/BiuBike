@@ -171,7 +171,7 @@ public class RouteDetailActivity extends BaseActivity {
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                handler.sendEmptyMessage(1);
+                handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1);
             }
 
             /**
@@ -189,7 +189,7 @@ public class RouteDetailActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
                 currentIndex = (int) routePointsLength * progress / 100;
-                handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
+
 
             }
         });

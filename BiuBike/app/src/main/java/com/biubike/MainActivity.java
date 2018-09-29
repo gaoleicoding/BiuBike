@@ -77,7 +77,6 @@ import com.biubike.custom.LeftDrawerLayout;
 import com.biubike.fragment.LeftMenuFragment;
 import com.biubike.map.MyOrientationListener;
 import com.biubike.map.RouteLineAdapter;
-import com.biubike.service.JobSchedulerService;
 import com.biubike.service.RouteService;
 import com.biubike.util.LocationManager;
 import com.biubike.util.Utils;

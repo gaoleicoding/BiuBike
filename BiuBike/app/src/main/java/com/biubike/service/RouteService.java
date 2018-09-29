@@ -78,8 +78,8 @@ public class RouteService extends Service {
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
-    public  double totalDistance = 0;
-    public  float totalPrice = 0;
+    public  int totalDistance = 0;
+    public  int totalPrice = 0;
     public  long beginTime = 0, totalTime = 0;
     private String showDistance,showTime,showPrice;
     Notification notification;
@@ -258,13 +258,10 @@ public class RouteService extends Service {
             }
 
             totalTime = (int) (System.currentTimeMillis() - beginTime) / 1000 / 60;
-            totalPrice = (float) (Math.floor(totalTime / 60) * 1 + 1);
-            Log.d("gaolei", "totalTime--------------" + totalTime);
-            Log.d("gaolei", "totalDistance--------------" + totalDistance);
-            Log.d("gaolei", "totalPrice--------------" + totalPrice);
+            totalPrice = (int) (Math.floor(totalTime / 60) * 1 + 1);
 
 
-//            String distance,time;
+
             if(totalDistance>1000) {
                 BigDecimal bd = new BigDecimal(totalDistance);
                 showDistance = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue()+ "千米";
@@ -275,7 +272,10 @@ public class RouteService extends Service {
             }
             else showTime=totalTime + "分钟";
             showPrice=totalPrice+ "元";
-            showRouteInfo(showDistance,showTime,showPrice);
+            showRouteInfo(showTime,showDistance,showPrice);
+            Log.d("gaolei", "totalTime--------------" + showTime);
+            Log.d("gaolei", "totalDistance--------------" + showDistance);
+            Log.d("gaolei", "totalPrice--------------" + showPrice);
         }
     }
 

@@ -263,7 +263,7 @@ public class RouteService extends Service {
 
 
             if(totalDistance>1000) {
-                BigDecimal bd = new BigDecimal(totalDistance);
+                BigDecimal bd = new BigDecimal(totalDistance/1000);
                 showDistance = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue()+ "千米";
             }
             else showDistance=totalDistance + "米";

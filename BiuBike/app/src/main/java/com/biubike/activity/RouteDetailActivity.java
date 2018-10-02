@@ -135,7 +135,7 @@ public class RouteDetailActivity extends BaseActivity {
         route_detail_mapview.showZoomControls(false);
         startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
         endBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
-        currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon2);
+        currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
 
         Intent intent = getIntent();
         String time = intent.getStringExtra("totalTime");

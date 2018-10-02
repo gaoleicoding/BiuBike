@@ -265,7 +265,7 @@ public class RouteService extends Service {
 
             if(totalDistance>1000) {
                 DecimalFormat df = new DecimalFormat("#.00");
-                showDistance = df.format(totalDistance/1000)+ "千米";
+                showDistance = df.format((float)totalDistance/1000)+ "千米";
             }
             else showDistance=totalDistance + "米";
             if(totalTime>60) {

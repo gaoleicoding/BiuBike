@@ -40,6 +40,7 @@ import com.biubike.util.Utils;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.biubike.util.Constant.span;
@@ -263,8 +264,8 @@ public class RouteService extends Service {
 
 
             if(totalDistance>1000) {
-                BigDecimal bd = new BigDecimal(totalDistance/1000);
-                showDistance = bd.setScale(2,BigDecimal.ROUND_FLOOR).doubleValue()+ "千米";
+                DecimalFormat df = new DecimalFormat("#.00");
+                showDistance = df.format(totalDistance/1000)+ "千米";
             }
             else showDistance=totalDistance + "米";
             if(totalTime>60) {

@@ -212,6 +212,7 @@ public class RouteService extends Service {
         showTime="";
         showDistance="";
         showPrice="";
+        mlocationClient.unRegisterLocationListener(mlistener);
     }
 
 
@@ -284,7 +285,7 @@ public class RouteService extends Service {
     }
 
     private void showRouteInfo(String time,String distance,String price ){
-        Intent intent = new Intent(this, RouteService.class);
+        Intent intent = new Intent("com.locationreceiver");
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", time);
         bundle.putString("totalPrice", price);

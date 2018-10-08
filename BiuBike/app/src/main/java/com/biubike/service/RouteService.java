@@ -209,6 +209,9 @@ public class RouteService extends Service {
             insertData(routeListStr);
         Utils.releaseWakeLock();
         stopForeground(true);
+        showTime="";
+        showDistance="";
+        showPrice="";
     }
 
 
@@ -281,7 +284,7 @@ public class RouteService extends Service {
     }
 
     private void showRouteInfo(String time,String distance,String price ){
-        Intent intent = new Intent("com.locationreceiver");
+        Intent intent = new Intent(this, RouteService.class);
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", time);
         bundle.putString("totalPrice", price);

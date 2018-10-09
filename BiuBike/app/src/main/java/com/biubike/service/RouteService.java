@@ -86,6 +86,13 @@ public class RouteService extends Service {
     Notification notification;
     RemoteViews contentView;
 
+    public void setRunning(boolean running) {
+        isRunning = running;
+    }
+
+    public boolean isRunning=true;
+
+
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
         this.iUpdateLocation = iUpdateLocation;
     }
@@ -212,7 +219,8 @@ public class RouteService extends Service {
         showTime="";
         showDistance="";
         showPrice="";
-        mlocationClient.unRegisterLocationListener(mlistener);
+
+        isRunning=false;
     }
 
 
@@ -225,6 +233,8 @@ public class RouteService extends Service {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             if (null == bdLocation) return;
+            if (!isRunning) return;
+
             //"4.9E-324"表示目前所处的环境（室内或者是网络状况不佳）造成无法获取到经纬度
             if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) || "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {
                 return;

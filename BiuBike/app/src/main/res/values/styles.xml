@@ -55,20 +55,7 @@
         <item name="android:src">@mipmap/arrow_right_white</item>
     </style>
 
-    <style name="code_edit_style">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:paddingTop">20dip</item>
-        <item name="android:paddingBottom">20dip</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:inputType">number</item>
-        <item name="android:maxLength">1</item>
-        <item name="android:background">@drawable/code_edit_bg</item>
-    </style>
+
     <style name="transaction_type_divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -90,5 +77,20 @@
     <style name="transparentCommonDialogStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="code_edit_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingTop">20dip</item>
+        <item name="android:paddingBottom">20dip</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:background">@drawable/code_edit_bg</item>
     </style>
 </resources>

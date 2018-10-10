@@ -100,6 +100,8 @@ public class RouteService extends Service {
     public void onCreate() {
         super.onCreate();
         beginTime = System.currentTimeMillis();
+        isRunning=true;
+
 //        RouteDBHelper dbHelper = new RouteDBHelper(this);
 //        // 只有调用了DatabaseHelper的getWritableDatabase()方法或者getReadableDatabase()方法之后，才会创建或打开一个连接
 //        SQLiteDatabase sqliteDatabase = dbHelper.getReadableDatabase();

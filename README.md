@@ -12,6 +12,7 @@
 
  ![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/download.png)
 
+app效果图
 
 ![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.gif)
 

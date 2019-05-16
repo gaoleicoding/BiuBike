@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/editText1"
+        style="@style/codeEditStyle"
+        android:layout_marginLeft="0dp"
+        android:windowSoftInputMode="stateVisible" />
+
+    <EditText
+        android:id="@+id/editText2"
+        style="@style/codeEditStyle" />
+
+    <EditText
+        android:id="@+id/editText3"
+        style="@style/codeEditStyle" />
+
+    <EditText
+        android:id="@+id/editText4"
+        style="@style/codeEditStyle" />
+
+    <EditText
+        android:id="@+id/editText5"
+        style="@style/codeEditStyle" />
+
+    <EditText
+        android:id="@+id/editText6"
+        style="@style/codeEditStyle" />
+</LinearLayout>

@@ -93,4 +93,17 @@
         <item name="android:maxLength">1</item>
         <item name="android:background">@drawable/code_edit_bg</item>
     </style>
+    <style name="codeEditStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:gravity">center|center_vertical</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:background">@drawable/shape_icv_et_bg_normal</item>
+    </style>
 </resources>

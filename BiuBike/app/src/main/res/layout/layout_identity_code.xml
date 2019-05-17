@@ -7,8 +7,7 @@
     <EditText
         android:id="@+id/editText1"
         style="@style/codeEditStyle"
-        android:layout_marginLeft="0dp"
-        android:windowSoftInputMode="stateVisible" />
+        android:layout_marginLeft="0dp" />
 
     <EditText
         android:id="@+id/editText2"

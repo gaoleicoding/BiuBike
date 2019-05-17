@@ -51,7 +51,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="0TZUXgHcH7C4Mk8ePZs6lfx2UeOtZUGM" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".activity.SplashActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,8 +60,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+
+        </activity>
+        <activity
             android:name=".activity.CodeUnlockActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize">
+
+        </activity>
+
         <activity android:name=".activity.WalletActivity" />
         <activity android:name=".activity.RouteDetailActivity" />
         <activity android:name=".activity.MyRouteActivity" />
@@ -93,9 +102,8 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"></service>
-        <service
-            android:name="com.biubike.service.RouteService"
-            ></service>
+        <service android:name="com.biubike.service.RouteService"></service>
+
         <provider
             android:name="com.biubike.provider.PoiProvider"
             android:authorities="com.biubike.provider.poiprovider"

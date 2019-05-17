@@ -40,54 +40,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_f4f3f3"
-        android:orientation="vertical"
         android:layout_below="@+id/title_layout"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:background="@color/color_f4f3f3"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/edge_shadow_bg"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="15dp">
 
-            <LinearLayout
+            <com.biubike.view.IdentityCodeView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editText1"
-                    style="@style/code_edit_style"
-                    android:windowSoftInputMode="stateVisible" />
-
-                <EditText
-                    android:id="@+id/editText2"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText3"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText4"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText5"
-                    style="@style/code_edit_style" />
-
-                <EditText
-                    android:id="@+id/editText6"
-                    style="@style/code_edit_style" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -102,22 +71,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
                 android:background="@drawable/bt_book_selector"
+                android:onClick="unlockSucess"
                 android:text="@string/unlock_im"
                 android:textColor="@color/white_dd"
-                android:onClick="unlockSucess"
                 android:textSize="18sp" />
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
                 android:layout_marginTop="30dp"
-                android:onClick="switchFlashlight"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/flashlight_circle_bg"
+                android:onClick="switchFlashlight"
                 android:src="@mipmap/flashlight_icon" />
         </LinearLayout>
     </LinearLayout>

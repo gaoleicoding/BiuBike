@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class IdentityCodeView extends RelativeLayout {
     private EditText editText1, editText2, editText3, editText4, editText5, editText6;
     private int currentEditIndex;
     List<EditText> editTextList = new ArrayList<>();
-
+    String TAG = "IdentityCodeView";
 
     public IdentityCodeView(Context context) {
         this(context, null);
@@ -120,8 +121,8 @@ public class IdentityCodeView extends RelativeLayout {
                     editTextList.get(index + 1).requestFocusFromTouch();
                 }
 
-                if (getInputNum() == 6)
-                    inputCompleteListener.inputComplete();
+//                if (getInputNum() == 6)
+//                    inputCompleteListener.inputComplete();
             } else {
 
 
@@ -154,7 +155,7 @@ public class IdentityCodeView extends RelativeLayout {
             if (hasFocus) {
                 v.setBackgroundResource(R.drawable.shape_icv_et_bg_focus);
                 currentEditIndex = index;
-
+                Log.d(TAG, "OnFocusChangeListener，currntEditIndex:" + currentEditIndex);
                 clearOtherFocus(index);
             }
         }
@@ -181,16 +182,20 @@ public class IdentityCodeView extends RelativeLayout {
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_DEL
                     && event.getAction() == KeyEvent.ACTION_DOWN) {
+                Log.d(TAG, "OnKeyListener，currntEditIndex：" + currentEditIndex);
                 EditText editText = editTextList.get(currentEditIndex);
                 //如果有焦点的输入框有内容或者是第一位则只删除内容，如果是没内容则取消焦点和删除上一个输入框文字
                 if (!TextUtils.isEmpty(editTextList.get(currentEditIndex).getText().toString()) || currentEditIndex == 0) {
                     editText.setText("");
                 } else {
+
                     editTextList.get(currentEditIndex - 1).setText("");
                     editTextList.get(currentEditIndex).setBackgroundResource(R.drawable.shape_icv_et_bg_normal);
                     if (currentEditIndex > 0)
                         editTextList.get(currentEditIndex - 1).requestFocusFromTouch();
                 }
+                currentEditIndex--;
+                return true;
             }
 
             return false;

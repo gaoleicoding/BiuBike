@@ -1,5 +1,6 @@
 package com.biubike;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -69,7 +71,6 @@ import com.biubike.activity.MyRouteActivity;
 import com.biubike.activity.NavigationActivity;
 import com.biubike.activity.RouteDetailActivity;
 import com.biubike.activity.WalletActivity;
-import com.biubike.application.CrashHandler;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
 import com.biubike.callback.AllInterface;
@@ -79,6 +80,8 @@ import com.biubike.map.MyOrientationListener;
 import com.biubike.map.RouteLineAdapter;
 import com.biubike.service.RouteService;
 import com.biubike.util.LocationManager;
+import com.biubike.util.PermissionUtil;
+import com.biubike.util.StatusUtil;
 import com.biubike.util.Utils;
 
 import java.util.List;
@@ -88,6 +91,7 @@ import java.util.regex.Pattern;
 
 import overlayutil.OverlayManager;
 import overlayutil.WalkingRouteOverlay;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.biubike.bean.BikeInfo.infos;
 import static com.biubike.util.Constant.span;
@@ -95,7 +99,7 @@ import static com.biubike.util.Constant.span;
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnGetRoutePlanResultListener, AllInterface.OnMenuSlideListener {
 
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
-    private ImageView splash_img, btn_locale, btn_refresh, menu_icon;
+    private ImageView btn_locale, btn_refresh, menu_icon;
     public static TextView current_addr;
     private TextView title, book_bt, cancel_book, end_route;
     private LinearLayout bike_layout, bike_distance_layout, bike_info_layout, confirm_cancel_layout;
@@ -131,18 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
-    private final int DISMISS_SPLASH = 0;
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DISMISS_SPLASH:
-                    Animator animator = AnimatorInflater.loadAnimator(MainActivity.this, R.animator.splash);
-                    animator.setTarget(splash_img);
-                    animator.start();
-                    break;
-            }
-        }
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +157,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
+
+
     }
 
     private void initMap() {
@@ -198,6 +193,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mSearch.setOnGetRoutePlanResultListener(this);
         initMarkerClickEvent();
     }
+
 
     /**
      * 定位SDK监听函数
@@ -255,7 +251,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void initView() {
 //        new SpeechUtil(this).startSpeech("欢迎光临");
-        splash_img = (ImageView) findViewById(R.id.splash_img);
 //        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.guide_1);
         current_addr = (TextView) findViewById(R.id.current_addr);
         bike_layout = (LinearLayout) findViewById(R.id.bike_layout);
@@ -312,7 +307,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
-        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 3000);
+
     }
 
 
@@ -750,7 +745,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mlocationClient.requestLocation();
         isServiceLive = Utils.isServiceWork(this, "com.biubike.service.RouteService");
         Log.d("gaolei", "MainActivity------------onRestart------------------");
-        if (CodeUnlockActivity.unlockSuccess || isServiceLive) {
+        if (StatusUtil.useStatus == 1 || isServiceLive) {
             beginService();
         }
         if (RouteDetailActivity.completeRoute)
@@ -914,6 +909,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 dialog.dismiss();
                 Intent intent = new Intent(MainActivity.this, RouteService.class);
                 stopService(intent);
+                StatusUtil.useStatus = 0;
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

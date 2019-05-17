@@ -52,16 +52,19 @@
             android:layout_margin="15dp"
             android:background="@drawable/edge_shadow_bg"
             android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="15dp">
 
             <com.biubike.view.IdentityCodeView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
                 android:text="@string/code_prompt"
                 android:textColor="@color/black_dd"
                 android:textSize="16sp" />

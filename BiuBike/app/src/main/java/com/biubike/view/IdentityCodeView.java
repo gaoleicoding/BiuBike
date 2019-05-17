@@ -85,7 +85,7 @@ public class IdentityCodeView extends RelativeLayout {
         editText1.setBackgroundResource(R.drawable.shape_icv_et_bg_focus);
 
         int dividerWidth = Utils.dp2px(context, 12);
-        int paddingWidth = Utils.dp2px(context, 56);
+        int paddingWidth = Utils.dp2px(context, 60);
         mEtWidth = (Utils.getScreenWidth(context) - dividerWidth * 5 - paddingWidth) / 6;
         editText1.setWidth(mEtWidth);
         editText1.setHeight(mEtWidth);
@@ -151,7 +151,6 @@ public class IdentityCodeView extends RelativeLayout {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
 
-
             if (hasFocus) {
                 v.setBackgroundResource(R.drawable.shape_icv_et_bg_focus);
                 currentEditIndex = index;
@@ -194,7 +193,6 @@ public class IdentityCodeView extends RelativeLayout {
                     if (currentEditIndex > 0)
                         editTextList.get(currentEditIndex - 1).requestFocusFromTouch();
                 }
-                currentEditIndex--;
                 return true;
             }
 

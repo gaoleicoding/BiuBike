@@ -29,14 +29,13 @@ public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
-        setStatusBar();
 
-        recyclerview_acount = (RecyclerView) findViewById(R.id.recyclerview_acount);
-        ballance = (TextView) findViewById(R.id.ballance);
-        wechat = (ImageView) findViewById(R.id.wechat);
-        alipay = (ImageView) findViewById(R.id.alipay);
-        wechat_layout = (RelativeLayout) findViewById(R.id.wechat_layout);
-        alipay_layout = (RelativeLayout) findViewById(R.id.alipay_layout);
+        recyclerview_acount = findViewById(R.id.recyclerview_acount);
+        ballance = findViewById(R.id.ballance);
+        wechat = findViewById(R.id.wechat);
+        alipay = findViewById(R.id.alipay);
+        wechat_layout = findViewById(R.id.wechat_layout);
+        alipay_layout = findViewById(R.id.alipay_layout);
         wechat_layout.setOnClickListener(this);
         alipay_layout.setOnClickListener(this);
 

@@ -106,4 +106,16 @@
         <item name="android:maxLength">1</item>
         <item name="android:background">@drawable/shape_icv_et_bg_normal</item>
     </style>
+
+    <style name="notification_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Notification.Title</item>
+    </style>
+
+    <style name="notification_content">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Notification.Info</item>
+    </style>
 </resources>

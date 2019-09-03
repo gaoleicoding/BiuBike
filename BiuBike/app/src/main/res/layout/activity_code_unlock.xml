@@ -53,8 +53,8 @@
             android:background="@drawable/edge_shadow_bg"
             android:orientation="vertical"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp">
+            android:paddingTop="15dp"
+            android:paddingRight="15dp">
 
             <com.biubike.view.IdentityCodeView
                 android:layout_width="match_parent"
@@ -83,14 +83,14 @@
                 android:textSize="18sp" />
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/iv_flash"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/flashlight_circle_bg"
                 android:onClick="switchFlashlight"
-                android:src="@mipmap/flashlight_icon" />
+                android:src="@mipmap/ic_flash_close" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

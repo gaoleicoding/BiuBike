@@ -62,22 +62,22 @@ public class NavigationActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         activityList.add(this);
         setContentView(R.layout.activity_navigation);
-        setStatusBar();
         providerUtil = new ProviderUtil(this);
         //想使用内置导航，必须初始化导航， NavUtil.initNavi(this);
         NavUtil.initNavi(this);
         currentAddress = LocationManager.getInstance().getAddress();
-        place_search_layout = (LinearLayout) findViewById(R.id.place_search_layout);
-        title_content_layout = (RelativeLayout) findViewById(R.id.title_content_layout);
-        start_place_edit = (TextView) findViewById(R.id.start_place_edit);
-        destination_edit = (TextView) findViewById(R.id.destination_edit);
-        place_edit = (EditText) findViewById(R.id.place_edit);
-        recyclerview_poi = (RecyclerView) findViewById(R.id.recyclerview_poi);
+        place_search_layout =  findViewById(R.id.place_search_layout);
+        title_content_layout =  findViewById(R.id.title_content_layout);
+        start_place_edit = findViewById(R.id.start_place_edit);
+        destination_edit = findViewById(R.id.destination_edit);
+        place_edit = findViewById(R.id.place_edit);
+        recyclerview_poi_history =findViewById(R.id.recyclerview_poi_history);
+        recyclerview_poi =  findViewById(R.id.recyclerview_poi);
         recyclerview_poi.setLayoutManager(new LinearLayoutManager(this));
         recyclerview_poi.addItemDecoration(new RecyclerViewDivider(
                 this, LinearLayoutManager.HORIZONTAL, 1,
                 ContextCompat.getColor(this, R.color.color_c8cacc)));
-        recyclerview_poi_history = (RecyclerView) findViewById(R.id.recyclerview_poi_history);
+
         recyclerview_poi_history.setLayoutManager(new LinearLayoutManager(this));
         recyclerview_poi_history.addItemDecoration(new RecyclerViewDivider(
                 this, LinearLayoutManager.HORIZONTAL, 1,
@@ -98,14 +98,12 @@ public class NavigationActivity extends BaseActivity implements
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1,
                                           int arg2, int arg3) {
-                Log.d("gaolei", "beforeTextChanged--------------");
 
             }
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2,
                                       int arg3) {
-                Log.d("gaolei", "onTextChanged--------------");
 
                 if (cs.length() <= 0) {
                     return;
@@ -137,7 +135,6 @@ public class NavigationActivity extends BaseActivity implements
     public void showInputStart(View view) {
         place_edit.requestFocus();
         new Utils(this).showIMM();
-        setStatusBarLayout();
         title_content_layout.setVisibility(View.GONE);
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_start_place));
@@ -148,7 +145,6 @@ public class NavigationActivity extends BaseActivity implements
     public void showInputDestination(View view) {
         place_edit.requestFocus();
         new Utils(this).showIMM();
-        setStatusBarLayout();
         title_content_layout.setVisibility(View.GONE);
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_destination));
@@ -157,7 +153,6 @@ public class NavigationActivity extends BaseActivity implements
     }
 
     public void backFromSearchPlace(View view) {
-        setStatusBar();
         new Utils(this).hideIMM();
         place_edit.setText("");
         if (sugAdapter != null)

@@ -43,7 +43,7 @@ public class PoiHostoryAdapter extends RecyclerView.Adapter<PoiHostoryAdapter.My
             public void onClick(View view) {
                 int position = (int) view.getTag();
                 if (listener != null) {
-                    listener.onHistoryItemClick(view, position,list.get(position));
+                    listener.onHistoryItemClick(view, position, list.get(position));
                 }
             }
         });
@@ -68,13 +68,13 @@ public class PoiHostoryAdapter extends RecyclerView.Adapter<PoiHostoryAdapter.My
 
         public MyViewHolder(View view) {
             super(view);
-            place = (TextView) view.findViewById(R.id.place);
-            district = (TextView) view.findViewById(R.id.district);
+            place = view.findViewById(R.id.place);
+            district = view.findViewById(R.id.district);
         }
     }
 
     public interface OnHistoryItemClickListener {
-        public void onHistoryItemClick(View v, int position,  PoiObject info);
+        void onHistoryItemClick(View v, int position, PoiObject info);
     }
 
     public void setOnClickListener(OnHistoryItemClickListener listener) {

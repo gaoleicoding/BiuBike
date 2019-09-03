@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,8 +28,7 @@ public class NaviSelectDialog extends Dialog implements View.OnClickListener {
     protected String mCurValue;// 当前值（选定状态）
     protected OnDlgItemClickListener mOnItemClickListener;// 回调
     protected ListView navi_listview;
-    private boolean hasCheckbox;
-    private LinearLayout checkBoxLayout;
+    private boolean hasCheckbox = false;
     private TextView tv_ensure;
     private TextView tv_cancle;
     private CheckBox cb_remeber;
@@ -42,16 +40,16 @@ public class NaviSelectDialog extends Dialog implements View.OnClickListener {
     }
 
     protected void init(Context context) {
-        mCurValue=context.getString(R.string.inner_navi);
+        mCurValue = context.getString(R.string.inner_navi);
         setContentView(R.layout.dlg_navi_select_layout);
-        navi_listview = (ListView) findViewById(R.id.navi_listview);
-        checkBoxLayout = (LinearLayout) findViewById(R.id.layout_remeber_myChoice);
-        tv_ensure = (TextView) findViewById(R.id.tv_dlg_redio_checkbox_ensure);
-        tv_cancle = (TextView) findViewById(R.id.tv_dlg_redio_checkbox_cancle);
+        navi_listview = findViewById(R.id.navi_listview);
+        tv_ensure = findViewById(R.id.tv_dlg_redio_checkbox_ensure);
+        tv_cancle = findViewById(R.id.tv_dlg_redio_checkbox_cancle);
         tv_ensure.setOnClickListener(this);
         tv_cancle.setOnClickListener(this);
-        cb_remeber = (CheckBox) findViewById(R.id.checkbox_remeber_my_choice);
+        cb_remeber = findViewById(R.id.checkbox_remeber_my_choice);
     }
+
     /**
      * 设置内容
      */
@@ -70,7 +68,7 @@ public class NaviSelectDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 adapter.changeUI(position);
-                mCurValue=mItems.get(position);
+                mCurValue = mItems.get(position);
             }
         });
     }
@@ -133,6 +131,7 @@ public class NaviSelectDialog extends Dialog implements View.OnClickListener {
     public interface OnDlgItemClickListener {
 
         public void onEnsureClicked(Dialog dialog, String value, boolean isChecked);
+
         public void onCancleClicked(Dialog dialog);
 
     }

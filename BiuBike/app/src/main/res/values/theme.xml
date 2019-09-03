@@ -1,0 +1,30 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_343333</item>
+        <item name="colorPrimaryDark">@color/color_343333</item>
+        <item name="colorAccent">@color/color_343333</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <!-- 5.0及以上6.0以下状态栏灰底白字；6.0及以上状态栏白底黑字 -->
+    <style name="AppThemeDefault" parent="AppTheme.Base" />
+
+    <!-- 状态栏黑底白字 -->
+    <style name="AppThemeDark" parent="AppTheme.Base">
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
+    <!-- 状态栏白字侵入 -->
+    <style name="TranslucentStatus" parent="AppTheme.Base">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <!-- 5.0及以上6.0以下状态栏白字侵入；6.0及以上状态栏黑字侵入 -->
+    <style name="TranslucentLightStatus" parent="TranslucentStatus" />
+
+    <style name="FullScreen" parent="AppThemeDefault">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>

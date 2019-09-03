@@ -15,7 +15,7 @@ android {
         }
         defaultConfig {
             applicationId "com.biubike"
-            minSdkVersion 18
+            minSdkVersion 21
             targetSdkVersion 28
             versionCode 211
             versionName "2.1.1"
@@ -27,7 +27,6 @@ android {
             checkReleaseBuilds false
             abortOnError false
         }
-
 
     }
     buildTypes {

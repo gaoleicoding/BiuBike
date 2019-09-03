@@ -1,0 +1,11 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppThemeDefault" parent="AppTheme.Base">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="TranslucentLightStatus" parent="TranslucentStatus">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+</resources>

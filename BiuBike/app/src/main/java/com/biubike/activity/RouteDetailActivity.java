@@ -1,24 +1,18 @@
 package com.biubike.activity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -27,11 +21,8 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
-import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
@@ -39,7 +30,6 @@ import com.biubike.bean.RoutePoint;
 import com.biubike.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.iflytek.cloud.thirdparty.T;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +44,10 @@ public class RouteDetailActivity extends BaseActivity {
     private MapView route_detail_mapview;
     BaiduMap routeBaiduMap;
     private BitmapDescriptor startBmp, endBmp, currentBmp;
-    private MylocationListener mlistener;
-    LocationClient mlocationClient;
     TextView total_time, total_distance, total_price, tv_route_replay, tv_title;
     public ArrayList<RoutePoint> routePoints;
     public static boolean completeRoute = false;
-    String time, distance, price, routePointsStr;
+    private String routePointsStr;
     RelativeLayout replay_progress_layout, route_mapview_layout;
     List<LatLng> points, subList;
     int routePointsLength, currentIndex = 0, spanIndex = 0;
@@ -67,16 +55,15 @@ public class RouteDetailActivity extends BaseActivity {
     ImageView img_replay;
     SeekBar seekbar_progress;
     TextView tv_current_time, tv_current_speed;
-    final int UPDATE_PROGRESS=1;
+    final int UPDATE_PROGRESS = 1;
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case UPDATE_PROGRESS:
                     currentIndex = currentIndex + spanIndex;
-                    Log.d("gaolei", "currentIndex------------" + currentIndex);
                     routeBaiduMap.clear();
-                    if(currentIndex<routePointsLength)
+                    if (currentIndex < routePointsLength)
                         subList = points.subList(0, currentIndex);
                     if (subList.size() >= 2) {
                         OverlayOptions ooPolyline = new PolylineOptions().width(10)
@@ -116,19 +103,18 @@ public class RouteDetailActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
-        setStatusBar();
-        route_detail_mapview = (MapView) findViewById(R.id.route_detail_mapview);
-        total_time = (TextView) findViewById(R.id.total_time);
-        total_distance = (TextView) findViewById(R.id.total_distance);
-        total_price = (TextView) findViewById(R.id.total_pricce);
-        tv_route_replay = (TextView) findViewById(R.id.tv_route_replay);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_current_time = (TextView) findViewById(R.id.tv_current_time);
-        tv_current_speed = (TextView) findViewById(R.id.tv_current_speed);
-        img_replay = (ImageView) findViewById(R.id.img_replay);
-        seekbar_progress = (SeekBar) findViewById(R.id.seekbar_progress);
-        replay_progress_layout = (RelativeLayout) findViewById(R.id.replay_progress_layout);
-        route_mapview_layout = (RelativeLayout) findViewById(R.id.route_mapview_layout);
+        route_detail_mapview = findViewById(R.id.route_detail_mapview);
+        total_time = findViewById(R.id.total_time);
+        total_distance = findViewById(R.id.total_distance);
+        total_price = findViewById(R.id.total_pricce);
+        tv_route_replay = findViewById(R.id.tv_route_replay);
+        tv_title = findViewById(R.id.tv_title);
+        tv_current_time = findViewById(R.id.tv_current_time);
+        tv_current_speed = findViewById(R.id.tv_current_speed);
+        img_replay = findViewById(R.id.img_replay);
+        seekbar_progress = findViewById(R.id.seekbar_progress);
+        replay_progress_layout = findViewById(R.id.replay_progress_layout);
+        route_mapview_layout = findViewById(R.id.route_mapview_layout);
         route_mapview_layout.requestDisallowInterceptTouchEvent(true);
         route_detail_mapview.requestDisallowInterceptTouchEvent(true);
         routeBaiduMap = route_detail_mapview.getMap();
@@ -159,12 +145,12 @@ public class RouteDetailActivity extends BaseActivity {
         //实际4000~20000s-->播放166~833s
         if (2000 <= routePointsLength && routePointsLength < 10000) spanIndex = 12;
         //实际10000~20000s-->播放156s
-        if (10000 <= routePointsLength ) spanIndex = 64;
+        if (10000 <= routePointsLength) spanIndex = 64;
         drawRoute();
 
-        total_time.setText("骑行时长：" + time );
-        total_distance.setText("骑行距离：" + distance );
-        total_price.setText("余额支付：" + price );
+        total_time.setText("骑行时长：" + time);
+        total_distance.setText("骑行距离：" + distance);
+        total_price.setText("余额支付：" + price);
         seekbar_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             /**
              * 拖动条停止拖动的时候调用
@@ -197,13 +183,11 @@ public class RouteDetailActivity extends BaseActivity {
     }
 
     public void drawRoute() {
-        points = new ArrayList<LatLng>();
+        points = new ArrayList<>();
 
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
-            Log.d("gaolei", "point.getRouteLat()----show-----" + point.getRouteLat());
-            Log.d("gaolei", "point.getRouteLng()----show-----" + point.getRouteLng());
             points.add(latLng);
         }
         if (points.size() > 2) {
@@ -221,24 +205,6 @@ public class RouteDetailActivity extends BaseActivity {
             addOverLayout(startPosition, endPosition);
         }
 
-    }
-
-
-    public class MylocationListener implements BDLocationListener {
-        //定位请求回调接口
-        private boolean isFirstIn = true;
-
-        //定位请求回调函数,这里面会得到定位信息
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            //判断是否为第一次定位,是的话需要定位到用户当前位置
-            if (isFirstIn) {
-                Log.d("gaolei", "onReceiveLocation----------RouteDetail-----" + bdLocation.getAddrStr());
-
-                isFirstIn = false;
-
-            }
-        }
     }
 
     private void addOverLayout(LatLng startPosition, LatLng endPosition) {
@@ -307,8 +273,8 @@ public class RouteDetailActivity extends BaseActivity {
         routeBaiduMap.clear();
         replay_progress_layout.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) route_mapview_layout.getLayoutParams();
-        params.height = Utils.getScreenHeight(this) - statusBarHeight - titleHeight;
-        route_mapview_layout.setLayoutParams(params);
+//        params.height = Utils.getScreenHeight(this) - statusBarHeight - titleHeight;
+//        route_mapview_layout.setLayoutParams(params);
 
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
     }

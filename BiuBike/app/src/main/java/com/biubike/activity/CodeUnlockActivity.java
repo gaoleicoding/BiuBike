@@ -1,21 +1,13 @@
 package com.biubike.activity;
 
-import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 
+import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
-import com.biubike.util.StatusUtil;
-import com.biubike.util.Utils;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -24,12 +16,13 @@ import com.biubike.util.Utils;
 public class CodeUnlockActivity extends BaseActivity {
 
     private boolean isFlashOpen = false;
+    private ImageView ivFlash;
+    public static boolean unlockSuccess = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_unlock);
-
-        setStatusBar();
+        ivFlash = findViewById(R.id.iv_flash);
     }
 
     public void switchFlashlight(View view) {
@@ -39,6 +32,7 @@ public class CodeUnlockActivity extends BaseActivity {
             mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);//打开Camera.Parameters.FLASH_MODE_OFF则为关闭
             camera.setParameters(mParameters);
             isFlashOpen = true;
+            ivFlash.setImageResource(R.mipmap.ic_flash_open);
         } else {
             Camera camera = Camera.open();
             Camera.Parameters mParameters = camera.getParameters();
@@ -46,13 +40,14 @@ public class CodeUnlockActivity extends BaseActivity {
             camera.setParameters(mParameters);
             camera.release();
             isFlashOpen = false;
+            ivFlash.setImageResource(R.mipmap.ic_flash_close);
         }
     }
 
     public void unlockSucess(View view) {
-        StatusUtil.useStatus = 1;
+        unlockSuccess = true;
+        setResult(RESULT_OK);
         finish();
-
     }
 
 }

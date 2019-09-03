@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,13 +38,11 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_route);
-        setStatusBar();
-        routeRecyclerView = (XRecyclerView) findViewById(R.id.recyclerview_route);
-        no_route = (TextView) findViewById(R.id.no_route);
+        routeRecyclerView = findViewById(R.id.recyclerview_route);
+        no_route = findViewById(R.id.no_route);
         routeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        routeList = getAllPoints();
-        routeList = new ArrayList<RouteRecord>();
+        routeList = new ArrayList<>();
 
         RouteDBHelper helper = new RouteDBHelper(this);
         db = helper.getWritableDatabase();
@@ -56,7 +53,7 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
             routeRecyclerView.setAdapter(routeAdapter);
             routeRecyclerView.addItemDecoration(new MyRouteDividerDecoration(10));
             routeAdapter.setOnClickListener(this);
-        }else{
+        } else {
             no_route.setVisibility(View.VISIBLE);
         }
 
@@ -64,19 +61,15 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         routeRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScale);
         routeRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         routeRecyclerView.setPullRefreshEnabled(false);
-//        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup)findViewById(android.R.id.content),false);
-//        routeRecyclerView.addHeaderView(header);
 
         routeRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-//                Toast.makeText(MyRouteActivity.this, "onRefresh", Toast.LENGTH_SHORT).show();
                 routeRecyclerView.refreshComplete();
             }
 
             @Override
             public void onLoadMore() {
-//                Toast.makeText(MyRouteActivity.this, "onLoadMore", Toast.LENGTH_SHORT).show();
                 loadPage();
                 routeRecyclerView.loadMoreComplete();
                 routeAdapter.notifyDataSetChanged();
@@ -88,9 +81,6 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     public void onItemClick(View v, int position) {
         Intent intent = new Intent(MyRouteActivity.this, RouteDetailActivity.class);
         RouteRecord routeRecord = routeList.get(position);
-//        bundle.putParcelable("routeContent",routeRecord );
-        Log.d("gaolei", "getCycle_date------pass-------" + routeRecord.getCycle_date());
-        Log.d("gaolei", "getCycle_points----pass---------" + routeRecord.getCycle_points());
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", routeRecord.getCycle_time());
         bundle.putString("totalDistance", routeRecord.getCycle_distance());
@@ -137,12 +127,6 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         String sql = "select * from " + TABLE_NAME + " order by route_id DESC" +
                 " " + "limit " + String.valueOf(PageSize) + " offset " + PageId * PageSize;
         Cursor cursor = db.rawQuery(sql, null);
-        Log.d("gaolei", "PageId--------------" + PageId);
-
-        Log.d("gaolei", "cursor.getCount()--------------" + cursor.getCount());
-        Log.d("gaolei", "routeList.size()--------------" + routeList.size());
-        Log.d("gaolei", "itemCount--------------" + itemCount);
-
         while (cursor.moveToNext()) {
             RouteRecord point = new RouteRecord();
             point.setCycle_date(cursor.getString(cursor

@@ -19,7 +19,6 @@ import java.util.List;
 public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHolder> {
 
     public Context context;
-    int selectPosition = 0;
     OnItemClickListener listener;
     List<RouteRecord> list;
 
@@ -46,7 +45,7 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        RouteRecord routeRecord=list.get(position);
+        RouteRecord routeRecord = list.get(position);
         holder.bike_time.setText(routeRecord.getCycle_time());
         holder.bike_distance.setText(routeRecord.getCycle_distance());
         holder.bike_price.setText(routeRecord.getCycle_price());
@@ -59,19 +58,19 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView bike_time,bike_distance,bike_price,bike_date;
+        TextView bike_time, bike_distance, bike_price, bike_date;
 
         public MyViewHolder(View view) {
             super(view);
-            bike_time = (TextView) view.findViewById(R.id.bike_time);
-            bike_distance = (TextView) view.findViewById(R.id.bike_distance);
-            bike_price = (TextView) view.findViewById(R.id.bike_price);
-            bike_date = (TextView) view.findViewById(R.id.bike_date);
+            bike_time = view.findViewById(R.id.bike_time);
+            bike_distance = view.findViewById(R.id.bike_distance);
+            bike_price = view.findViewById(R.id.bike_price);
+            bike_date = view.findViewById(R.id.bike_date);
         }
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View v, int position);
+        void onItemClick(View v, int position);
     }
 
     public void setOnClickListener(OnItemClickListener listener) {

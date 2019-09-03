@@ -62,7 +62,6 @@ public class SlideLayout extends ViewGroup {
 			scrollX=mScroller.getCurrX();
 //			这里是判断打开菜单时即向右滑动菜单向右滑动 实现视觉差滑动效果，scrollX就是监听startScroll开始滚动程X的值，因为getScrollX()只是监听手在屏幕上滑动的过程，手离开后就要在这里监听，0.7是可以根据需求改动
 			if(scrollX<oldX){
-//			Log.d("gaolei", "scrollX2--------------------------------|"+scrollX);
 			ViewHelper.setTranslationX(getChildAt(0), (menuWidth+scrollX)* 0.7f);
 			}
 //			这里是判断点击菜单按钮关闭时，对菜单做处理，已达到视觉差效果，不然的话没有

@@ -5,6 +5,8 @@ package com.biubike.service;
  */
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -14,8 +16,12 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -39,36 +45,27 @@ import com.biubike.map.MyOrientationListener;
 import com.biubike.util.Utils;
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.biubike.util.Constant.span;
 
 
-//        当前位置:我的异常网» Android » Android使用百度LBS SDK（4）记录和显示行走轨迹
-//        Android使用百度LBS SDK（4）记录和显示行走轨迹
-//        www.MyException.Cn 网友分享于：2015-04-01浏览：0次
-//        Android使用百度LBS SDK（四）记录和显示行走轨迹
-//        记录轨迹思路
-//        用Service获取经纬度，onCreate中开始采集经纬度点，保存到ArrayList
-//        每隔5秒取样一次，若经纬度未发生变化，丢弃该次取样
-//        在onDestroy中，将ArrayList转成JSON格式，然后存储到SDCard中
-//        显示轨迹思路
-//        读取目录下所有轨迹文件，并生成ListView
+//        记录轨迹思路:
+//        用Service获取经纬度，onCreate中开始采集经纬度点，保存到到List
+//        每隔2秒取样一次，若经纬度未发生变化，丢弃该次取样
+//        在onDestroy中，将List转成JSON格式，然后存储到sqlite
+//
+//        显示轨迹思路:
+//        读取sqlite下所有轨迹文件，显示到recyclerview
 //        在OnItemClick中将文件名称通过intent.putExtra传递给显示轨迹的Activity
 //        根据文件名将对应的JSON内容转成ArrayList
 //        然后将以上ArrayList的点集依次连线，并绘制到百度地图上
 //        设置起始点Marker，Zoom级别,中心点为起始点
-//        轨迹点小于2个无法绘制轨迹，给出提示
-//        初步Demo效果图，获取的经纬度有偏移，明天看看哪里的问题：
-//        LBS
-//        先贴一个保存经纬度点的Service的核心代码：
+//        轨迹点小于2个无法绘制轨迹
 
 
 public class RouteService extends Service {
-
-    private double currentLatitude, currentLongitude;
 
     private LocationClient mlocationClient = null;
     private MylocationListener mlistener;
@@ -79,18 +76,30 @@ public class RouteService extends Service {
     private MyLocationConfiguration.LocationMode locationMode;
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
-    public  int totalDistance = 0;
-    public  int totalPrice = 0;
-    public  long beginTime = 0, totalTime = 0;
-    private String showDistance,showTime,showPrice;
-    Notification notification;
-    RemoteViews contentView;
+    public int totalDistance = 0;
+    public int totalPrice = 0;
+    public long beginTime = 0, totalTime = 0;
+    private String showDistance, showTime, showPrice;
+    private Notification notification;
+    private RemoteViews contentView;
+    private final int MSG_REFRESh_LOCATION = 1;
+
+    private Handler handler = new Handler() {
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case MSG_REFRESh_LOCATION:
+                    showRouteInfo(showTime, showDistance, showPrice);
+                    handler.sendEmptyMessageDelayed(MSG_REFRESh_LOCATION, 2000);
+                    break;
+            }
+        }
+    };
 
     public void setRunning(boolean running) {
         isRunning = running;
     }
 
-    public boolean isRunning=true;
+    public boolean isRunning = true;
 
 
     public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
@@ -100,34 +109,47 @@ public class RouteService extends Service {
     public void onCreate() {
         super.onCreate();
         beginTime = System.currentTimeMillis();
-        isRunning=true;
+        isRunning = true;
 
-//        RouteDBHelper dbHelper = new RouteDBHelper(this);
-//        // 只有调用了DatabaseHelper的getWritableDatabase()方法或者getReadableDatabase()方法之后，才会创建或打开一个连接
-//        SQLiteDatabase sqliteDatabase = dbHelper.getReadableDatabase();
         totalTime = 0;
         totalDistance = 0;
         totalPrice = 0;
         routPointList.clear();
-
-    }
-
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("gaolei", "RouteService--------onStartCommand---------------");
         initLocation();//初始化LocationgClient
         initNotification();
         Utils.acquireWakeLock(this);
-        // 开启轨迹记录线程
+        handler.sendEmptyMessageDelayed(MSG_REFRESh_LOCATION, 2000);
+    }
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void initNotification() {
         int icon = R.mipmap.bike_icon2;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel("id_route", "route");
+        }
         contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        notification = new NotificationCompat.Builder(this).setContent(contentView).setSmallIcon(icon).build();
+        notification = new NotificationCompat.Builder(this, "id_route").setContent(contentView).setSmallIcon(icon).build();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra("flag", "notification");
-        notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (notificationManager.getNotificationChannel(channelId) != null) return;
+
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW);
+        notificationChannel.enableVibration(false);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        notificationChannel.setShowBadge(true);
+        notificationChannel.setBypassDnd(true);
+
+        notificationManager.createNotificationChannel(notificationChannel);
     }
 
     private void initLocation() {
@@ -165,34 +187,18 @@ public class RouteService extends Service {
             public void onOrientationChanged(float x) {
             }
         });
-//        mSearch = RoutePlanSearch.newInstance();
-//        mSearch.setOnGetRoutePlanResultListener(this);
-//        //开启定位
-//        mBaiduMap.setMyLocationEnabled(true);
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
         myOrientationListener.start();
     }
 
-    private void startNotifi(String time, String distance, String price) {
-        startForeground(1, notification);
-        contentView.setTextViewText(R.id.bike_time, time);
-        contentView.setTextViewText(R.id.bike_distance, distance);
-        contentView.setTextViewText(R.id.bike_price, price);
-        rt_time=time;
-        rt_distance=distance;
-        rt_price=price;
-    }
-
 
     public IBinder onBind(Intent intent) {
-        Log.d("gaolei", "onBind-------------");
         return null;
     }
 
     public boolean onUnBind(Intent intent) {
-        Log.d("gaolei", "onBind-------------");
         return false;
     }
 
@@ -201,13 +207,11 @@ public class RouteService extends Service {
         super.onDestroy();
         mlocationClient.stop();
         myOrientationListener.stop();
-        Log.d("gaolei", "RouteService----0nDestroy---------------");
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
-        Log.d("gaolei", "RouteService----routeListStr-------------" + routeListStr);
         Bundle bundle = new Bundle();
-        bundle.putString("totalTime", showTime );
-        bundle.putString("totalDistance", showDistance );
+        bundle.putString("totalTime", showTime);
+        bundle.putString("totalDistance", showDistance);
         bundle.putString("totalPrice", showPrice);
         bundle.putString("routePoints", routeListStr);
         Intent intent = new Intent(this, RouteDetailActivity.class);
@@ -218,11 +222,11 @@ public class RouteService extends Service {
             insertData(routeListStr);
         Utils.releaseWakeLock();
         stopForeground(true);
-        showTime="";
-        showDistance="";
-        showPrice="";
-
-        isRunning=false;
+        showTime = "";
+        showDistance = "";
+        showPrice = "";
+        handler.removeCallbacksAndMessages(null);
+        isRunning = false;
     }
 
 
@@ -242,7 +246,6 @@ public class RouteService extends Service {
                 return;
             }//过滤百度定位失败
 
-            Log.d("gaolei", "RouteService---------getAddrStr()-------------" + bdLocation.getAddrStr());
             double routeLat = bdLocation.getLatitude();
             double routeLng = bdLocation.getLongitude();
             RoutePoint routePoint = new RoutePoint();
@@ -265,8 +268,8 @@ public class RouteService extends Service {
 //                        大于2米算作有效加入列表
                         if (distantce > 2) {
                             //distance单位是米 转化为km/h
-                            routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce/1000)*30*60));
-                            routePoint.time=System.currentTimeMillis();
+                            routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce / 1000) * 30 * 60));
+                            routePoint.time = System.currentTimeMillis();
                             routPointList.add(routePoint);
                             totalDistance += distantce;
                         }
@@ -278,39 +281,44 @@ public class RouteService extends Service {
             totalPrice = (int) (Math.floor(totalTime / 60) * 1 + 1);
 
 
-
-            if(totalDistance>1000) {
+            if (totalDistance > 1000) {
                 DecimalFormat df = new DecimalFormat("#.00");
-                showDistance = df.format((float)totalDistance/1000)+ "千米";
-            }
-            else showDistance=totalDistance + "米";
-            if(totalTime>60) {
-                showTime=totalTime/60+"时"+totalTime%60+"分";
-            }
-            else showTime=totalTime + "分钟";
-            showPrice=totalPrice+ "元";
-            showRouteInfo(showTime,showDistance,showPrice);
+                showDistance = df.format((float) totalDistance / 1000) + "千米";
+            } else showDistance = totalDistance + "米";
+            if (totalTime > 60) {
+                showTime = totalTime / 60 + "时" + totalTime % 60 + "分";
+            } else showTime = totalTime + "分钟";
+            showPrice = totalPrice + "元";
+
             Log.d("gaolei", "totalTime--------------" + showTime);
             Log.d("gaolei", "totalDistance--------------" + showDistance);
             Log.d("gaolei", "totalPrice--------------" + showPrice);
         }
     }
 
-    private void showRouteInfo(String time,String distance,String price ){
+    private void showRouteInfo(String time, String distance, String price) {
         Intent intent = new Intent("com.locationreceiver");
         Bundle bundle = new Bundle();
         bundle.putString("totalTime", time);
         bundle.putString("totalPrice", price);
         bundle.putString("totalDistance", distance);
         intent.putExtras(bundle);
-        sendBroadcast(intent);
 
+        sendBroadcast(intent);
         startNotifi(time, distance, price);
     }
 
-    public static class NetWorkReceiver extends BroadcastReceiver
+    private void startNotifi(String time, String distance, String price) {
+        startForeground(1, notification);
+        contentView.setTextViewText(R.id.bike_time, time);
+        contentView.setTextViewText(R.id.bike_distance, distance);
+        contentView.setTextViewText(R.id.bike_price, price);
+        rt_time = time;
+        rt_distance = distance;
+        rt_price = price;
+    }
 
-    {
+    public static class NetWorkReceiver extends BroadcastReceiver {
         public NetWorkReceiver() {
         }
 

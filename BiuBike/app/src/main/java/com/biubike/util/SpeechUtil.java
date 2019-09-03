@@ -65,12 +65,10 @@ public class SpeechUtil {
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Log.d("gaolei","----------------");
             } else {
                 // 初始化成功，之后可以调用startSpeaking方法
                 // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
                 // 正确的做法是将onCreate中的startSpeaking调用移至这里
-                Log.d("gaolei","----------------");
 
             }
         }
@@ -83,7 +81,6 @@ public class SpeechUtil {
 
         @Override
         public void onSpeakBegin() {
-            Log.d("gaolei","----------------");
 
         }
 
@@ -110,7 +107,6 @@ public class SpeechUtil {
 
         @Override
         public void onCompleted(SpeechError error) {
-            Log.d("gaolei","----------------");
 
         }
 
@@ -120,7 +116,6 @@ public class SpeechUtil {
             // 若使用本地能力，会话id为null
             //	if (SpeechEvent.EVENT_SESSION_ID == eventType) {
             //		String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);
-            //		Log.d(TAG, "session id =" + sid);
             //	}
         }
     };

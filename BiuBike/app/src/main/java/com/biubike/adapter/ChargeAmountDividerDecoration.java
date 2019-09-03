@@ -16,26 +16,17 @@ import android.view.View;
  */
 public class ChargeAmountDividerDecoration extends RecyclerView.ItemDecoration {
 
-        private int space;
+    private int space;
 
-        public ChargeAmountDividerDecoration(int space) {
-            this.space = space;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view,
-                                   RecyclerView parent, RecyclerView.State state) {
-//            outRect.left = space;
-//            outRect.right = space;
-//            outRect.bottom = space;
-            outRect.set(0, 20, 20, 20);
-
-
-            // Add top margin only for the first item to avoid double space between items
-//            if (parent.getChildLayoutPosition(view) == 0) {
-//                outRect.top = space;
-//            } else {
-//                outRect.top = 0;
-//            }
-        }
+    public ChargeAmountDividerDecoration(int space) {
+        this.space = space;
     }
+
+    @Override
+    public void getItemOffsets(Rect outRect, View view,
+                               RecyclerView parent, RecyclerView.State state) {
+
+        outRect.set(0, 20, 20, 20);
+
+    }
+}

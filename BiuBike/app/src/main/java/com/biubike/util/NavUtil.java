@@ -193,7 +193,6 @@ public class NavUtil {
             String start_latlng = pt1.latitude + "," + pt1.longitude;
             String end_latlng = pt2.latitude + "," + pt2.longitude;
             Intent intent = Intent.getIntent("intent://map/direction?origin=latlng:"+start_latlng+"|name:"+"Start"+"&destination=latlng:"+end_latlng+"|name:"+"End"+"&mode=riding&src=这里随便写#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-            Log.d("gaolei", "---------------" + start_address + "," + end_address);
             activity.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,7 +208,6 @@ public class NavUtil {
             Intent intent = new Intent();
             double sLat = pt1.latitude, sLon = pt1.longitude, eLat = pt2.latitude, eLon = pt2.longitude;
             String poiAddress = LocationManager.getInstance().getAddress();
-            Log.d("gaolei", "poiAddress---------gaode-----------" + poiAddress);
             intent.setData(android.net.Uri
                     .parse("androidamap://navi?sourceApplication=yongche&poiname=" + start_place + "&lat="
                             + eLat

@@ -1,8 +1,6 @@
 package com.biubike.activity;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,10 +22,10 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class SplashActivity extends Activity implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
 
     //要申请的权限
-    private String[] mPermissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE};
+    private String[] mPermissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE};
     public static final int CODE = 0x001;
     private final int DISMISS_SPLASH = 0;
-    String TAG="gaolei";
+    String TAG = "gaolei";
 
 
     Handler handler = new Handler() {
@@ -51,15 +49,13 @@ public class SplashActivity extends Activity implements EasyPermissions.Permissi
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        if(perms.size()==5)
-        handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 2000);
-        Log.d(TAG,"onPermissionsGranted---------"+Arrays.toString(perms.toArray()) );
+        if (perms.size() == 5)
+            handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 2000);
 
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Log.d(TAG,"onPermissionsDenied---------"+Arrays.toString(perms.toArray()) );
 
         //存在被永久拒绝(拒绝&不再询问)的权限
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
@@ -70,24 +66,22 @@ public class SplashActivity extends Activity implements EasyPermissions.Permissi
         }
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-         Log.d(TAG,"onRequestPermissionsResult---------permissions："+Arrays.toString(permissions) );
         //将请求结果传递EasyPermission库处理
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
     public void onRationaleAccepted(int requestCode) {
-        Log.d(TAG,"onRationaleAccepted---------");
 
     }
 
     @Override
     public void onRationaleDenied(int requestCode) {
-        Log.d(TAG,"onRationaleDenied---------");
     }
 }

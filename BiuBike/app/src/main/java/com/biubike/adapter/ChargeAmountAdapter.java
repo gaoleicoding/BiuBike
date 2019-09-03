@@ -50,7 +50,6 @@ public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapte
 
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.textView.setText(accountArr[position]);
-        Log.d("gaolei","onBindViewHolder---Charage----"+position);
 
         holder.itemView.setTag(position);
         if (position == selectPosition) {

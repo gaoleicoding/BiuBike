@@ -15,7 +15,6 @@ import com.biubike.R;
  */
 public class SelectDialog extends Dialog implements View.OnClickListener {
     private TextView confirm;
-    private IDialogOnclickInterface dialogOnclickInterface;
     private Context context;
 
     public SelectDialog(Context context, int theme) {
@@ -30,18 +29,16 @@ public class SelectDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_confirm);
 
-        confirm = (TextView) findViewById(R.id.confirm);
+        confirm = findViewById(R.id.confirm);
         confirm.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
-//        dialogOnclickInterface = (IDialogOnclickInterface) context;
         switch (v.getId()) {
             case R.id.confirm:
-//                dialogOnclickInterface.confirmOnclick();
-//                turnGPSOn(getContext());
+
                 Intent intent = new Intent(
                         Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 context.startActivity(intent);
@@ -53,8 +50,4 @@ public class SelectDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public interface IDialogOnclickInterface {
-        void confirmOnclick();
-
-    }
 }

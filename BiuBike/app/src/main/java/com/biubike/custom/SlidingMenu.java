@@ -42,11 +42,6 @@ public class SlidingMenu extends HorizontalScrollView {
 
     }
 
-//   public OnMenuOpenListener onMenuOpenListener;
-//    public void setOnMenuOpenListener(OnMenuOpenListener onMenuOpenListener){
-//        this.onMenuOpenListener=onMenuOpenListener;
-//    }
-
     public SlidingMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mScreenWidth = Utils.getScreenWidth(context);
@@ -111,8 +106,6 @@ public class SlidingMenu extends HorizontalScrollView {
             // Up时，进行判断，如果显示区域大于菜单宽度一半则完全显示，否则隐藏
             case MotionEvent.ACTION_UP:
                 int scrollX = getScrollX();
-                Log.d("gaolei", "mThirdMenuWidth--------------------" + mThirdMenuWidth);
-                Log.d("gaolei", "scrollX--------------------" + scrollX);
                 if (!isOpen) {
                     if (scrollX < 2 * mThirdMenuWidth) {
                         openMenu();

@@ -31,7 +31,6 @@ public class PoiProvider extends ContentProvider {
 	public boolean onCreate() {
 		helper = new DBHelper(getContext(), "lenve.db", null, 1);
 		db = helper.getWritableDatabase();
-		Log.d("qf", "MyContentProvider--->onCreate()");
 		return true;
 	}
 

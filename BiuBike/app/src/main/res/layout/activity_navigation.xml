@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_f6f6f6"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/title_content_layout"
+        android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_layout_height"
         android:background="@color/color_343333">
@@ -231,4 +231,4 @@
             android:overScrollMode="never"
             android:scrollbars="none" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

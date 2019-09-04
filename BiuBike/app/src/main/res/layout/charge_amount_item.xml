@@ -7,7 +7,7 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:textColor="@color/color_989898"
-    android:textSize="22sp"
+    android:textSize="20sp"
     android:background="@drawable/charge_amount_unselect">
 
 

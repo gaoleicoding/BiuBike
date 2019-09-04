@@ -45,7 +45,7 @@ public class NavigationActivity extends BaseActivity implements
         , PoiHostoryAdapter.OnHistoryItemClickListener {
 
     private LinearLayout place_search_layout;
-    private RelativeLayout title_content_layout;
+    private RelativeLayout titleLayout;
     private EditText place_edit;
     private TextView start_place_edit, destination_edit;
     private RecyclerView recyclerview_poi, recyclerview_poi_history;
@@ -67,7 +67,7 @@ public class NavigationActivity extends BaseActivity implements
         NavUtil.initNavi(this);
         currentAddress = LocationManager.getInstance().getAddress();
         place_search_layout =  findViewById(R.id.place_search_layout);
-        title_content_layout =  findViewById(R.id.title_content_layout);
+        titleLayout =  findViewById(R.id.title_layout);
         start_place_edit = findViewById(R.id.start_place_edit);
         destination_edit = findViewById(R.id.destination_edit);
         place_edit = findViewById(R.id.place_edit);
@@ -135,7 +135,7 @@ public class NavigationActivity extends BaseActivity implements
     public void showInputStart(View view) {
         place_edit.requestFocus();
         new Utils(this).showIMM();
-        title_content_layout.setVisibility(View.GONE);
+        titleLayout.setVisibility(View.GONE);
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_start_place));
         isStartPoi = true;
@@ -145,7 +145,7 @@ public class NavigationActivity extends BaseActivity implements
     public void showInputDestination(View view) {
         place_edit.requestFocus();
         new Utils(this).showIMM();
-        title_content_layout.setVisibility(View.GONE);
+        titleLayout.setVisibility(View.GONE);
         place_search_layout.setVisibility(View.VISIBLE);
         place_edit.setHint(getString(R.string.input_destination));
         isStartPoi = false;
@@ -157,7 +157,7 @@ public class NavigationActivity extends BaseActivity implements
         place_edit.setText("");
         if (sugAdapter != null)
             sugAdapter.changeData(null);
-        title_content_layout.setVisibility(View.VISIBLE);
+        titleLayout.setVisibility(View.VISIBLE);
         place_search_layout.setVisibility(View.GONE);
     }
 

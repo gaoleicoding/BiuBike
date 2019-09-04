@@ -89,15 +89,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public static final int REQUEST_CODE_UNLOCK_SUCCESS = 1001;
     private double currentLatitude, currentLongitude, changeLatitude, changeLongitude;
     private ImageView btn_locale, btn_refresh, menu_icon;
-    public TextView current_addr;
+    private TextView current_addr;
     private TextView title, book_bt, end_route;
-    private LinearLayout llBikeLayout, llBikeTime, llBikeDetail, llPrice;
+    private LinearLayout llBikeLayout, llBikeDetail, llPrice;
     private TextView prompt, textview_time, textview_distance, textview_price, unlock;
-    public static TextView bike_distance, bike_time, bike_price;
+    private TextView bike_distance, bike_time, bike_price;
     private long exitTime = 0;
     private View divider;
     //自定义图标
-    private BitmapDescriptor dragLocationIcon, bikeIcon, currentBmp;
+    private BitmapDescriptor dragLocationIcon, bikeIcon;
     private RoutePlanSearch mSearch = null;    // 搜索模块，也可去掉地图模块独立使用
 
     private PlanNode startNodeStr;
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private LeftDrawerLayout mLeftDrawerLayout;
     private View shadowView;
     // 定位相关
-    LocationClient mlocationClient;
+    private LocationClient mlocationClient;
     public MyLocationListenner myListener = new MyLocationListenner();
     private MyLocationConfiguration.LocationMode mCurrentMode;
     private MyOrientationListener myOrientationListener;
@@ -231,7 +231,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void initView() {
         current_addr = findViewById(R.id.current_addr);
         llBikeLayout = findViewById(R.id.ll_bike_layout);
-        llBikeTime = findViewById(R.id.ll_bike_time);
         llBikeDetail = findViewById(R.id.ll_bike_detail);
         bike_time = findViewById(R.id.bike_time);
         bike_distance = findViewById(R.id.bike_distance);
@@ -265,7 +264,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
-        currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
     }
 
     public void getMyLocation() {

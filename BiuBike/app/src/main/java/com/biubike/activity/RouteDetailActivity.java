@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -67,33 +65,18 @@ public class RouteDetailActivity extends BaseActivity {
 
                     if (currentIndex < routePointsLength)
                         subList = points.subList(0, currentIndex);
-                    if (subList.size() >= 2) {
-                        OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                                .color(0xFF36D19D).points(subList);
-                        routeBaiduMap.clear();
-                        routeBaiduMap.addOverlay(ooPolyline);
-                    }
                     if (subList.size() >= 1) {
-                        LatLng latLng = points.get(subList.size() - 1);
-                        MarkerOptions options = new MarkerOptions().position(latLng)
-                                .icon(currentBmp);
-                        // 在地图上添加Marker，并显示
-                        routeBaiduMap.addOverlay(options);
-                        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
-                        // 移动到某经纬度
-                        routeBaiduMap.animateMapStatus(update);
+                        setPolyline(subList);
                     }
                     if (currentIndex < routePointsLength) {
                         tv_current_time.setText(Utils.getDateFromMillisecond(routePoints.get(currentIndex).time));
                         tv_current_speed.setText(routePoints.get(currentIndex).speed + "km/h");
-                        int progress = (int) currentIndex * 100 / routePointsLength;
+                        int progress = currentIndex * 100 / routePointsLength;
                         seekbar_progress.setProgress(progress);
 
                         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
                     } else {
-                        OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                                .color(0xFF36D19D).points(points);
-                        routeBaiduMap.addOverlay(ooPolyline);
+                        setPolyline(points);
                         seekbar_progress.setProgress(100);
                         handler.removeCallbacksAndMessages(null);
                         Toast.makeText(RouteDetailActivity.this, "轨迹回放结束", Toast.LENGTH_LONG).show();
@@ -277,6 +260,21 @@ public class RouteDetailActivity extends BaseActivity {
         replay_progress_layout.setVisibility(View.VISIBLE);
 
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
+    }
+
+    private void setPolyline(List<LatLng> list) {
+        OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                .color(0xFF36D19D).points(list);
+        routeBaiduMap.clear();
+        routeBaiduMap.addOverlay(ooPolyline);
+        LatLng latLng = points.get(list.size() - 1);
+        MarkerOptions options = new MarkerOptions().position(latLng)
+                .icon(currentBmp);
+        // 在地图上添加Marker，并显示
+        routeBaiduMap.addOverlay(options);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+        // 移动到某经纬度
+        routeBaiduMap.animateMapStatus(update);
     }
 
     public void backFromReplay() {

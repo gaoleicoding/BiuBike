@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
-    private List points = new ArrayList<>();
+    private List points;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
-
+        points = new ArrayList<>();
     }
 
     private void initMap() {
@@ -795,18 +795,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void drawRoute(ArrayList<RoutePoint> routePoints) {
-        mBaiduMap.clear();
+        points.clear();
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
             points.add(latLng);
         }
-        if (points.size() > 2) {
+        if (points.size() > 1) {
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
                     .color(0xFF36D19D).points(points);
             mBaiduMap.clear();
             mBaiduMap.addOverlay(ooPolyline);
-
         }
     }
 

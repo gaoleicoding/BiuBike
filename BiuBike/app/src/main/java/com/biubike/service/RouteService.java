@@ -15,12 +15,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -39,15 +36,19 @@ import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.activity.RouteDetailActivity;
 import com.biubike.bean.RoutePoint;
+import com.biubike.bean.RoutePoints;
 import com.biubike.callback.AllInterface;
 import com.biubike.database.RouteDBHelper;
 import com.biubike.map.MyOrientationListener;
 import com.biubike.util.Utils;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static android.net.NetworkInfo.State;
 import static com.biubike.util.Constant.span;
 
 
@@ -71,11 +72,10 @@ public class RouteService extends Service {
     private MylocationListener mlistener;
     private BitmapDescriptor mIconLocation;
     private MyOrientationListener myOrientationListener;
-    private String rt_time, rt_distance, rt_price;
-    //定位图层显示方式
-    private MyLocationConfiguration.LocationMode locationMode;
+    private String rt_distance;
+    private String rt_price;
     AllInterface.IUpdateLocation iUpdateLocation;
-    public ArrayList<RoutePoint> routPointList = new ArrayList<RoutePoint>();
+    public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public int totalDistance = 0;
     public int totalPrice = 0;
     public long beginTime = 0, totalTime = 0;
@@ -84,16 +84,6 @@ public class RouteService extends Service {
     private RemoteViews contentView;
     private final int MSG_REFRESh_LOCATION = 1;
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case MSG_REFRESh_LOCATION:
-                    showRouteInfo(showTime, showDistance, showPrice);
-                    handler.sendEmptyMessageDelayed(MSG_REFRESh_LOCATION, 2000);
-                    break;
-            }
-        }
-    };
 
     public void setRunning(boolean running) {
         isRunning = running;
@@ -118,7 +108,6 @@ public class RouteService extends Service {
         initLocation();//初始化LocationgClient
         initNotification();
         Utils.acquireWakeLock(this);
-        handler.sendEmptyMessageDelayed(MSG_REFRESh_LOCATION, 2000);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -155,7 +144,8 @@ public class RouteService extends Service {
     private void initLocation() {
         mIconLocation = BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker);
-        locationMode = MyLocationConfiguration.LocationMode.NORMAL;
+        //定位图层显示方式
+        MyLocationConfiguration.LocationMode locationMode = MyLocationConfiguration.LocationMode.NORMAL;
 
         //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
         mlocationClient = new LocationClient(this);
@@ -225,7 +215,6 @@ public class RouteService extends Service {
         showTime = "";
         showDistance = "";
         showPrice = "";
-        handler.removeCallbacksAndMessages(null);
         isRunning = false;
     }
 
@@ -290,21 +279,18 @@ public class RouteService extends Service {
             } else showTime = totalTime + "分钟";
             showPrice = totalPrice + "元";
 
-            Log.d("gaolei", "totalTime--------------" + showTime);
-            Log.d("gaolei", "totalDistance--------------" + showDistance);
-            Log.d("gaolei", "totalPrice--------------" + showPrice);
+            showRouteInfo(showTime, showDistance, showPrice, routPointList);
+
+
         }
     }
 
-    private void showRouteInfo(String time, String distance, String price) {
-        Intent intent = new Intent("com.locationreceiver");
-        Bundle bundle = new Bundle();
-        bundle.putString("totalTime", time);
-        bundle.putString("totalPrice", price);
-        bundle.putString("totalDistance", distance);
-        intent.putExtras(bundle);
-
-        sendBroadcast(intent);
+    private void showRouteInfo(String time, String distance, String price, ArrayList<RoutePoint> routPointList) {
+        Log.d("gaolei", "totalTime---------post-----" + showTime);
+        Log.d("gaolei", "totalDistance-----post---------" + showDistance);
+        Log.d("gaolei", "totalPrice-------post-------" + showPrice);
+        Log.d("gaolei", "routPointList.size()-------post-------" + routPointList.size());
+        EventBus.getDefault().post(new RoutePoints(routPointList, time, distance, price));
         startNotifi(time, distance, price);
     }
 
@@ -313,7 +299,6 @@ public class RouteService extends Service {
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);
         contentView.setTextViewText(R.id.bike_price, price);
-        rt_time = time;
         rt_distance = distance;
         rt_price = price;
     }
@@ -324,23 +309,23 @@ public class RouteService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            NetworkInfo.State wifiState = null;
-            NetworkInfo.State mobileState = null;
+            State wifiState;
+            State mobileState = null;
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
             mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
             if (wifiState != null && mobileState != null
-                    && NetworkInfo.State.CONNECTED != wifiState
-                    && NetworkInfo.State.CONNECTED == mobileState) {
+                    && State.CONNECTED != wifiState
+                    && State.CONNECTED == mobileState) {
 //                Toast.makeText(context, context.getString(R.string.net_mobile), Toast.LENGTH_SHORT).show();
                 // 手机网络连接成功
             } else if (wifiState != null && mobileState != null
-                    && NetworkInfo.State.CONNECTED != wifiState
-                    && NetworkInfo.State.CONNECTED != mobileState) {
+                    && State.CONNECTED != wifiState
+                    && State.CONNECTED != mobileState) {
 //                Toast.makeText(context, context.getString(R.string.net_none), Toast.LENGTH_SHORT).show();
 
                 // 手机没有任何的网络
-            } else if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
+            } else if (wifiState != null && State.CONNECTED == wifiState) {
                 // 无线网络连接成功
 //                Toast.makeText(context, context.getString(R.string.net_wifi), Toast.LENGTH_SHORT).show();
 

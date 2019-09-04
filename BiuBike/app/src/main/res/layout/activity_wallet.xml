@@ -1,52 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_f6f6f6"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/title_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="@dimen/title_layout_height"
+        android:background="@color/color_343333">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="finishActivity"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/return_icon" />
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:onClick="finishActivity"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/return_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/wallet"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/wallet"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/charge_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_layout"
         android:layout_margin="15dp"
         android:background="@drawable/edge_shadow_bg"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/ballance"
@@ -63,9 +53,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ballance"
+            android:layout_margin="15dp"
             android:overScrollMode="never"
-            android:scrollbars="none"
-            android:layout_margin="15dp" />
+            android:scrollbars="none" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,16 +65,16 @@
         android:layout_below="@id/charge_layout"
         android:layout_margin="15dp"
         android:background="@drawable/edge_shadow_bg"
-        android:padding="2dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="2dp">
 
         <TextView
             android:id="@+id/trancaction_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:text="@string/transaction_type"
             android:textColor="@color/color_343333"
             android:textSize="16sp" />
@@ -95,8 +85,8 @@
             android:id="@+id/wechat_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:background="@drawable/type_item_selector">
+            android:background="@drawable/type_item_selector"
+            android:clickable="true">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -121,8 +111,8 @@
             android:id="@+id/alipay_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:background="@drawable/type_item_selector">
+            android:background="@drawable/type_item_selector"
+            android:clickable="true">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -143,7 +133,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/book_bt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/trancaction_type_layout"
@@ -152,9 +141,9 @@
         android:clickable="true"
         android:gravity="center"
         android:padding="10dp"
-        android:paddingBottom="1dp"
         android:paddingTop="1dp"
+        android:paddingBottom="1dp"
         android:text="@string/charge_im"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size" />
-</RelativeLayout>
+</LinearLayout>

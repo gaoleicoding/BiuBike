@@ -3,53 +3,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="@dimen/title_layout_height"
+        android:background="@color/color_343333">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/color_343333">
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/menu_icon" />
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/menu_icon" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/bybike"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/bybike"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/search_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:onClick="gotoNavigation"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/search" />
-        </RelativeLayout>
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="gotoNavigation"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/search" />
+    </RelativeLayout>
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/id_bmapView"
@@ -67,14 +60,14 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/bike_layout"
+        android:id="@+id/ll_bike_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
         android:layout_margin="12dp"
         android:background="@drawable/edge_shadow_bg"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/bike_layout_margin"
+        android:paddingBottom="@dimen/ll_bike_layout_margin"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -101,13 +94,14 @@
             android:background="#bbbbbb" />
 
         <LinearLayout
-            android:id="@+id/bike_distance_layout"
+            android:id="@+id/ll_bike_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bike_layout_margin"
+            android:layout_marginTop="@dimen/ll_bike_layout_margin"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_bike_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -127,6 +121,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_bike_distance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -145,7 +140,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_price"
+                android:id="@+id/ll_bike_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -155,7 +150,7 @@
                 <TextView
                     android:id="@+id/textview_price"
                     style="@style/text_style"
-                    android:text="@string/each_hour" />
+                    android:text="@string/bike_price" />
 
                 <TextView
                     android:id="@+id/bike_price"
@@ -179,7 +174,7 @@
             android:padding="10dp"
             android:paddingTop="1dp"
             android:paddingBottom="1dp"
-            android:text="@string/book"
+            android:text="@string/unlock"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size" />
 
@@ -189,7 +184,7 @@
         android:id="@+id/prompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bike_layout"
+        android:layout_below="@id/ll_bike_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

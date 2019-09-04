@@ -116,6 +116,7 @@
     <style name="notification_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Material.Notification.Info</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Notification.Line2</item>
     </style>
 </resources>

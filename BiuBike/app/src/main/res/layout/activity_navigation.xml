@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_f6f6f6"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/title_layout"
+    <RelativeLayout
+        android:id="@+id/title_content_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="@dimen/title_layout_height"
+        android:background="@color/color_343333">
 
-        <RelativeLayout
-            android:id="@+id/title_content_layout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="finishActivity"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/return_icon" />
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:onClick="finishActivity"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/return_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/navigation"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/navigation"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/charge_layout"
@@ -78,9 +70,9 @@
                 android:layout_gravity="center"
                 android:background="@null"
                 android:clickable="true"
+                android:onClick="showInputStart"
                 android:padding="10dp"
                 android:text="@string/my_position"
-                android:onClick="showInputStart"
                 android:textColor="@color/black_cc"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -114,9 +106,9 @@
                 android:layout_gravity="center"
                 android:background="@null"
                 android:clickable="true"
+                android:onClick="showInputDestination"
                 android:padding="10dp"
                 android:text="@string/input_destination"
-                android:onClick="showInputDestination"
                 android:textColor="@color/color_989898"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -124,18 +116,17 @@
 
 
     <TextView
-        android:id="@+id/book_bt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/charge_layout"
         android:layout_margin="15dp"
         android:background="@drawable/bt_book_selector"
         android:clickable="true"
-        android:onClick="startNavigation"
         android:gravity="center"
+        android:onClick="startNavigation"
         android:padding="12dp"
-        android:paddingBottom="1dp"
         android:paddingTop="1dp"
+        android:paddingBottom="1dp"
         android:text="@string/begin_navigation"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -144,41 +135,41 @@
         android:id="@+id/place_search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:clickable="true"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_below="@id/title_layout"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/position_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:clickable="true"
                 android:onClick="backFromSearchPlace"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:src="@mipmap/back2" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/search_layout_bg"
                 android:layout_weight="1"
+                android:background="@drawable/search_layout_bg"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -202,6 +193,7 @@
                     android:textColorHint="@color/color_cc858585"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/confirm_poi"
                 android:layout_width="wrap_content"
@@ -211,17 +203,17 @@
                 android:background="@drawable/bt_confirm_selector"
                 android:clickable="true"
                 android:onClick="confirmPoi"
-                android:text="@string/confirm"
-                android:visibility="gone"
                 android:padding="10dp"
+                android:text="@string/confirm"
                 android:textColor="@color/white_dd"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <View
             style="@style/transaction_type_divider"
             android:layout_marginTop="10dp" />
-             />
+        />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_poi_history"
@@ -230,6 +222,7 @@
             android:layout_margin="15dp"
             android:overScrollMode="never"
             android:scrollbars="none" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_poi"
             android:layout_width="match_parent"
@@ -238,4 +231,4 @@
             android:overScrollMode="never"
             android:scrollbars="none" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

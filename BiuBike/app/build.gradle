@@ -82,7 +82,7 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation 'pub.devrel:easypermissions:1.2.0'
     implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
-//    api 'cat.ereza:customactivityoncrash:2.2.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
 }
 

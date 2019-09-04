@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
 
-    <LinearLayout
-        android:id="@+id/title_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/color_343333"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:background="@color/color_343333">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/color_343333">
-            >
+        <ImageView
+            android:id="@+id/menu_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="finishActivity"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/return_icon" />
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:onClick="finishActivity"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@mipmap/return_icon" />
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/route_detail"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/route_detail"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/replay_progress_layout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/title_layout"
         android:background="@color/color_ededed"
         android:padding="5dp"
         android:paddingLeft="10dp"
@@ -71,10 +60,10 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_toRightOf="@id/img_replay"
+                android:max="100"
                 android:maxHeight="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="15dp"
-                android:max="100"
                 android:progressDrawable="@drawable/po_seekbar"
                 android:thumb="@drawable/detail_icon_schedule_ball" />
         </RelativeLayout>
@@ -119,14 +108,14 @@
             android:id="@+id/tv_route_replay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/route_replay_bg"
             android:onClick="startReplay"
-            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="3dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="3dp"
             android:text="@string/route_replay"
             android:textSize="14sp" />
 
@@ -179,4 +168,4 @@
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

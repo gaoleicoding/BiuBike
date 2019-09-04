@@ -53,13 +53,14 @@
 
         <activity
             android:name=".activity.SplashActivity"
-            android:launchMode="singleTask">
+            android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/TranslucentStatus">
 
         </activity>
         <activity
@@ -83,11 +84,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MainActivity$LocationReceiver">
-            <intent-filter>
-                <action android:name="com.locationreceiver" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name="com.biubike.service.RouteService$NetWorkReceiver"
             android:label="NetworkConnection">

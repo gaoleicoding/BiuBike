@@ -2,6 +2,7 @@
     android:id="@+id/id_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:background="@color/color_343333">
 
     <!--content-->
@@ -11,7 +12,7 @@
     <FrameLayout
         android:id="@+id/id_container_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent"/>
 
 
 </com.biubike.custom.LeftDrawerLayout>

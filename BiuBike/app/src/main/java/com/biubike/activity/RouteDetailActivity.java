@@ -64,12 +64,13 @@ public class RouteDetailActivity extends BaseActivity {
             switch (msg.what) {
                 case UPDATE_PROGRESS:
                     currentIndex = currentIndex + spanIndex;
-                    routeBaiduMap.clear();
+
                     if (currentIndex < routePointsLength)
                         subList = points.subList(0, currentIndex);
                     if (subList.size() >= 2) {
                         OverlayOptions ooPolyline = new PolylineOptions().width(10)
                                 .color(0xFF36D19D).points(subList);
+                        routeBaiduMap.clear();
                         routeBaiduMap.addOverlay(ooPolyline);
                     }
                     if (subList.size() >= 1) {
@@ -274,7 +275,6 @@ public class RouteDetailActivity extends BaseActivity {
         tv_route_replay.setVisibility(View.GONE);
         routeBaiduMap.clear();
         replay_progress_layout.setVisibility(View.VISIBLE);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) route_mapview_layout.getLayoutParams();
 
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
     }

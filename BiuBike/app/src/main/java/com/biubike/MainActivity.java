@@ -795,7 +795,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void drawRoute(ArrayList<RoutePoint> routePoints) {
-
+        mBaiduMap.clear();
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
@@ -804,6 +804,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (points.size() > 2) {
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
                     .color(0xFF36D19D).points(points);
+            mBaiduMap.clear();
             mBaiduMap.addOverlay(ooPolyline);
 
         }

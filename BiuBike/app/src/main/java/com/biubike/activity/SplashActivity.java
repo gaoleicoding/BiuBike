@@ -25,8 +25,6 @@ public class SplashActivity extends Activity implements EasyPermissions.Permissi
     private String[] mPermissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE};
     public static final int CODE = 0x001;
     private final int DISMISS_SPLASH = 0;
-    String TAG = "gaolei";
-
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {

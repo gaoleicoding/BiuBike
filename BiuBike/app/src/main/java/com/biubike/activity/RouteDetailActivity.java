@@ -7,7 +7,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -42,20 +44,20 @@ import java.util.List;
 public class RouteDetailActivity extends BaseActivity {
 
     private MapView route_detail_mapview;
-    BaiduMap routeBaiduMap;
+    private BaiduMap routeBaiduMap;
     private BitmapDescriptor startBmp, endBmp, currentBmp;
-    TextView total_time, total_distance, total_price, tv_route_replay, tv_title;
+    private TextView total_time, total_distance, total_price, tv_route_replay, tv_title;
     public ArrayList<RoutePoint> routePoints;
     public static boolean completeRoute = false;
     private String routePointsStr;
-    RelativeLayout replay_progress_layout, route_mapview_layout;
-    List<LatLng> points, subList;
-    int routePointsLength, currentIndex = 0, spanIndex = 0;
-    boolean isInReplay = false, pauseReplay = false;
-    ImageView img_replay;
-    SeekBar seekbar_progress;
-    TextView tv_current_time, tv_current_speed;
-    final int UPDATE_PROGRESS = 1;
+    private RelativeLayout replay_progress_layout, route_mapview_layout;
+    private List<LatLng> points, subList;
+    private int routePointsLength, currentIndex = 0, spanIndex = 0;
+    private boolean isInReplay = false, pauseReplay = false;
+    private ImageView img_replay;
+    private SeekBar seekbar_progress;
+    private TextView tv_current_time, tv_current_speed;
+    private final int UPDATE_PROGRESS = 1;
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -273,8 +275,6 @@ public class RouteDetailActivity extends BaseActivity {
         routeBaiduMap.clear();
         replay_progress_layout.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) route_mapview_layout.getLayoutParams();
-//        params.height = Utils.getScreenHeight(this) - statusBarHeight - titleHeight;
-//        route_mapview_layout.setLayoutParams(params);
 
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
     }
@@ -288,7 +288,7 @@ public class RouteDetailActivity extends BaseActivity {
         currentIndex = 2;
         drawRoute();
         replay_progress_layout.setVisibility(View.GONE);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) route_mapview_layout.getLayoutParams();
+        ViewGroup.LayoutParams params = route_mapview_layout.getLayoutParams();
         params.height = Utils.dp2px(this, 240);
         route_mapview_layout.setLayoutParams(params);
         handler.removeCallbacksAndMessages(null);

@@ -19,7 +19,7 @@ import java.util.List;
 public class PoiHostoryAdapter extends RecyclerView.Adapter<PoiHostoryAdapter.MyViewHolder> {
 
     public Context context;
-    OnHistoryItemClickListener listener;
+    private OnHistoryItemClickListener listener;
     private List<PoiObject> list;
 
     public PoiHostoryAdapter(Context context, List<PoiObject> list) {

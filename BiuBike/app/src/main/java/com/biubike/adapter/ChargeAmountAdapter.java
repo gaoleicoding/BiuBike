@@ -17,10 +17,10 @@ import com.biubike.R;
 
 public class ChargeAmountAdapter extends RecyclerView.Adapter<ChargeAmountAdapter.MyViewHolder> {
 
-    public Context context;
-    String[] accountArr;
-    int selectPosition = 0;
-    OnItemClickListener listener;
+    private Context context;
+    private String[] accountArr;
+    private int selectPosition = 0;
+    private OnItemClickListener listener;
 
     public ChargeAmountAdapter(Context context) {
         this.context = context;

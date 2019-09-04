@@ -19,9 +19,9 @@ import java.util.List;
 public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdapter.MyViewHolder> {
 
     public Context context;
-    OnItemClickListener listener;
+    private OnItemClickListener listener;
     private List<SuggestionInfo> list;
-    String from;
+    private String from;
 
     public PoiSuggestionAdapter(Context context, List<SuggestionInfo> list, String from) {
         this.context = context;

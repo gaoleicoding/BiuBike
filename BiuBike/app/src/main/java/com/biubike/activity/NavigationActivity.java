@@ -44,19 +44,19 @@ public class NavigationActivity extends BaseActivity implements
         OnGetSuggestionResultListener, PoiSuggestionAdapter.OnItemClickListener
         , PoiHostoryAdapter.OnHistoryItemClickListener {
 
-    LinearLayout place_search_layout;
-    RelativeLayout title_content_layout;
-    EditText place_edit;
-    TextView start_place_edit, destination_edit;
-    RecyclerView recyclerview_poi, recyclerview_poi_history;
+    private LinearLayout place_search_layout;
+    private RelativeLayout title_content_layout;
+    private EditText place_edit;
+    private TextView start_place_edit, destination_edit;
+    private RecyclerView recyclerview_poi, recyclerview_poi_history;
     private List<SuggestionResult.SuggestionInfo> suggestionInfoList;
     private SuggestionSearch mSuggestionSearch = null;
-    PoiSuggestionAdapter sugAdapter;
-    boolean firstSetAdapter = true, isStartPoi = true;
-    String currentAddress, start_place, destination;
-    LatLng startLL, endLL, tempLL;
-    PoiHostoryAdapter poiHostoryAdapter;
-    ProviderUtil providerUtil;
+    private PoiSuggestionAdapter sugAdapter;
+    private boolean firstSetAdapter = true, isStartPoi = true;
+    private String currentAddress, start_place, destination;
+    private LatLng startLL, endLL, tempLL;
+    private PoiHostoryAdapter poiHostoryAdapter;
+    private ProviderUtil providerUtil;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

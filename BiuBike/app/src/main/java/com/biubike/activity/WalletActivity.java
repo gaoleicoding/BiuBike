@@ -20,11 +20,11 @@ import com.biubike.util.Utils;
 
 public class WalletActivity extends BaseActivity implements ChargeAmountAdapter.OnItemClickListener, View.OnClickListener {
 
-    RecyclerView recyclerview_acount;
-    ChargeAmountAdapter adapter;
-    TextView ballance;
-    ImageView wechat, alipay;
-    RelativeLayout wechat_layout, alipay_layout;
+    private RecyclerView recyclerview_acount;
+    private ChargeAmountAdapter adapter;
+    private TextView ballance;
+    private ImageView wechat, alipay;
+    private RelativeLayout wechat_layout, alipay_layout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -65,7 +65,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="15dp"
                 android:progressDrawable="@drawable/po_seekbar"
-                android:thumb="@drawable/detail_icon_schedule_ball" />
+                android:thumb="@mipmap/seekbar_thumb" />
         </RelativeLayout>
 
         <TextView

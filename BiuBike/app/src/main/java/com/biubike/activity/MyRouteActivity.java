@@ -26,14 +26,14 @@ import java.util.List;
 
 public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnItemClickListener {
 
-    XRecyclerView routeRecyclerView;
-    MyRouteAdapter routeAdapter;
-    List<RouteRecord> routeList;
-    String TABLE_NAME = "cycle_route";
-    int PageId = 0, PageSize = 10;
-    long itemCount = 0;
-    SQLiteDatabase db;
-    TextView no_route;
+    private XRecyclerView routeRecyclerView;
+    private MyRouteAdapter routeAdapter;
+    private List<RouteRecord> routeList;
+    private String TABLE_NAME = "cycle_route";
+    private int PageId = 0, PageSize = 10;
+    private long itemCount = 0;
+    private SQLiteDatabase db;
+    private TextView no_route;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

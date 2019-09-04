@@ -19,8 +19,8 @@ import java.util.List;
 public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHolder> {
 
     public Context context;
-    OnItemClickListener listener;
-    List<RouteRecord> list;
+    private OnItemClickListener listener;
+    private List<RouteRecord> list;
 
     public MyRouteAdapter(Context context, List<RouteRecord> list) {
         this.context = context;

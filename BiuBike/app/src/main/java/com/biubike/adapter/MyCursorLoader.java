@@ -11,7 +11,7 @@ import android.provider.ContactsContract;
 
 public class MyCursorLoader extends CursorLoader {
 
-    String[] mContactProjection={
+    private String[] mContactProjection={
             ContactsContract.Contacts._ID, //0
             ContactsContract.Contacts.DISPLAY_NAME//1
     };

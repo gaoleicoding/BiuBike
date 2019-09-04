@@ -1,6 +1,5 @@
 package com.biubike.base;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +36,9 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    public void finishActivity(View view) {
+        finish();
     }
 }

@@ -25,11 +25,7 @@ import java.util.List;
 
 import static com.biubike.util.NavUtil.activityList;
 
-/**
- * 诱导界面
- *
- * @author sunhao04
- */
+
 public class BDInnerNaviActivity extends Activity {
 
     private final String TAG = BDInnerNaviActivity.class.getName();
@@ -163,9 +159,6 @@ public class BDInnerNaviActivity extends Activity {
         }
 
     }
-
-    ;
-
 
     @Override
     public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {

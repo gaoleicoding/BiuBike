@@ -12,7 +12,6 @@
     <FrameLayout
         android:id="@+id/id_container_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent" />
 
 </com.biubike.custom.LeftDrawerLayout>

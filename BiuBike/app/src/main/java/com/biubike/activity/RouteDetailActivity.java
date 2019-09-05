@@ -41,7 +41,7 @@ import java.util.List;
 
 public class RouteDetailActivity extends BaseActivity {
 
-    private MapView route_detail_mapview;
+    private MapView routeDetailMapView;
     private BaiduMap routeBaiduMap;
     private BitmapDescriptor startBmp, endBmp, currentBmp;
     private TextView total_time, total_distance, total_price, tv_route_replay, tv_title;
@@ -89,7 +89,7 @@ public class RouteDetailActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
-        route_detail_mapview = findViewById(R.id.route_detail_mapview);
+        initMap();
         total_time = findViewById(R.id.total_time);
         total_distance = findViewById(R.id.total_distance);
         total_price = findViewById(R.id.total_pricce);
@@ -102,9 +102,7 @@ public class RouteDetailActivity extends BaseActivity {
         replay_progress_layout = findViewById(R.id.replay_progress_layout);
         route_mapview_layout = findViewById(R.id.route_mapview_layout);
         route_mapview_layout.requestDisallowInterceptTouchEvent(true);
-        route_detail_mapview.requestDisallowInterceptTouchEvent(true);
-        routeBaiduMap = route_detail_mapview.getMap();
-        route_detail_mapview.showZoomControls(false);
+
         startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
         endBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
         currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
@@ -160,12 +158,17 @@ public class RouteDetailActivity extends BaseActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
-                currentIndex = (int) routePointsLength * progress / 100;
-
+                currentIndex = routePointsLength * progress / 100;
 
             }
         });
 
+    }
+    private void initMap(){
+        routeDetailMapView = findViewById(R.id.route_detail_mapview);
+        routeDetailMapView.requestDisallowInterceptTouchEvent(true);
+        routeDetailMapView.showZoomControls(true);
+        routeBaiduMap = routeDetailMapView.getMap();
     }
 
     public void drawRoute() {
@@ -194,22 +197,6 @@ public class RouteDetailActivity extends BaseActivity {
     }
 
     private void addOverLayout(LatLng startPosition, LatLng endPosition) {
-        //先清除图层
-        // mBaiduMap.clear();
-        // 定义Maker坐标点
-        // 构建MarkerOption，用于在地图上添加Marker
-        MarkerOptions options = new MarkerOptions().position(startPosition)
-                .icon(startBmp);
-        // 在地图上添加Marker，并显示
-        routeBaiduMap.addOverlay(options);
-        MarkerOptions options2 = new MarkerOptions().position(endPosition)
-                .icon(endBmp);
-        // 在地图上添加Marker，并显示
-        routeBaiduMap.addOverlay(options2);
-
-    }
-
-    private void addOverLayout2(LatLng startPosition, LatLng endPosition) {
         //先清除图层
         // mBaiduMap.clear();
         // 定义Maker坐标点

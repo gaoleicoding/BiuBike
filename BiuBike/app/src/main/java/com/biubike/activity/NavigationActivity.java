@@ -63,7 +63,7 @@ public class NavigationActivity extends BaseActivity implements
         activityList.add(this);
         setContentView(R.layout.activity_navigation);
         providerUtil = new ProviderUtil(this);
-        //想使用内置导航，必须初始化导航， NavUtil.initNavi(this);
+        //想使用内置导航，必须初始化导航
         NavUtil.initNavi(this);
         currentAddress = LocationManager.getInstance().getAddress();
         place_search_layout =  findViewById(R.id.place_search_layout);
@@ -92,7 +92,6 @@ public class NavigationActivity extends BaseActivity implements
 
             @Override
             public void afterTextChanged(Editable arg0) {
-                Log.d("gaolei", "afterTextChanged--------------");
             }
 
             @Override

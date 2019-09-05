@@ -117,7 +117,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BaiduMap mBaiduMap;
     private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
-    private List points;
+    private List<LatLng> points;
+    private BitmapDescriptor currentBmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,11 +140,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
         points = new ArrayList<>();
+        currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
+//        mLeftDrawerLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+//            @Override
+//            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+//                return windowInsets.consumeSystemWindowInsets();
+//            }
+//        });
+
     }
 
     private void initMap() {
         // 地图初始化
-        mMapView = (MapView) findViewById(R.id.id_bmapView);
+        mMapView = findViewById(R.id.id_bmapView);
+        mMapView.showZoomControls(true);
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -156,10 +166,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        option.setScanSpan(span);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
-        mlocationClient.start();
-        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+        if (!mlocationClient.isStarted()) {
+            mlocationClient.start();
+        }
+        mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
-                mCurrentMode, true, null));
+                mCurrentMode, true, currentBmp));
         myOrientationListener = new MyOrientationListener(this);
         //通过接口回调来实现实时方向的改变
         myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
@@ -168,6 +180,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mCurrentX = x;
             }
         });
+
         myOrientationListener.start();
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
@@ -248,8 +261,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         menu_icon = findViewById(R.id.menu_icon);
         menu_icon.setOnClickListener(this);
         shadowView.setOnClickListener(this);
-
-        mBaiduMap = mMapView.getMap();
 
         mBaiduMap.setOnMapStatusChangeListener(changeListener);
         btn_locale = findViewById(R.id.btn_locale);
@@ -557,7 +568,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_transit_dialog);
 
-            transitRouteList = (ListView) findViewById(R.id.transitList);
+            transitRouteList = findViewById(R.id.transitList);
             transitRouteList.setAdapter(mTransitAdapter);
 
             transitRouteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -662,7 +673,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         btn_refresh.setVisibility(View.VISIBLE);
         btn_locale.setVisibility(View.VISIBLE);
         end_route.setVisibility(View.GONE);
-        mMapView.showZoomControls(true);
+
 
         getMyLocation();
         if (routeOverlay != null)
@@ -712,12 +723,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         btn_locale.setVisibility(View.GONE);
         end_route.setVisibility(View.VISIBLE);
-        mMapView.showZoomControls(false);
         mBaiduMap.clear();
         if (isServiceLive)
             mlocationClient.requestLocation();
         Intent intent = new Intent(this, RouteService.class);
         startService(intent);
+
     }
 
     private void cancelBook() {
@@ -806,6 +817,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     .color(0xFF36D19D).points(points);
             mBaiduMap.clear();
             mBaiduMap.addOverlay(ooPolyline);
+//            LatLng latLng = points.get(points.size() - 1);
+//            MarkerOptions options = new MarkerOptions().position(latLng)
+//                    .icon(currentBmp);
+//            // 在地图上添加Marker，并显示
+//            mBaiduMap.addOverlay(options);
+//            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+//            // 移动到某经纬度
+//            mBaiduMap.animateMapStatus(update);
         }
     }
 

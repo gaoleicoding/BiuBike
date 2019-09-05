@@ -76,7 +76,7 @@ public class PoiSuggestionAdapter extends RecyclerView.Adapter<PoiSuggestionAdap
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View v, int position, String flag, SuggestionInfo info);
+        void onItemClick(View v, int position, String flag, SuggestionInfo info);
     }
 
     public void setOnClickListener(OnItemClickListener listener) {

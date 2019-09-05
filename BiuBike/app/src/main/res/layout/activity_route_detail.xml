@@ -102,6 +102,7 @@
             android:id="@+id/route_detail_mapview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             android:clickable="true" />
 
         <TextView

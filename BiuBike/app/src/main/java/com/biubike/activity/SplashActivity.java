@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.util.PermissionUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;

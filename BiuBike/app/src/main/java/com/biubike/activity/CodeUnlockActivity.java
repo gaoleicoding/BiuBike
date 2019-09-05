@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
 

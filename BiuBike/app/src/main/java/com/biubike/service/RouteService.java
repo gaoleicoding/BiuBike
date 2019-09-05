@@ -70,10 +70,8 @@ public class RouteService extends Service {
 
     private LocationClient mlocationClient = null;
     private MylocationListener mlistener;
-    private BitmapDescriptor mIconLocation;
     private MyOrientationListener myOrientationListener;
-    private String rt_distance;
-    private String rt_price;
+    protected String rt_price;
     AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public int totalDistance = 0;
@@ -82,7 +80,6 @@ public class RouteService extends Service {
     private String showDistance, showTime, showPrice;
     private Notification notification;
     private RemoteViews contentView;
-    private final int MSG_REFRESh_LOCATION = 1;
 
 
     public void setRunning(boolean running) {
@@ -142,8 +139,7 @@ public class RouteService extends Service {
     }
 
     private void initLocation() {
-        mIconLocation = BitmapDescriptorFactory
-                .fromResource(R.mipmap.location_marker);
+
         //定位图层显示方式
         MyLocationConfiguration.LocationMode locationMode = MyLocationConfiguration.LocationMode.NORMAL;
 
@@ -166,21 +162,9 @@ public class RouteService extends Service {
         //设置 LocationClientOptionƒ20
         mlocationClient.setLocOption(mOption);
 
-        //初始化图标,BitmapDescriptorFactory是bitmap 描述信息工厂类.
-        mIconLocation = BitmapDescriptorFactory
-                .fromResource(R.mipmap.location_marker);
-
-        myOrientationListener = new MyOrientationListener(this);
-        //通过接口回调来实现实时方向的改变
-        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
-            @Override
-            public void onOrientationChanged(float x) {
-            }
-        });
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
-        myOrientationListener.start();
     }
 
 
@@ -299,7 +283,6 @@ public class RouteService extends Service {
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);
         contentView.setTextViewText(R.id.bike_price, price);
-        rt_distance = distance;
         rt_price = price;
     }
 

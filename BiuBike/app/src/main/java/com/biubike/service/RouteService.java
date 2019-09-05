@@ -27,8 +27,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
@@ -37,9 +35,7 @@ import com.biubike.R;
 import com.biubike.activity.RouteDetailActivity;
 import com.biubike.bean.RoutePoint;
 import com.biubike.bean.RoutePoints;
-import com.biubike.callback.AllInterface;
 import com.biubike.database.RouteDBHelper;
-import com.biubike.map.MyOrientationListener;
 import com.biubike.util.Utils;
 import com.google.gson.Gson;
 
@@ -70,9 +66,7 @@ public class RouteService extends Service {
 
     private LocationClient mlocationClient = null;
     private MylocationListener mlistener;
-    private MyOrientationListener myOrientationListener;
     protected String rt_price;
-    AllInterface.IUpdateLocation iUpdateLocation;
     public ArrayList<RoutePoint> routPointList = new ArrayList<>();
     public int totalDistance = 0;
     public int totalPrice = 0;
@@ -81,22 +75,9 @@ public class RouteService extends Service {
     private Notification notification;
     private RemoteViews contentView;
 
-
-    public void setRunning(boolean running) {
-        isRunning = running;
-    }
-
-    public boolean isRunning = true;
-
-
-    public void setiUpdateLocation(AllInterface.IUpdateLocation iUpdateLocation) {
-        this.iUpdateLocation = iUpdateLocation;
-    }
-
     public void onCreate() {
         super.onCreate();
         beginTime = System.currentTimeMillis();
-        isRunning = true;
 
         totalTime = 0;
         totalDistance = 0;
@@ -180,7 +161,6 @@ public class RouteService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mlocationClient.stop();
-        myOrientationListener.stop();
         Gson gson = new Gson();
         String routeListStr = gson.toJson(routPointList);
         Bundle bundle = new Bundle();
@@ -199,7 +179,6 @@ public class RouteService extends Service {
         showTime = "";
         showDistance = "";
         showPrice = "";
-        isRunning = false;
     }
 
 
@@ -212,7 +191,6 @@ public class RouteService extends Service {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             if (null == bdLocation) return;
-            if (!isRunning) return;
 
             //"4.9E-324"表示目前所处的环境（室内或者是网络状况不佳）造成无法获取到经纬度
             if ("4.9E-324".equals(String.valueOf(bdLocation.getLatitude())) || "4.9E-324".equals(String.valueOf(bdLocation.getLongitude()))) {

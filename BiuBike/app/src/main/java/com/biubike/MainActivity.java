@@ -55,7 +55,6 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.biubike.activity.CodeUnlockActivity;
 import com.biubike.activity.MyRouteActivity;
 import com.biubike.activity.NavigationActivity;
-import com.biubike.activity.RouteDetailActivity;
 import com.biubike.activity.WalletActivity;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
@@ -163,7 +162,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-//        option.setScanSpan(span);//设置onReceiveLocation()获取位置的频率
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         mlocationClient.setLocOption(option);
         if (!mlocationClient.isStarted()) {
@@ -212,17 +210,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             LocationManager.getInstance().setCurrentLL(currentLL);
             LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);
-            //option.setScanSpan(2000)，每隔2000ms这个方法就会调用一次，而有些我们只想调用一次，所以要判断一下isFirstLoc
+            //可能会调用多次，而我们只想第一次进入的时候调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
-                LatLng ll = new LatLng(bdLocation.getLatitude(),
-                        bdLocation.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
                 //地图缩放比设置为18
-                builder.target(ll).zoom(18.0f);
+                builder.target(currentLL).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-                changeLatitude = bdLocation.getLatitude();
-                changeLongitude = bdLocation.getLongitude();
                 if (!isServiceLive) {
                     addOverLayout(currentLatitude, currentLongitude);
                 }
@@ -294,13 +288,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.btn_locale:
                 getMyLocation();
-                if (routeOverlay != null)
-                    routeOverlay.removeFromMap();
+
                 addOverLayout(currentLatitude, currentLongitude);
                 break;
             case R.id.btn_refresh:
-                if (routeOverlay != null)
-                    routeOverlay.removeFromMap();
                 addOverLayout(changeLatitude, changeLongitude);
                 break;
             case R.id.end_route:
@@ -365,7 +356,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 bike_time.setText(Utils.timeFormatter(totalTime));
 
                 WalkingRouteOverlay overlay = new MyWalkingRouteOverlay(mBaiduMap);
-//                    mBaiduMap.setOnMarkerClickListener(overlay);
                 routeOverlay = overlay;
                 overlay.setData(result.getRouteLines().get(0));
                 overlay.addToMap();
@@ -435,7 +425,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void addInfosOverlay(List<BikeInfo> infos) {
         LatLng latLng = null;
-        OverlayOptions overlayOptions = null;
+        OverlayOptions overlayOptions;
         Marker marker = null;
         for (BikeInfo info : infos) {
             // 位置
@@ -457,15 +447,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void addOverLayout(double _latitude, double _longitude) {
         //先清除图层
         mBaiduMap.clear();
-        mlocationClient.requestLocation();
-        // 定义Maker坐标点
+        infos.clear();
+//        mlocationClient.requestLocation();
+//        if (routeOverlay != null)
+//            routeOverlay.removeFromMap();
+
         LatLng point = new LatLng(_latitude, _longitude);
-        // 构建MarkerOption，用于在地图上添加Marker
         MarkerOptions options = new MarkerOptions().position(point)
                 .icon(dragLocationIcon);
-        // 在地图上添加Marker，并显示
+        // 在地图上添加显示当前位置Marker
         mBaiduMap.addOverlay(options);
-        infos.clear();
+
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_mobai, "001",
                 "100米", "1分钟"));
         infos.add(new BikeInfo(_latitude - new Random().nextInt(5) * 0.0005, _longitude - new Random().nextInt(5) * 0.0005, R.mipmap.bike_youbai, "002",
@@ -490,7 +482,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (marker != null && marker.getExtraInfo() != null) {
                     BikeInfo bikeInfo = (BikeInfo) marker.getExtraInfo().get("info");
                     if (bikeInfo != null)
-                        updateBikeInfo(bikeInfo);
+                        showBikeWalkingPlan(bikeInfo);
                 }
                 return true;
             }
@@ -503,7 +495,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         InfoWindow.OnInfoWindowClickListener listener = null;
         listener = new InfoWindow.OnInfoWindowClickListener() {
             public void onInfoWindowClick() {
-                updateBikeInfo(bikeInfo);
+                showBikeWalkingPlan(bikeInfo);
                 mBaiduMap.hideInfoWindow();
             }
         };
@@ -511,20 +503,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mBaiduMap.showInfoWindow(mInfoWindow);
     }
 
-    private void updateBikeInfo(BikeInfo bikeInfo) {
+    private void showBikeWalkingPlan(BikeInfo bikeInfo) {
 
-        boolean hasPlanRoute = false;
-        if (!hasPlanRoute) {
-            llBikeLayout.setVisibility(View.VISIBLE);
-            bike_time.setText(bikeInfo.getTime());
-            bike_distance.setText(bikeInfo.getDistance());
-            PlanNode endNodeStr = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(), bikeInfo.getLongitude()));
-            drawPlanRoute(endNodeStr);
-            llPrice.setVisibility(View.GONE);
-        }
+        llBikeLayout.setVisibility(View.VISIBLE);
+        bike_time.setText(bikeInfo.getTime());
+        bike_distance.setText(bikeInfo.getDistance());
+        PlanNode endNodeStr = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(), bikeInfo.getLongitude()));
+        drawWalkingPlanRoute(endNodeStr);
+        llPrice.setVisibility(View.GONE);
     }
 
-    private void drawPlanRoute(PlanNode endNodeStr) {
+    private void drawWalkingPlanRoute(PlanNode endNodeStr) {
         if (routeOverlay != null)
             routeOverlay.removeFromMap();
         if (endNodeStr != null) {
@@ -661,10 +650,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         btn_locale.setVisibility(View.VISIBLE);
         end_route.setVisibility(View.GONE);
 
-
         getMyLocation();
-        if (routeOverlay != null)
-            routeOverlay.removeFromMap();
+
         addOverLayout(currentLatitude, currentLongitude);
     }
 
@@ -711,8 +698,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         btn_locale.setVisibility(View.GONE);
         end_route.setVisibility(View.VISIBLE);
         mBaiduMap.clear();
-        if (isServiceLive)
-            mlocationClient.requestLocation();
+        mlocationClient.requestLocation();
         Intent intent = new Intent(this, RouteService.class);
         startService(intent);
 
@@ -805,10 +791,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mBaiduMap.clear();
             mBaiduMap.addOverlay(ooPolyline);
 //            LatLng latLng = points.get(points.size() - 1);
-//            MarkerOptions options = new MarkerOptions().position(latLng)
-//                    .icon(currentBmp);
-//            // 在地图上添加Marker，并显示
-//            mBaiduMap.addOverlay(options);
 //            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
 //            // 移动到某经纬度
 //            mBaiduMap.animateMapStatus(update);

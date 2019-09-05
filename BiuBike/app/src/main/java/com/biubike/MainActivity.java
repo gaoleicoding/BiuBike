@@ -169,7 +169,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
-        mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
+        mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                 mCurrentMode, true, currentBmp));
         myOrientationListener = new MyOrientationListener(this);
@@ -637,19 +637,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-
-    protected void onRestart() {
-        super.onRestart();
-        mlocationClient.start();
-        myOrientationListener.start();
-        isServiceLive = Utils.isServiceWork(this, "com.biubike.service.RouteService");
-        if (isServiceLive) {
-            beginService();
-        }
-        if (RouteDetailActivity.completeRoute)
-            backFromRouteDetail();
-    }
-
     private void backFromRouteDetail() {
         title.setText(getString(R.string.bybike));
         textview_time.setText(getString(R.string.foot));
@@ -841,6 +828,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
                 mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                         mCurrentMode, true, null));
+                backFromRouteDetail();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -46,7 +46,6 @@ public class RouteDetailActivity extends BaseActivity {
     private BitmapDescriptor startBmp, endBmp, currentBmp;
     private TextView total_time, total_distance, total_price, tv_route_replay, tv_title;
     public ArrayList<RoutePoint> routePoints;
-    public static boolean completeRoute = false;
     private String routePointsStr;
     private RelativeLayout replay_progress_layout, route_mapview_layout;
     private List<LatLng> points, subList;
@@ -214,8 +213,6 @@ public class RouteDetailActivity extends BaseActivity {
 
     public void onDestroy() {
         super.onDestroy();
-
-        completeRoute = false;
     }
 
     public void finishActivity(View view) {
@@ -223,7 +220,6 @@ public class RouteDetailActivity extends BaseActivity {
             backFromReplay();
             return;
         }
-        completeRoute = true;
         finish();
     }
 
@@ -285,7 +281,6 @@ public class RouteDetailActivity extends BaseActivity {
                 backFromReplay();
                 return false;
             }
-            completeRoute = true;
             finish();
             return true;
         }

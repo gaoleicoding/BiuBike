@@ -60,7 +60,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
-            android:theme="@style/TranslucentStatus">
+            android:theme="@style/TranslucentStatus"
+            android:launchMode="singleTask">
 
         </activity>
         <activity

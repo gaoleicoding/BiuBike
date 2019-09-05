@@ -45,7 +45,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static android.net.NetworkInfo.State;
-import static com.biubike.util.Constant.span;
 
 
 //        记录轨迹思路:
@@ -139,7 +138,7 @@ public class RouteService extends Service {
         //设置是否打开gps进行定位
         mOption.setOpenGps(true);
         //设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        mOption.setScanSpan(span);
+        mOption.setScanSpan(2000);
         //设置 LocationClientOptionƒ20
         mlocationClient.setLocOption(mOption);
 

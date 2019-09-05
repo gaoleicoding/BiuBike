@@ -219,7 +219,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
+        android:layout_margin="24dp"
         android:orientation="vertical">
 
         <ImageView
@@ -243,12 +243,12 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/btn_refresh"
-            android:layout_alignParentRight="true"
             android:background="@drawable/end_route_bg"
             android:gravity="center"
             android:text="@string/end_route"
             android:textColor="@color/white"
             android:textSize="14sp"
+            tools:visibility="visible"
             android:visibility="gone" />
     </RelativeLayout>
 

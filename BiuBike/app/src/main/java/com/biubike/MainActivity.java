@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private View shadowView;
     // 定位相关
     private LocationClient mlocationClient;
-    public MyLocationListenner myListener = new MyLocationListenner();
+    public MyLocationListenner myListener;
     private MyLocationConfiguration.LocationMode mCurrentMode;
     private MyOrientationListener myOrientationListener;
     private MapView mMapView;
@@ -150,6 +150,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initMap() {
+
         // 地图初始化
         mMapView = findViewById(R.id.id_bmapView);
         mMapView.showZoomControls(true);
@@ -158,6 +159,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
         mlocationClient = new LocationClient(this);
+        myListener = new MyLocationListenner();
         mlocationClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
@@ -186,7 +188,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     /**
-     * 定位SDK监听函数
+     * 定位SDK监听函数，调用的时机：
+     * 1、第一次进入此Activity
+     * 2、调用mlocationClient.requestLocation()
+     * 3、RouteService中设置了setScanSpan(2000)，所以行程中会每隔2s调用一次
      */
     public class MyLocationListenner implements BDLocationListener {
 
@@ -210,7 +215,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             LocationManager.getInstance().setCurrentLL(currentLL);
             LocationManager.getInstance().setAddress(bdLocation.getAddrStr());
             startNodeStr = PlanNode.withLocation(currentLL);
-            //可能会调用多次，而我们只想第一次进入的时候调用一次，所以要判断一下isFirstLoc
+
+            Log.d("gaolei", "currentLL----------" + currentLL);
+            //可能会调用多次，而我们下面的逻辑只想第一次进入的时候调用一次，所以要判断一下isFirstLoc
             if (isFirstLoc) {
                 isFirstLoc = false;
                 MapStatus.Builder builder = new MapStatus.Builder();
@@ -272,9 +279,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void getMyLocation() {
+        mlocationClient.requestLocation();
+
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-        mBaiduMap.setMapStatus(msu);
+//        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+//        mBaiduMap.setMapStatus(msu);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+        // 移动到某经纬度
+        mBaiduMap.animateMapStatus(update);
     }
 
     @Override
@@ -391,7 +403,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onMenuSlide(float offset) {
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
-        String hex = Integer.toHexString(alpha).toUpperCase();
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
     }
 
@@ -406,8 +417,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             String _regex2 = "target lng: (.*)\ntarget screen x";
             changeLatitude = Double.parseDouble(latlng(_regex, _str));
             changeLongitude = Double.parseDouble(latlng(_regex2, _str));
-            LatLng changeLL = new LatLng(changeLatitude, changeLongitude);
-            startNodeStr = PlanNode.withLocation(changeLL);
+
         }
 
         public void onMapStatusChange(MapStatus mapStatus) {
@@ -504,7 +514,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void showBikeWalkingPlan(BikeInfo bikeInfo) {
-
+        mlocationClient.requestLocation();
         llBikeLayout.setVisibility(View.VISIBLE);
         bike_time.setText(bikeInfo.getTime());
         bike_distance.setText(bikeInfo.getDistance());

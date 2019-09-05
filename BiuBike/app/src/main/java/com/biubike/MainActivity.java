@@ -282,8 +282,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mlocationClient.requestLocation();
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-//        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-//        mBaiduMap.setMapStatus(msu);
         MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
         // 移动到某经纬度
         mBaiduMap.animateMapStatus(update);
@@ -785,6 +783,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             bike_time.setText(showTime);
             bike_distance.setText(showDistance);
             bike_price.setText(showPrice);
+            RoutePoint routePoint=routPointList.get(routPointList.size()-1);
+            LatLng latLng = new LatLng(routePoint.routeLat, routePoint.routeLng);
+            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+            // 移动到某经纬度
+            mBaiduMap.animateMapStatus(update);
         }
     }
 

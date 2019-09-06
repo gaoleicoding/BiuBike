@@ -8,6 +8,20 @@
 百度地图开放平台：http://lbsyun.baidu.com
 
 
+-------------------------------------------
+V2.2.0更新：
+ 1、兼容8.0 9.0系统
+ 2、解决地图不能定位的问题（因为9.0及之后非https请求需要配置network-security-config）
+ 3、解决Notification不能显示的问题（因为9.0及之后Notification需要加Channel）
+ 4、更换Translucent状态栏实现方式
+ 5、BroadcastReceiver替换为EveentBus 
+ 6、行程中增加行程轨迹 
+ 7、优化逻辑和代码
+
+
+
+-------------------------------------------
+
  app扫码下载体验
 
  ![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/download.png)

@@ -242,11 +242,15 @@ public class RouteDetailActivity extends BaseActivity {
         tv_route_replay.setVisibility(View.GONE);
         routeBaiduMap.clear();
         replay_progress_layout.setVisibility(View.VISIBLE);
+        ViewGroup.LayoutParams params = route_mapview_layout.getLayoutParams();
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        route_mapview_layout.setLayoutParams(params);
 
         handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
     }
 
     private void setPolyline(List<LatLng> list) {
+        if (list.size() < 2) return;
         OverlayOptions ooPolyline = new PolylineOptions().width(10)
                 .color(0xFF36D19D).points(list);
         routeBaiduMap.clear();

@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private boolean isFirstLoc = true; // 是否首次定位
-    private List<LatLng> points;
+    private List<LatLng> pointsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
-        points = new ArrayList<>();
+        pointsList = new ArrayList<>();
 //        mLeftDrawerLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
 //            @Override
 //            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
@@ -787,7 +787,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Log.d("gaolei", "totalPrice-------get-------" + showPrice);
             Log.d("gaolei", "routPointList.size()-------get-------" + routPointList.size());
 
-            drawPolyline(routPointList);
+            setPolyline(routPointList);
             bike_time.setText(showTime);
             bike_distance.setText(showDistance);
             bike_price.setText(showPrice);
@@ -799,19 +799,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    public void drawPolyline(ArrayList<RoutePoint> routePoints) {
-        points.clear();
+    public void setPolyline(ArrayList<RoutePoint> routePoints) {
+        pointsList.clear();
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
-            points.add(latLng);
+            pointsList.add(latLng);
         }
+        if (pointsList.size() < 2) return;
         OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                .color(0xFF36D19D).points(points);
+                .color(0xFF36D19D).points(pointsList);
         mBaiduMap.clear();
         mBaiduMap.addOverlay(ooPolyline);
 
-        LatLng newLatLng = points.get(points.size() - 1);
+        LatLng newLatLng = pointsList.get(pointsList.size() - 1);
         MarkerOptions options = new MarkerOptions().position(newLatLng)
                 .icon(bikeIcon);
         // 在地图上添加Marker，并显示

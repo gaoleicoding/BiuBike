@@ -120,8 +120,6 @@ public class RouteService extends Service {
 
     private void initLocation() {
 
-        //定位图层显示方式
-        MyLocationConfiguration.LocationMode locationMode = MyLocationConfiguration.LocationMode.NORMAL;
 
         //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
         mlocationClient = new LocationClient(this);
@@ -183,8 +181,6 @@ public class RouteService extends Service {
 
     //所有的定位信息都通过接口回调来实现
     public class MylocationListener implements BDLocationListener {
-        //定位请求回调接口
-        private boolean isFirstIn = true;
 
         //定位请求回调函数,这里面会得到定位信息
         @Override

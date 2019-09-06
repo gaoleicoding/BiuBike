@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private long exitTime = 0;
     private View divider;
     //自定义图标
-    private BitmapDescriptor dragLocationIcon, bikeIcon;
+    private BitmapDescriptor dragLocationIcon, bikeIcon,startBmp;
     private RoutePlanSearch mSearch = null;    // 搜索模块，也可去掉地图模块独立使用
 
     private PlanNode startNodeStr;
@@ -114,10 +114,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MyOrientationListener myOrientationListener;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
-    private float mCurrentX;
     private boolean isFirstLoc = true; // 是否首次定位
     private List<LatLng> points;
-    private BitmapDescriptor currentBmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +137,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
         points = new ArrayList<>();
-        currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
 //        mLeftDrawerLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
 //            @Override
 //            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
@@ -154,6 +151,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // 地图初始化
         mMapView = findViewById(R.id.id_bmapView);
         mMapView.showZoomControls(true);
+        //去掉百度Logo的小技巧
+        View child = mMapView.getChildAt(1);
+        if (child != null && (child instanceof ImageView)){
+            child.setVisibility(View.INVISIBLE);
+        }
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -171,17 +173,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
-                mCurrentMode, true, currentBmp));
-        myOrientationListener = new MyOrientationListener(this);
-        //通过接口回调来实现实时方向的改变
-        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
-            @Override
-            public void onOrientationChanged(float x) {
-                mCurrentX = x;
-            }
-        });
-
-        myOrientationListener.start();
+                mCurrentMode, true, null));
+//        myOrientationListener = new MyOrientationListener(this);
+//        //通过接口回调来实现实时方向的改变
+//        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
+//            @Override
+//            public void onOrientationChanged(float x) {
+//                mCurrentX = x;
+//            }
+//        });
+//
+//        myOrientationListener.start();
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
         initMarkerClickEvent();
@@ -201,12 +203,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (bdLocation == null || mMapView == null) {
                 return;
             }
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(bdLocation.getRadius())
-                    .direction(mCurrentX)//设定图标方向     // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .latitude(bdLocation.getLatitude())
-                    .longitude(bdLocation.getLongitude()).build();
-            mBaiduMap.setMyLocationData(locData);
+//            MyLocationData locData = new MyLocationData.Builder()
+//                    .accuracy(bdLocation.getRadius())
+//                    .direction(mCurrentX)//设定图标方向     // 此处设置开发者获取到的方向信息，顺时针0-360
+//                    .latitude(bdLocation.getLatitude())
+//                    .longitude(bdLocation.getLongitude()).build();
+//            mBaiduMap.setMyLocationData(locData);
             currentLatitude = bdLocation.getLatitude();
             currentLongitude = bdLocation.getLongitude();
             current_addr.setText(bdLocation.getAddrStr());
@@ -276,6 +278,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.setOnClickListener(this);
         dragLocationIcon = BitmapDescriptorFactory.fromResource(R.mipmap.drag_location);
         bikeIcon = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
+        startBmp = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
     }
 
     public void getMyLocation() {
@@ -629,8 +632,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+
         if (resultCode == RESULT_OK) {
             beginService();
+            MarkerOptions options = new MarkerOptions().position(new LatLng(currentLatitude,currentLongitude))
+                    .icon(startBmp);
+            // 在地图上添加Marker，并显示
+            mBaiduMap.addOverlay(options);
         }
     }
 
@@ -779,11 +787,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Log.d("gaolei", "totalPrice-------get-------" + showPrice);
             Log.d("gaolei", "routPointList.size()-------get-------" + routPointList.size());
 
-            drawRoute(routPointList);
+            drawPolyline(routPointList);
             bike_time.setText(showTime);
             bike_distance.setText(showDistance);
             bike_price.setText(showPrice);
-            RoutePoint routePoint=routPointList.get(routPointList.size()-1);
+            RoutePoint routePoint = routPointList.get(routPointList.size() - 1);
             LatLng latLng = new LatLng(routePoint.routeLat, routePoint.routeLng);
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
             // 移动到某经纬度
@@ -791,23 +799,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    public void drawRoute(ArrayList<RoutePoint> routePoints) {
+    public void drawPolyline(ArrayList<RoutePoint> routePoints) {
         points.clear();
         for (int i = 0; i < routePoints.size(); i++) {
             RoutePoint point = routePoints.get(i);
             LatLng latLng = new LatLng(point.getRouteLat(), point.getRouteLng());
             points.add(latLng);
         }
-        if (points.size() > 1) {
-            OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                    .color(0xFF36D19D).points(points);
-            mBaiduMap.clear();
-            mBaiduMap.addOverlay(ooPolyline);
-//            LatLng latLng = points.get(points.size() - 1);
-//            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
-//            // 移动到某经纬度
-//            mBaiduMap.animateMapStatus(update);
-        }
+        OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                .color(0xFF36D19D).points(points);
+        mBaiduMap.clear();
+        mBaiduMap.addOverlay(ooPolyline);
+
+        LatLng newLatLng = points.get(points.size() - 1);
+        MarkerOptions options = new MarkerOptions().position(newLatLng)
+                .icon(bikeIcon);
+        // 在地图上添加Marker，并显示
+        mBaiduMap.addOverlay(options);
     }
 
     protected void toastDialog() {

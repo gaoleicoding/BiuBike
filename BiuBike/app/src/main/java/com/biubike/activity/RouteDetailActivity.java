@@ -163,7 +163,8 @@ public class RouteDetailActivity extends BaseActivity {
         });
 
     }
-    private void initMap(){
+
+    private void initMap() {
         routeDetailMapView = findViewById(R.id.route_detail_mapview);
         routeDetailMapView.requestDisallowInterceptTouchEvent(true);
         routeDetailMapView.showZoomControls(true);
@@ -250,12 +251,12 @@ public class RouteDetailActivity extends BaseActivity {
                 .color(0xFF36D19D).points(list);
         routeBaiduMap.clear();
         routeBaiduMap.addOverlay(ooPolyline);
-        LatLng latLng = points.get(list.size() - 1);
-        MarkerOptions options = new MarkerOptions().position(latLng)
+        LatLng newLatLng = points.get(list.size() - 1);
+        MarkerOptions options = new MarkerOptions().position(newLatLng)
                 .icon(currentBmp);
         // 在地图上添加Marker，并显示
         routeBaiduMap.addOverlay(options);
-        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(newLatLng);
         // 移动到某经纬度
         routeBaiduMap.animateMapStatus(update);
     }

@@ -1,10 +1,9 @@
 package com.biubike.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -26,7 +25,7 @@ import java.util.List;
 import static com.biubike.util.NavUtil.activityList;
 
 
-public class BDInnerNaviActivity extends Activity {
+public class BDInnerNaviActivity extends AppCompatActivity {
 
     private final String TAG = BDInnerNaviActivity.class.getName();
     private BNRoutePlanNode mBNRoutePlanNode = null;
@@ -45,8 +44,7 @@ public class BDInnerNaviActivity extends Activity {
 
         activityList.add(this);
         createHandler();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        }
+
         View view = null;
         if (useCommonInterface) {
             //使用通用接口
@@ -62,7 +60,6 @@ public class BDInnerNaviActivity extends Activity {
             //使用传统接口
             view = BNRouteGuideManager.getInstance().onCreate(this, mOnNavigationListener);
         }
-
 
         if (view != null) {
             setContentView(view);
@@ -91,8 +88,6 @@ public class BDInnerNaviActivity extends Activity {
         } else {
             BNRouteGuideManager.getInstance().onResume();
         }
-
-
     }
 
     protected void onPause() {

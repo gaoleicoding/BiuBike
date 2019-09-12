@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 public class PermissionUtil {
 
-    private static Object context;
-    private static String[] permissions;
 
     /**
      * 检查所需权限中缺少的权限
@@ -26,9 +24,7 @@ public class PermissionUtil {
      * @param permissions
      * @return 返回缺少的权限，null 意味着没有缺少权限
      */
-    public static <Context> String[] getDeniedPermissions(Activity context, String... permissions) {
-        PermissionUtil.context = context;
-        PermissionUtil.permissions = permissions;
+    public static String[] getDeniedPermissions(Activity context, String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ArrayList<String> deniedPermissionList = new ArrayList<>();
             for (String permission : permissions) {
@@ -84,18 +80,17 @@ public class PermissionUtil {
         for (String s : perms) {
             if (s.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 sb.append("位置权限(用于获取你自行车的位置;\n");
-            }
-            else if (s.equals(Manifest.permission.CAMERA)) {
-                sb.append("相机权限(用于拍照，扫描二维码);\n");
+            } else if (s.equals(Manifest.permission.CAMERA)) {
+                sb.append("相机权限(用于手电筒，扫描二维码);\n");
             } else if (s.equals(Manifest.permission.RECORD_AUDIO)) {
                 sb.append("麦克风权限(用于导航语音);\n");
-            } else if (s.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            } else if (s.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 sb.append("存储卡权限(用于缓存数据减少流量);\n");
-            }else if (s.equals(Manifest.permission.WAKE_LOCK)) {
-                sb.append("存储(用于存储必要信息，缓存数据);\n");
+            } else if (s.equals(Manifest.permission.WAKE_LOCK)) {
+                sb.append("常驻通知栏(用于App在行程中不被中断);\n");
             }
         }
-        return "程序运行需要如下权限：\n\n" + sb.toString();
+        return "程序正常需要如下权限：\n\n" + sb.toString();
     }
 }
 

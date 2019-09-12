@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:background="@drawable/edge_shadow_bg"
+        android:background="@drawable/shape_shadow_bg"
         android:orientation="vertical">
 
         <TextView

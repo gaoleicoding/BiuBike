@@ -1,83 +1,65 @@
 package com.biubike.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 import com.biubike.MainActivity;
 import com.biubike.R;
 import com.biubike.util.PermissionUtil;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import pub.devrel.easypermissions.EasyPermissions;
+import io.reactivex.Observable;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.internal.observers.LambdaObserver;
 
 
-public class SplashActivity extends Activity implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+public class SplashActivity extends AppCompatActivity {
 
     //要申请的权限
-    private String[] mPermissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE};
-    public static final int CODE = 0x001;
-    private final int DISMISS_SPLASH = 0;
-
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DISMISS_SPLASH:
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-            }
-        }
-    };
+    private String[] mPermissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        EasyPermissions.requestPermissions(this, PermissionUtil.permissionText(mPermissions), CODE, mPermissions);
+        requestPermissions();
+    }
+
+    public void onRestart() {
+        super.onRestart();
+        requestPermissions();
+    }
+
+    private void requestPermissions() {
+        RxPermissions rxPermission = new RxPermissions(SplashActivity.this);
+        rxPermission
+                .requestEachCombined(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO)
+                .subscribe(new LambdaObserver<>(permission -> {
+                    if (permission.granted) {
+                        // All permissions are granted !
+                        Observable.just("")
+                                .delay(1, TimeUnit.SECONDS)
+                                .subscribe(new LambdaObserver<>(s -> {
+                                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }, Functions.ON_ERROR_MISSING, Functions.EMPTY_ACTION, Functions.emptyConsumer()));
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        // At least one denied permission without ask never again
+                        requestPermissions();
+                    } else {
+                        // At least one denied permission with ask never again
+                        // Need to go to the settings
+                        String[] permissions = PermissionUtil.getDeniedPermissions(SplashActivity.this, mPermissions);
+                        PermissionUtil.PermissionDialog(SplashActivity.this, PermissionUtil.permissionText(permissions));
+                    }
+                }, Functions.ON_ERROR_MISSING, Functions.EMPTY_ACTION, Functions.emptyConsumer()));
+
     }
 
 
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        if (perms.size() == 5)
-            handler.sendEmptyMessageDelayed(DISMISS_SPLASH, 2000);
-
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
-        //存在被永久拒绝(拒绝&不再询问)的权限
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            mPermissions = PermissionUtil.getDeniedPermissions(this, mPermissions);
-            PermissionUtil.PermissionDialog(this, PermissionUtil.permissionText(mPermissions) + "App正常使用请设置以下权限");
-        } else {
-            EasyPermissions.requestPermissions(this, PermissionUtil.permissionText(mPermissions), CODE, mPermissions);
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //将请求结果传递EasyPermission库处理
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @Override
-    public void onRationaleAccepted(int requestCode) {
-
-    }
-
-    @Override
-    public void onRationaleDenied(int requestCode) {
-    }
 }

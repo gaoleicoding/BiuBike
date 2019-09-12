@@ -27,6 +27,10 @@ android {
             checkReleaseBuilds false
             abortOnError false
         }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
 
     }
     buildTypes {
@@ -70,17 +74,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-
     implementation files('libs/baidumapapi_base_v4_1_1.jar')
     implementation files('libs/baidumapapi_map_v4_1_1.jar')
     implementation files('libs/nineoldandroids-2.4.0.jar')
-
     implementation files('libs/baidumapapi_util_v4_1_1.jar')
     implementation files('libs/gson-2.2.1.jar')
     implementation files('libs/BaiduNaviSDK_3.2.0.jar')
     implementation files('libs/Msc.jar')
     implementation files('libs/Msc.jar')
-    implementation 'pub.devrel:easypermissions:1.2.0'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
     implementation 'org.greenrobot:eventbus:3.1.1'
 

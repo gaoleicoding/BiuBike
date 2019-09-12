@@ -1,5 +1,6 @@
 package com.biubike.activity;
 
+import android.Manifest;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,11 @@ import android.widget.ImageView;
 
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
+import com.biubike.util.PermissionUtil;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.internal.observers.LambdaObserver;
 
 /**
  * Created by gaolei on 16/12/29.
@@ -24,7 +30,7 @@ public class CodeUnlockActivity extends BaseActivity {
         ivFlash = findViewById(R.id.iv_flash);
     }
 
-    public void switchFlashlight(View view) {
+    public void switchFlashlight() {
         if (!isFlashOpen) {
             Camera camera = Camera.open();
             Camera.Parameters mParameters = camera.getParameters();
@@ -49,4 +55,28 @@ public class CodeUnlockActivity extends BaseActivity {
         finish();
     }
 
+    public void onRestart() {
+        super.onRestart();
+        requestCameraPermission(ivFlash);
+    }
+    public void requestCameraPermission(View view) {
+        RxPermissions rxPermission = new RxPermissions(CodeUnlockActivity.this);
+        rxPermission
+                .requestEachCombined(Manifest.permission.CAMERA)
+                .subscribe(new LambdaObserver<>(permission -> {
+                    if (permission.granted) {
+                        // All permissions are granted !
+                        switchFlashlight();
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        // At least one denied permission without ask never again
+                        requestCameraPermission(ivFlash);
+                    } else {
+                        // At least one denied permission with ask never again
+                        // Need to go to the settings
+                        String[] permissions = PermissionUtil.getDeniedPermissions(CodeUnlockActivity.this, Manifest.permission.CAMERA);
+                        PermissionUtil.PermissionDialog(CodeUnlockActivity.this, PermissionUtil.permissionText(permissions));
+                    }
+                }, Functions.ON_ERROR_MISSING, Functions.EMPTY_ACTION, Functions.emptyConsumer()));
+
+    }
 }

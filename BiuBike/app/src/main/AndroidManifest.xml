@@ -18,7 +18,16 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Android O之后开启前台服务需要申请该权限 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Android Q之后，后台定位需要申请该权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- 以下不是鹰眼SDK需要的基础权限，可选 -->
+    <!-- 用于加快GPS首次定位，可选权限，非必须-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!-- 用于Android M及以上系统，申请加入忽略电池优化白名单，可选权限，非必须-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission
@@ -43,7 +52,8 @@
         android:label="@string/bybike"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeDefault">
+        android:theme="@style/AppThemeDefault"
+        tools:ignore="GoogleAppIndexingWarning">
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -73,17 +83,7 @@
         <activity android:name=".activity.WalletActivity" />
         <activity android:name=".activity.RouteDetailActivity" />
         <activity android:name=".activity.MyRouteActivity" />
-        <activity android:name=".activity.NavigationActivity" />
-        <activity
-            android:name=".activity.BDInnerNaviActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <receiver
             android:name="com.biubike.service.RouteService$NetWorkReceiver"
@@ -96,9 +96,14 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
-        <service android:name="com.biubike.service.RouteService"></service>
-
+            android:process=":remote" />
+        <service android:name="com.biubike.service.RouteService" />
+        <service
+            android:name="com.baidu.trace.LBSTraceService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote"
+            />
         <provider
             android:name="com.biubike.provider.PoiProvider"
             android:authorities="com.biubike.provider.poiprovider"

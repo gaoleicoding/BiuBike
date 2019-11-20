@@ -4,8 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
+import com.biubike.util.CommonUtil;
 
 import java.io.File;
 
@@ -20,9 +19,12 @@ public class DemoApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
+        // 若为创建独立进程，则不初始化成员变量
+        if ("com.baidu.track:remote".equals(CommonUtil.getCurProcessName(this))) {
+            return;
+        }
         SDKInitializer.initialize(getApplicationContext());
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=58f9ff61");
-//        CrashHandler crashHandler=CrashHandler.getInstance();
+//        CrashHandler crashHandler=CrashHandler.get();
 //        crashHandler.init(this);
         initDirs();
     }

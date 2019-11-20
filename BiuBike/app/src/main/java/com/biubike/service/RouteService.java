@@ -27,7 +27,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.biubike.MainActivity;
@@ -124,7 +123,7 @@ public class RouteService extends Service {
         //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
         mlocationClient = new LocationClient(this);
         mlistener = new MylocationListener();
-//        initMarkerClickEvent();
+        // initMarkerClickEvent();
         //注册监听器
         mlocationClient.registerLocationListener(mlistener);
         //配置定位SDK各配置参数，比如定位模式、定位时间间隔、坐标系类型等
@@ -211,7 +210,7 @@ public class RouteService extends Service {
                     LatLng currentLatLng = new LatLng(routeLat, routeLng);
                     if (routeLat > 0 && routeLng > 0) {
                         double distantce = DistanceUtil.getDistance(lastLatLng, currentLatLng);
-//                        大于2米算作有效加入列表
+                        //  大于2米算作有效加入列表
                         if (distantce > 2) {
                             //distance单位是米 转化为km/h
                             routePoint.speed = Double.parseDouble(String.format("%.1f", (distantce / 1000) * 30 * 60));
@@ -273,17 +272,14 @@ public class RouteService extends Service {
             if (wifiState != null && mobileState != null
                     && State.CONNECTED != wifiState
                     && State.CONNECTED == mobileState) {
-//                Toast.makeText(context, context.getString(R.string.net_mobile), Toast.LENGTH_SHORT).show();
                 // 手机网络连接成功
             } else if (wifiState != null && mobileState != null
                     && State.CONNECTED != wifiState
                     && State.CONNECTED != mobileState) {
-//                Toast.makeText(context, context.getString(R.string.net_none), Toast.LENGTH_SHORT).show();
 
                 // 手机没有任何的网络
             } else if (wifiState != null && State.CONNECTED == wifiState) {
                 // 无线网络连接成功
-//                Toast.makeText(context, context.getString(R.string.net_wifi), Toast.LENGTH_SHORT).show();
 
             }
         }

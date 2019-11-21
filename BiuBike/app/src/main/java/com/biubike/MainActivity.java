@@ -936,7 +936,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (resultCode == RESULT_OK) {
-//            beginService();
+            beginService();
 //            MarkerOptions options = new MarkerOptions().position(new LatLng(currentLatitude,currentLongitude))
 //                    .icon(startBmp);
 //            // 在地图上添加Marker，并显示
@@ -1040,9 +1040,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         btn_locale.setVisibility(View.GONE);
         end_route.setVisibility(View.VISIBLE);
         mBaiduMap.clear();
-        mlocationClient.requestLocation();
-        Intent intent = new Intent(this, RouteService.class);
-        startService(intent);
+//        mlocationClient.requestLocation();
+//        Intent intent = new Intent(this, RouteService.class);
+//        startService(intent);
 
     }
 
@@ -1079,9 +1079,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.onDestroy();
         mMapView = null;
         EventBus.getDefault().unregister(this);
-        startOrStopTrace();
-        startOrStopGather();
-        stopRealTimeLoc();
+
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

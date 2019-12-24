@@ -1,4 +1,4 @@
-package com.biubike.util;
+package com.biubike.map;
 
 import android.graphics.Color;
 import android.graphics.Point;
@@ -22,13 +22,14 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
 import com.baidu.trace.model.TraceLocation;
-import com.biubike.map.EagleEyeUtil;
 import com.biubike.track.model.CurrentLocation;
+import com.biubike.util.CommonUtil;
+import com.biubike.util.ContextUtil;
+import com.biubike.util.Utils;
 
 import java.util.List;
-import static com.biubike.util.BitmapUtil.bmArrowPoint;
-import static com.biubike.util.BitmapUtil.bmEnd;
-import static com.biubike.util.BitmapUtil.bmStart;
+import static com.biubike.map.BitmapUtil.bmArrowPoint;
+import static com.biubike.map.BitmapUtil.bmStart;
 
 /**
  * Created by baidu on 17/2/9.
@@ -63,7 +64,6 @@ public class MapUtil {
     public void init(MapView view) {
         mapView = view;
         baiduMap = mapView.getMap();
-        mapView.showZoomControls(false);
     }
 
     public void onPause() {
@@ -182,11 +182,11 @@ public class MapUtil {
             if (screenPoint.y < 200 || screenPoint.y > Utils.getScreenHeight(ContextUtil.getAppContext()) - 500
                     || screenPoint.x < 200 || screenPoint.x > Utils.getScreenWidth(ContextUtil.getAppContext()) - 200
                     || null == mapStatus) {
-                animateMapStatus(currentPoint, 15.0f);
+                setMapZoomStatus(currentPoint, 15.0f);
             }
         } else if (null == mapStatus) {
             // 第一次定位时，聚焦底图
-            setMapStatus(currentPoint, 15.0f);
+            setMapZoomStatus(currentPoint, 15.0f);
         }
 
         if (showMarker) {
@@ -266,7 +266,7 @@ public class MapUtil {
             OverlayOptions startOptions = new MarkerOptions().position(points.get(0)).icon(bmStart)
                     .zIndex(9).draggable(true);
             baiduMap.addOverlay(startOptions);
-            animateMapStatus(points.get(0), 18.0f);
+            setMapZoomStatus(points.get(0), 26.0f);
             return;
         }
 
@@ -280,50 +280,32 @@ public class MapUtil {
             endPoint = points.get(0);
         }
 
-        // 添加起点图标
-        OverlayOptions startOptions = new MarkerOptions()
-                .position(startPoint).icon(bmStart)
-                .zIndex(9).draggable(true);
-        // 添加终点图标
-        OverlayOptions endOptions = new MarkerOptions().position(endPoint)
-                .icon(bmEnd).zIndex(9).draggable(true);
+//        // 添加起点图标
+//        OverlayOptions startOptions = new MarkerOptions()
+//                .position(startPoint).icon(bmStart)
+//                .zIndex(9).draggable(true);
+//        // 添加终点图标
+//        OverlayOptions endOptions = new MarkerOptions().position(endPoint)
+//                .icon(bmEnd).zIndex(9).draggable(true);
 
         // 添加路线（轨迹）
         OverlayOptions polylineOptions = new PolylineOptions().width(10)
                 .color(Color.BLUE).points(points);
 
-        baiduMap.addOverlay(startOptions);
-        baiduMap.addOverlay(endOptions);
+//        baiduMap.addOverlay(startOptions);
+//        baiduMap.addOverlay(endOptions);
         polylineOverlay = baiduMap.addOverlay(polylineOptions);
 
         OverlayOptions markerOptions =
                 new MarkerOptions().flat(true).anchor(0.5f, 0.5f).icon(bmArrowPoint)
-                        .position(points.get(points.size() - 1))
-                        .rotate((float) CommonUtil.getAngle(points.get(0), points.get(1)));
+                        .position(points.get(points.size() - 1));
         mMoveMarker = (Marker) baiduMap.addOverlay(markerOptions);
 
-        animateMapStatus(points);
+//        animateMapStatus(points);
     }
 
-    public void animateMapStatus(List<LatLng> points) {
-        if (null == points || points.isEmpty()) {
-            return;
-        }
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng point : points) {
-            builder.include(point);
-        }
-        MapStatusUpdate msUpdate = MapStatusUpdateFactory.newLatLngBounds(builder.build());
-        baiduMap.animateMapStatus(msUpdate);
-    }
 
-    public void animateMapStatus(LatLng point, float zoom) {
-        MapStatus.Builder builder = new MapStatus.Builder();
-        mapStatus = builder.target(point).zoom(zoom).build();
-        baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(mapStatus));
-    }
-
-    public void setMapStatus(LatLng point, float zoom) {
+    public void setMapZoomStatus(LatLng point, float zoom) {
         MapStatus.Builder builder = new MapStatus.Builder();
         mapStatus = builder.target(point).zoom(zoom).build();
         baiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(mapStatus));
@@ -332,7 +314,7 @@ public class MapUtil {
     public void refresh() {
         LatLng mapCenter = baiduMap.getMapStatus().target;
         float mapZoom = baiduMap.getMapStatus().zoom - 1.0f;
-        setMapStatus(mapCenter, mapZoom);
+        setMapZoomStatus(mapCenter, mapZoom);
     }
 
 }

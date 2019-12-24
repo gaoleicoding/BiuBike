@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.baidu.mapapi.model.LatLng;
+import com.biubike.map.Constants;
 import com.biubike.map.EagleEyeUtil;
 import com.biubike.track.model.CurrentLocation;
 

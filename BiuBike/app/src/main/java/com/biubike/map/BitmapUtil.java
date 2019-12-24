@@ -1,4 +1,4 @@
-package com.biubike.util;
+package com.biubike.map;
 
 import android.content.Context;
 import android.content.res.Resources;

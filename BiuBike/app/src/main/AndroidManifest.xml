@@ -25,9 +25,9 @@
 
     <!-- 以下不是鹰眼SDK需要的基础权限，可选 -->
     <!-- 用于加快GPS首次定位，可选权限，非必须-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <!-- 用于Android M及以上系统，申请加入忽略电池优化白名单，可选权限，非必须-->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission
@@ -63,26 +63,36 @@
 
         <activity
             android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:theme="@style/TranslucentStatus"
-            android:launchMode="singleTask">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentStatus">
 
         </activity>
         <activity
             android:name=".activity.CodeUnlockActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
 
-        <activity android:name=".activity.WalletActivity" />
-        <activity android:name=".activity.RouteDetailActivity" />
-        <activity android:name=".activity.MyRouteActivity" />
+        <activity
+            android:name=".activity.WalletActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RouteDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyRouteActivity"
+            android:screenOrientation="portrait" />
 
 
         <receiver
@@ -93,17 +103,16 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
-        <service android:name="com.biubike.service.RouteService" />
+        <!--        <service-->
+        <!--            android:name="com.baidu.location.f"-->
+        <!--            android:enabled="true"-->
+        <!--            android:process=":remote" />-->
+        <!--        <service android:name="com.biubike.service.RouteService" />-->
         <service
             android:name="com.baidu.trace.LBSTraceService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote"
-            />
+            android:process=":remote" />
         <provider
             android:name="com.biubike.provider.PoiProvider"
             android:authorities="com.biubike.provider.poiprovider"

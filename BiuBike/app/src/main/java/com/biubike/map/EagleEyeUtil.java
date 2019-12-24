@@ -38,7 +38,10 @@ public class EagleEyeUtil {
     private PowerManager powerManager = null;
 
     private PowerManager.WakeLock wakeLock = null;
-
+    // 定位周期(单位:秒)
+    public int gatherInterval = 2;
+    // 打包回传周期(单位:秒)
+    public int packInterval = 4;
     /**
      * 轨迹服务
      */
@@ -93,10 +96,7 @@ public class EagleEyeUtil {
         mTrace = new Trace(serviceId, entityName, isNeedObjectStorage);
         // 初始化轨迹服务客户端
         mTraceClient = new LBSTraceClient(ContextUtil.getAppContext());
-        // 定位周期(单位:秒)
-        int gatherInterval = 5;
-        // 打包回传周期(单位:秒)
-        int packInterval = 10;
+
         // 设置定位和打包周期
         mTraceClient.setInterval(gatherInterval, packInterval);
 
@@ -113,16 +113,16 @@ public class EagleEyeUtil {
     鹰眼分别针对驾车、骑行、步行提供了不同的轨迹纠偏绑路算法，适用于多种交通工具的轨迹校正。
     */
 
-    public void getTraceQuery() {
+    public void getTraceQuery(long startTime,long endTime) {
         // 请求标识
         int tag = 1;
 
         // 创建历史轨迹请求实例
         HistoryTrackRequest historyTrackRequest = new HistoryTrackRequest(tag, serviceId, entityName);
-        // 开始时间2017-4-17 0:0:0的UNIX 时间戳
-        long startTime = 1492358400;
-        // 结束时间2017-4-17 23:59:59的UNIX 时间戳
-        long endTime = 1492444799;
+//        // 开始时间2017-4-17 0:0:0的UNIX 时间戳
+//        long startTime = 1492358400;
+//        // 结束时间2017-4-17 23:59:59的UNIX 时间戳
+//        long endTime = 1492444799;
         // 设置开始时间
         historyTrackRequest.setStartTime(startTime);
         // 设置结束时间
@@ -140,11 +140,11 @@ public class EagleEyeUtil {
         // 设置精度过滤值(定位精度大于100米的过滤掉)
         processOption.setRadiusThreshold(100);
         // 设置交通方式为驾车
-        processOption.setTransportMode(TransportMode.driving);
+        processOption.setTransportMode(TransportMode.riding);
         // 设置纠偏选项
         historyTrackRequest.setProcessOption(processOption);
         // 设置里程填充方式为驾车
-        historyTrackRequest.setSupplementMode(SupplementMode.driving);
+        historyTrackRequest.setSupplementMode(SupplementMode.riding);
         // 初始化轨迹监听器
         OnTrackListener mTrackListener = new OnTrackListener() {
             @Override
@@ -162,16 +162,16 @@ public class EagleEyeUtil {
         鹰眼Android SDK提供了queryDistance()方法，用于计算指定时间段内的轨迹里程，
         支持：计算纠偏后的里程，用路线规划补偿中断轨迹的里程。
         */
-    public void getTraceDistance() {
+    public void getTraceDistance(OnTrackListener mTrackListener,long startTime,long endTime) {
         // 请求标识
         int tag = 2;
 
         // 创建里程查询请求实例
         DistanceRequest distanceRequest = new DistanceRequest(tag, serviceId, entityName);
-        // 开始时间(单位：秒)
-        long startTime = System.currentTimeMillis() / 1000 - 12 * 60 * 60;
-        // 结束时间(单位：秒)
-        long endTime = System.currentTimeMillis() / 1000;
+//        // 开始时间(单位：秒)
+//        long startTime = System.currentTimeMillis() / 1000 - 12 * 60 * 60;
+//        // 结束时间(单位：秒)
+//        long endTime = System.currentTimeMillis() / 1000;
         // 设置开始时间
         distanceRequest.setStartTime(startTime);
         // 设置结束时间
@@ -185,18 +185,18 @@ public class EagleEyeUtil {
         // 设置需要绑路
         processOption.setNeedMapMatch(true);
         // 设置交通方式为驾车
-        processOption.setTransportMode(TransportMode.driving);
+        processOption.setTransportMode(TransportMode.riding);
         // 设置纠偏选项
         distanceRequest.setProcessOption(processOption);
         // 设置里程填充方式为驾车
-        distanceRequest.setSupplementMode(SupplementMode.driving);
-        // 初始化轨迹监听器
-        OnTrackListener mTrackListener = new OnTrackListener() {
-            @Override
-            public void onDistanceCallback(DistanceResponse response) {
-                // 里程回调
-            }
-        };
+        distanceRequest.setSupplementMode(SupplementMode.riding);
+//        // 初始化轨迹监听器
+//        OnTrackListener mTrackListener = new OnTrackListener() {
+//            @Override
+//            public void onDistanceCallback(DistanceResponse response) {
+//                // 里程回调
+//            }
+//        };
         // 查询里程
         mTraceClient.queryDistance(distanceRequest, mTrackListener);
     }

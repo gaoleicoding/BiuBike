@@ -1,4 +1,4 @@
-package com.biubike.util;
+package com.biubike.map;
 
 /**
  * Created by baidu on 17/1/12.

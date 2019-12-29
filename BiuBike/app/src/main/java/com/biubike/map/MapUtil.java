@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
@@ -17,17 +16,16 @@ import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
 import com.baidu.trace.model.TraceLocation;
 import com.biubike.track.model.CurrentLocation;
-import com.biubike.util.CommonUtil;
 import com.biubike.util.ContextUtil;
 import com.biubike.util.Utils;
 
 import java.util.List;
+
 import static com.biubike.map.BitmapUtil.bmArrowPoint;
 import static com.biubike.map.BitmapUtil.bmStart;
 
@@ -103,7 +101,6 @@ public class MapUtil {
      * 将轨迹实时定位点转换为地图坐标
      *
      * @param location
-     *
      * @return
      */
     public static LatLng convertTraceLocation2Map(TraceLocation location) {
@@ -130,7 +127,6 @@ public class MapUtil {
      * 将地图坐标转换轨迹坐标
      *
      * @param latLng
-     *
      * @return
      */
     public static com.baidu.trace.model.LatLng convertMap2Trace(LatLng latLng) {
@@ -141,7 +137,6 @@ public class MapUtil {
      * 将轨迹坐标对象转换为地图坐标对象
      *
      * @param traceLatLng
-     *
      * @return
      */
     public static LatLng convertTrace2Map(com.baidu.trace.model.LatLng traceLatLng) {
@@ -150,10 +145,9 @@ public class MapUtil {
 
     /**
      * 设置地图中心：使用已有定位信息；
-     *
      */
     public void setCenter() {
-        if (!CommonUtil.isZeroPoint(CurrentLocation.latitude, CurrentLocation.longitude)) {
+        if (!TraceUtil.isZeroPoint(CurrentLocation.latitude, CurrentLocation.longitude)) {
             LatLng currentLatLng = new LatLng(CurrentLocation.latitude, CurrentLocation.longitude);
             updateStatus(currentLatLng, false);
             return;
@@ -161,7 +155,7 @@ public class MapUtil {
         String lastLocation = EagleEyeUtil.get().trackConf.getString(Constants.LAST_LOCATION, null);
         if (!TextUtils.isEmpty(lastLocation)) {
             String[] locationInfo = lastLocation.split(";");
-            if (!CommonUtil.isZeroPoint(Double.parseDouble(locationInfo[1]),
+            if (!TraceUtil.isZeroPoint(Double.parseDouble(locationInfo[1]),
                     Double.parseDouble(locationInfo[2]))) {
                 LatLng currentLatLng = new LatLng(Double.parseDouble(locationInfo[1]),
                         Double.parseDouble(locationInfo[2]));
@@ -228,13 +222,13 @@ public class MapUtil {
     public void moveLooper(LatLng endPoint) {
 
         mMoveMarker.setPosition(lastPoint);
-        mMoveMarker.setRotate((float) CommonUtil.getAngle(lastPoint, endPoint));
+        mMoveMarker.setRotate((float) TraceUtil.getAngle(lastPoint, endPoint));
 
-        double slope = CommonUtil.getSlope(lastPoint, endPoint);
+        double slope = TraceUtil.getSlope(lastPoint, endPoint);
         // 是不是正向的标示（向上设为正向）
         boolean isReverse = (lastPoint.latitude > endPoint.latitude);
-        double intercept = CommonUtil.getInterception(slope, lastPoint);
-        double xMoveDistance = isReverse ? CommonUtil.getXMoveDistance(slope) : -1 * CommonUtil.getXMoveDistance(slope);
+        double intercept = TraceUtil.getInterception(slope, lastPoint);
+        double xMoveDistance = isReverse ? TraceUtil.getXMoveDistance(slope) : -1 * TraceUtil.getXMoveDistance(slope);
 
         for (double latitude = lastPoint.latitude; latitude > endPoint.latitude == isReverse; latitude =
                 latitude - xMoveDistance) {
@@ -252,7 +246,7 @@ public class MapUtil {
      * 绘制历史轨迹
      */
     public void drawHistoryTrack(List<LatLng> points, SortType sortType) {
-        // 绘制新覆盖物前，清空之前的覆盖物
+
         baiduMap.clear();
         if (points == null || points.size() == 0) {
             if (null != polylineOverlay) {
@@ -302,6 +296,23 @@ public class MapUtil {
         mMoveMarker = (Marker) baiduMap.addOverlay(markerOptions);
 
 //        animateMapStatus(points);
+        }
+
+
+    private void addOverLayout(LatLng startPosition, LatLng endPosition) {
+        //先清除图层
+        // mBaiduMap.clear();
+        // 定义Maker坐标点
+        // 构建MarkerOption，用于在地图上添加Marker
+        MarkerOptions options = new MarkerOptions().position(startPosition)
+                .icon(bmStart);
+        // 在地图上添加Marker，并显示
+        baiduMap.addOverlay(options);
+//        MarkerOptions options2 = new MarkerOptions().position(endPosition)
+//                .icon(endBmp);
+//        // 在地图上添加Marker，并显示
+//        baiduMap.addOverlay(options2);
+
     }
 
 

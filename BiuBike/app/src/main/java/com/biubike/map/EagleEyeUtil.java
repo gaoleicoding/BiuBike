@@ -113,7 +113,7 @@ public class EagleEyeUtil {
     鹰眼分别针对驾车、骑行、步行提供了不同的轨迹纠偏绑路算法，适用于多种交通工具的轨迹校正。
     */
 
-    public void getTraceQuery(long startTime,long endTime) {
+    public void getTraceHistory(OnTrackListener mTrackListener, long startTime, long endTime) {
         // 请求标识
         int tag = 1;
 
@@ -146,12 +146,7 @@ public class EagleEyeUtil {
         // 设置里程填充方式为驾车
         historyTrackRequest.setSupplementMode(SupplementMode.riding);
         // 初始化轨迹监听器
-        OnTrackListener mTrackListener = new OnTrackListener() {
-            @Override
-            public void onHistoryTrackCallback(HistoryTrackResponse response) {
-                // 历史轨迹回调
-            }
-        };
+
         // 查询轨迹
         mTraceClient.queryHistoryTrack(historyTrackRequest, mTrackListener);
     }
@@ -162,7 +157,7 @@ public class EagleEyeUtil {
         鹰眼Android SDK提供了queryDistance()方法，用于计算指定时间段内的轨迹里程，
         支持：计算纠偏后的里程，用路线规划补偿中断轨迹的里程。
         */
-    public void getTraceDistance(OnTrackListener mTrackListener,long startTime,long endTime) {
+    public void getTraceDistance(OnTrackListener mTrackListener, long startTime, long endTime) {
         // 请求标识
         int tag = 2;
 

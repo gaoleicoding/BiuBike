@@ -28,8 +28,8 @@ public class BitmapUtil {
      */
     public static void init() {
         bmArrowPoint = BitmapDescriptorFactory.fromResource(R.mipmap.icon_point);
-        bmStart = BitmapDescriptorFactory.fromResource(R.mipmap.icon_start);
-        bmEnd = BitmapDescriptorFactory.fromResource(R.mipmap.icon_end);
+        bmStart = BitmapDescriptorFactory.fromResource(R.mipmap.route_start);
+        bmEnd = BitmapDescriptorFactory.fromResource(R.mipmap.route_end);
         bmGeo = BitmapDescriptorFactory.fromResource(R.mipmap.icon_geo);
         bmGcoding = BitmapDescriptorFactory.fromResource(R.mipmap.icon_gcoding);
     }

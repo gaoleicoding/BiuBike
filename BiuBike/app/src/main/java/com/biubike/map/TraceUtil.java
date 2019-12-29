@@ -1,4 +1,4 @@
-package com.biubike.util;
+package com.biubike.map;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -20,7 +20,7 @@ import java.util.Locale;
  * Created by baidu on 17/1/23.
  */
 
-public class CommonUtil {
+public class TraceUtil {
 
     private static DecimalFormat df = new DecimalFormat("######0.00");
 

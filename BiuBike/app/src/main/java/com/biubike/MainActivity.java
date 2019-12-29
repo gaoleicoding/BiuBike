@@ -1,6 +1,10 @@
 package com.biubike;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,15 +13,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +48,12 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.trace.api.entity.OnEntityListener;
 import com.baidu.trace.api.track.DistanceResponse;
+import com.baidu.trace.api.track.HistoryTrackResponse;
 import com.baidu.trace.api.track.LatestPoint;
 import com.baidu.trace.api.track.LatestPointRequest;
 import com.baidu.trace.api.track.LatestPointResponse;
 import com.baidu.trace.api.track.OnTrackListener;
+import com.baidu.trace.api.track.TrackPoint;
 import com.baidu.trace.model.OnTraceListener;
 import com.baidu.trace.model.ProcessOption;
 import com.baidu.trace.model.PushMessage;
@@ -64,14 +74,16 @@ import com.biubike.map.BitmapUtil;
 import com.biubike.map.EagleEyeUtil;
 import com.biubike.map.LocationManager;
 import com.biubike.map.MapUtil;
+import com.biubike.map.TraceUtil;
 import com.biubike.track.model.CurrentLocation;
-import com.biubike.util.CommonUtil;
 import com.biubike.util.NetUtil;
 import com.biubike.util.Utils;
 import com.biubike.util.ViewUtil;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -102,10 +114,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public MyLocationListenner myListener;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
+
+    private OnTrackListener trackDistanceListener = null;
+    private OnTrackListener trackHistoryListener = null;
     /**
      * 轨迹监听器(用于接收纠偏后实时位置回调)
      */
     private OnTrackListener trackListener = null;
+
 
     /**
      * Entity监听器(用于接收实时定位回调)
@@ -131,10 +147,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private List<LatLng> trackPoints;
     // 查询周期(单位:秒)
     private int queryInterval = 2000;
-    String showTime;
-    String showDistance;
-    String showPrice;
+    private String showTime;
+    private String showDistance;
+    private String showPrice;
     private boolean isGetLocation = false;
+    private Notification notification;
+    private RemoteViews contentView;
+    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        EventBus.getDefault().register(this);
         initView();
         initMap();
+        initNotification();
 
         FragmentManager fm = getSupportFragmentManager();
         LeftMenuFragment mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
@@ -153,6 +173,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftMenuFragment()).commit();
         }
         trackPoints = new ArrayList<>();
+        if (Utils.isServiceWork(this, "com.baidu.trace.LBSTraceService")) {
+            beginService();
+        }
     }
 
     private void initView() {
@@ -218,13 +241,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setIsNeedAddress(true);//如想获得具体位置就需要设置为true
         option.setIgnoreKillProcess(false);
-        option.setScanSpan(1000);
         mlocationClient.setLocOption(option);
         if (!mlocationClient.isStarted()) {
             mlocationClient.start();
         }
-        getMyLocation();
         initMarkerClickEvent();
+        if (!Utils.isServiceWork(this, "com.baidu.trace.LBSTraceService")) {
+            getMyLocation();
+        }
     }
 
     /**
@@ -251,7 +275,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             Log.d("gaolei", "currentLL----------" + currentLatLng);
             Log.d("gaolei", "getAddrStr()----------" + bdLocation.getAddrStr());
-            MapUtil.getInstance().setMapZoomStatus(currentLatLng, 18);
+            mapUtil.setMapZoomStatus(currentLatLng, 19);
             addOverLayout(currentLatLng);
             mlocationClient.stop();
 
@@ -325,7 +349,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
 
                 LatestPoint point = response.getLatestPoint();
-                if (null == point || CommonUtil.isZeroPoint(point.getLocation().getLatitude(), point.getLocation()
+                if (null == point || TraceUtil.isZeroPoint(point.getLocation().getLatitude(), point.getLocation()
                         .getLongitude())) {
                     return;
                 }
@@ -334,11 +358,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 CurrentLocation.locTime = point.getLocTime();
                 CurrentLocation.latitude = currentLatLng.latitude;
                 CurrentLocation.longitude = currentLatLng.longitude;
-                trackPoints.add(currentLatLng);
-                MapUtil.getInstance().drawHistoryTrack(trackPoints, SortType.asc);
+//                trackPoints.add(currentLatLng);
+//                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
                 if (null != mapUtil) {
-                    mapUtil.updateStatus(currentLatLng, true);
                     Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
+                    mapUtil.updateStatus(currentLatLng, true);
                 }
 
 
@@ -349,30 +373,68 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             }
 
+        };
+        trackDistanceListener = new OnTrackListener() {
+
             @Override
             public void onDistanceCallback(DistanceResponse response) {
                 // 里程回调
-                showDistance = (int) response.getDistance() + "";
-                bike_distance.setText(showDistance + "米");
-                long minute = (System.currentTimeMillis() - startTime) / 1000 / 60;
-                showTime = minute + "";
-                bike_time.setText(showTime + "分钟");
-                int price = ((int) (minute / 30) + 1);
-                showPrice = price + "";
-                bike_price.setText(showPrice + "元");
+
+                int totalDistance = (int) response.getDistance();
+
+                long totalTime = (System.currentTimeMillis() - startTime) / 1000 / 60;
+
+                if (totalDistance > 1000) {
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    showDistance = df.format((float) totalDistance / 1000) + "千米";
+                } else {
+                    showDistance = totalDistance + "米";
+                }
+                if (totalTime > 60) {
+                    showTime = totalTime / 60 + "时" + totalTime % 60 + "分";
+                } else {
+                    showTime = totalTime + "分钟";
+                }
+
+                int totalPrice = (int) (Math.floor(totalTime / 30) * 1 + 1);
+
+                bike_distance.setText(showDistance);
+                bike_time.setText(showTime);
+                showPrice = totalPrice + "元";
+                bike_price.setText(showPrice);
                 Log.d("gaolei", "rideDistance：" + showDistance);
                 Log.d("gaolei", "minute：" + showTime);
                 Log.d("gaolei", "(System.currentTimeMillis() - startTime) / 1000 ：" + (System.currentTimeMillis() - startTime) / 1000);
                 Log.d("gaolei", "price：" + showPrice);
+                startNotifi(showTime, showDistance, showPrice);
             }
         };
+
+        trackHistoryListener = new OnTrackListener() {
+            @Override
+            public void onHistoryTrackCallback(HistoryTrackResponse response) {
+                // 历史轨迹回调
+                List<TrackPoint> points = response.getTrackPoints();
+                if (null != points) {
+                    for (TrackPoint trackPoint : points) {
+                        double lat = trackPoint.getLocation().getLatitude();
+                        double lng = trackPoint.getLocation().getLongitude();
+                        if (!TraceUtil.isZeroPoint(lat, lng)) {
+                            trackPoints.add(new LatLng(lat, lng));
+                        }
+                    }
+                }
+                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
+            }
+        };
+
 
         entityListener = new OnEntityListener() {
 
             @Override
             public void onReceiveLocation(TraceLocation location) {
 
-                if (StatusCodes.SUCCESS != location.getStatus() || CommonUtil.isZeroPoint(location.getLatitude(),
+                if (StatusCodes.SUCCESS != location.getStatus() || TraceUtil.isZeroPoint(location.getLatitude(),
                         location.getLongitude())) {
                     return;
                 }
@@ -380,11 +442,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (null == currentLatLng) {
                     return;
                 }
-                CurrentLocation.locTime = CommonUtil.toTimeStamp(location.getTime());
+                CurrentLocation.locTime = TraceUtil.toTimeStamp(location.getTime());
                 CurrentLocation.latitude = currentLatLng.latitude;
                 CurrentLocation.longitude = currentLatLng.longitude;
-                trackPoints.add(currentLatLng);
-                MapUtil.getInstance().drawHistoryTrack(trackPoints, SortType.asc);
                 if (null != mapUtil) {
                     mapUtil.updateStatus(currentLatLng, true);
                     Toast.makeText(MainActivity.this, "entityListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
@@ -394,12 +454,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     showCurrentLocationInfo(currentLatLng);
                     isGetLocation = false;
                 }
-
-
             }
 
         };
-
 
         mTraceListener = new OnTraceListener() {
 
@@ -547,7 +604,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //                }
 //                StringBuffer alarmInfo = new StringBuffer();
 //                alarmInfo.append("您于")
-//                        .append(CommonUtil.getHMS(alarmPushInfo.getCurrentPoint().getLocTime() * 1000))
+//                        .append(TraceUtil.getHMS(alarmPushInfo.getCurrentPoint().getLocTime() * 1000))
 //                        .append(alarmPushInfo.getMonitoredAction() == MonitoredAction.enter ? "进入" : "离开")
 //                        .append(messageType == 0x03 ? "云端" : "本地")
 //                        .append("围栏：").append(alarmPushInfo.getFenceName());
@@ -580,7 +637,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 current_addr.setText(addressList.get(0).getAddressLine(0));
                 Log.d("gaolei", "Address:" + addressList.get(0).toString());
             }
-            MapUtil.getInstance().setMapZoomStatus(currentLatLng, 18);
             addOverLayout(currentLatLng);
         } catch (Exception e) {
             Log.d("gaolei", "" + e.getMessage());
@@ -597,8 +653,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         @Override
         public void run() {
             if (isRealTimeRunning) {
-                getCurrentLocation(entityListener, trackListener);
+//                getCurrentLocation(entityListener, trackListener);
                 getDistance();
+                getTraceHistory();
                 realTimeHandler.postDelayed(this, queryInterval);
             }
         }
@@ -644,9 +701,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void getDistance() {
 
-        EagleEyeUtil.get().getTraceDistance(trackListener, startTime / 1000, System.currentTimeMillis() / 1000);
+        EagleEyeUtil.get().getTraceDistance(trackDistanceListener, startTime / 1000, System.currentTimeMillis() / 1000);
 
     }
+
+    public void getTraceHistory() {
+
+        EagleEyeUtil.get().getTraceHistory(trackHistoryListener, startTime / 1000, System.currentTimeMillis() / 1000);
+
+    }
+
 
     @Override
     public void onMenuSlide(float offset) {
@@ -812,7 +876,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         .icon(startBmp);
                 // 在地图上添加Marker，并显示
                 mBaiduMap.addOverlay(options);
-                MapUtil.getInstance().setMapZoomStatus(currentLatLng, 24);
+                MapUtil.getInstance().setMapZoomStatus(currentLatLng, 22);
             }
 
             startTrace();
@@ -880,10 +944,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         textview_price.setText(getString(R.string.bike_price));
         prompt.setText(getString(R.string.routing_prompt));
 
-        bike_time.setText("0分钟");
-        bike_distance.setText("0米");
-        bike_price.setText("0元");
-        llPrice.setVisibility(View.VISIBLE);
 
         textview_time.setTextSize(20);
         textview_distance.setTextSize(20);
@@ -891,7 +951,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         bike_time.setTextSize(20);
         bike_distance.setTextSize(20);
         bike_price.setTextSize(20);
-
+        llPrice.setVisibility(View.VISIBLE);
         prompt.setVisibility(View.VISIBLE);
         llBikeLayout.setVisibility(View.VISIBLE);
         current_addr.setVisibility(View.GONE);
@@ -905,13 +965,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         btn_locale.setVisibility(View.GONE);
         end_route.setVisibility(View.VISIBLE);
-        mBaiduMap.clear();
+        if (!Utils.isServiceWork(this, "com.baidu.trace.LBSTraceService")) {
+            mBaiduMap.clear();
+            bike_time.setText("0分钟");
+            bike_distance.setText("0米");
+            bike_price.setText("0元");
+
+        }
+
     }
 
     private void cancelBook() {
         llBikeLayout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
-        MapUtil.getInstance().setMapZoomStatus(currentLatLng, 18);
+        MapUtil.getInstance().setMapZoomStatus(currentLatLng, 19);
 
     }
 
@@ -938,7 +1005,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (llBikeLayout.getVisibility() == View.VISIBLE) {
-                if (!Utils.isServiceWork(this, "com.biubike.service.RouteService"))
+                if (!Utils.isServiceWork(this, "com.baidu.trace.LBSTraceService"))
                     cancelBook();
                 return true;
             }
@@ -952,31 +1019,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         return super.onKeyDown(keyCode, event);
     }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void updateRoute(RoutePoints routePoints) {
-//        if (Utils.isTopActivity(this)) {
-//
-//            String showTime = routePoints.getTime();
-//            String showDistance = routePoints.getDistance();
-//            String showPrice = routePoints.getPrice();
-//            ArrayList<RoutePoint> routPointList = routePoints.getRouteList();
-//
-//            Log.d("gaolei", "totalTime---------get-----" + showTime);
-//            Log.d("gaolei", "totalDistance-----get---------" + showDistance);
-//            Log.d("gaolei", "totalPrice-------get-------" + showPrice);
-//            Log.d("gaolei", "routPointList.size()-------get-------" + routPointList.size());
-//
-//            bike_time.setText(showTime);
-//            bike_distance.setText(showDistance);
-//            bike_price.setText(showPrice);
-//            RoutePoint routePoint = routPointList.get(routPointList.size() - 1);
-//            LatLng latLng = new LatLng(routePoint.routeLat, routePoint.routeLng);
-//            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
-//            // 移动到某经纬度
-//            mBaiduMap.animateMapStatus(update);
-//        }
-//    }
 
 
     protected void toastDialog() {
@@ -997,7 +1039,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 backFromRouteDetail();
 
                 getMyLocation();
-                insertCycleData();
+
+                Gson gson = new Gson();
+                String routeListStr = gson.toJson(trackPoints);
+                insertCycleData(routeListStr);
+                notificationManager.cancel(1);
                 trackPoints.clear();
             }
         });
@@ -1009,7 +1055,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         builder.create().show();
     }
 
-    public void insertCycleData() {
+    public void insertCycleData(String routeListStr) {
         if (trackPoints.size() < 2) return;
         ContentValues values = new ContentValues();
         // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
@@ -1019,7 +1065,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         values.put("cycle_time", showTime);
         values.put("cycle_distance", showDistance);
         values.put("cycle_price", showPrice);
-//        values.put("cycle_points", routeListStr);
+        values.put("cycle_points", routeListStr);
         // 创建DatabaseHelper对象
         RouteDBHelper dbHelper = new RouteDBHelper(this);
         // 得到一个可写的SQLiteDatabase对象
@@ -1031,4 +1077,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         sqliteDatabase.insert("cycle_route", null, values);
         sqliteDatabase.close();
     }
+
+    private void startNotifi(String time, String distance, String price) {
+//        startForeground(1, notification);
+        contentView.setTextViewText(R.id.bike_time, time);
+        contentView.setTextViewText(R.id.bike_distance, distance);
+        contentView.setTextViewText(R.id.bike_price, price);
+        notificationManager.notify(1, notification);
+    }
+
+    private void initNotification() {
+        int icon = R.mipmap.bike_icon2;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel("id_route", "route");
+        }
+
+        contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        notification = new NotificationCompat.Builder(this, "id_route").setContent(contentView).setSmallIcon(icon).build();
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.putExtra("flag", "notification");
+        notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName) {
+
+
+        if (notificationManager.getNotificationChannel(channelId) != null) return;
+
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW);
+        notificationChannel.enableVibration(false);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        notificationChannel.setShowBadge(true);
+        notificationChannel.setBypassDnd(true);
+
+        notificationManager.createNotificationChannel(notificationChannel);
+
+    }
+
 }

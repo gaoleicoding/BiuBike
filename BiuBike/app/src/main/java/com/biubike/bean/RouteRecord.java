@@ -8,9 +8,27 @@ import android.os.Parcelable;
  */
 
 public class RouteRecord implements Parcelable {
-    public String cycle_date;
-    public String cycle_time;
-    public String cycle_distance;
+    private String cycle_date;
+    private String cycle_time;
+    private String cycle_distance;
+    private long cycle_start_time;
+    private long cycle_end_time;
+
+    public long getCycle_start_time() {
+        return cycle_start_time;
+    }
+
+    public void setCycle_start_time(long cycle_start_time) {
+        this.cycle_start_time = cycle_start_time;
+    }
+
+    public long getCycle_end_time() {
+        return cycle_end_time;
+    }
+
+    public void setCycle_end_time(long cycle_end_time) {
+        this.cycle_end_time = cycle_end_time;
+    }
 
     public String getCycle_price() {
         return cycle_price;
@@ -66,6 +84,8 @@ public class RouteRecord implements Parcelable {
         parcel.writeString(cycle_time);
         parcel.writeString(cycle_distance);
         parcel.writeString(cycle_price);
+        parcel.writeLong(cycle_start_time);
+        parcel.writeLong(cycle_end_time);
         parcel.writeString(cycle_points);
     }
 
@@ -91,6 +111,8 @@ public class RouteRecord implements Parcelable {
         cycle_time = source.readString();
         cycle_distance = source.readString();
         cycle_price = source.readString();
+        cycle_start_time = source.readLong();
+        cycle_end_time = source.readLong();
         cycle_points = source.readString();
     }
 }

@@ -20,7 +20,13 @@ public class RouteDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS  cycle_route (route_id integer primary key autoincrement ," +
                 "cycle_date text not null ," +
                 "cycle_start_time long not null ," +
-                "cycle_end_time long not null )");
+                "cycle_end_time long not null ," +
+                "cycle_time text not null ," +
+                "cycle_distance text not null ," +
+                "cycle_price text not null ," +
+                "cycle_points text not null )"
+
+        );
     }
 
     @Override

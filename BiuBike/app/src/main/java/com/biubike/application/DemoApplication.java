@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.biubike.util.CommonUtil;
+import com.biubike.map.TraceUtil;
 
 import java.io.File;
 
@@ -20,7 +20,7 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         // 若为创建独立进程，则不初始化成员变量
-        if ("com.baidu.track:remote".equals(CommonUtil.getCurProcessName(this))) {
+        if ("com.baidu.track:remote".equals(TraceUtil.getCurProcessName(this))) {
             return;
         }
         SDKInitializer.initialize(getApplicationContext());

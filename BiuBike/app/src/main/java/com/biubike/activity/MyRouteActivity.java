@@ -85,6 +85,9 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         bundle.putString("totalTime", routeRecord.getCycle_time());
         bundle.putString("totalDistance", routeRecord.getCycle_distance());
         bundle.putString("totalPrice", routeRecord.getCycle_price());
+        bundle.putString("totalPrice", routeRecord.getCycle_price());
+        bundle.putLong("startTime", routeRecord.getCycle_start_time());
+        bundle.putLong("endTime", routeRecord.getCycle_end_time());
         bundle.putString("routePoints", routeRecord.getCycle_points());
         intent.putExtras(bundle);
         startActivity(intent);
@@ -137,6 +140,10 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
                     .getColumnIndex("cycle_distance")));
             point.setCycle_price(cursor.getString(cursor
                     .getColumnIndex("cycle_price")));
+            point.setCycle_start_time(cursor.getLong(cursor
+                    .getColumnIndex("cycle_start_time")));
+            point.setCycle_end_time(cursor.getLong(cursor
+                    .getColumnIndex("cycle_end_time")));
             point.setCycle_points(cursor.getString(cursor
                     .getColumnIndex("cycle_points")));
             routeList.add(point);

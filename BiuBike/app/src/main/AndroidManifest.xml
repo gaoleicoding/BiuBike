@@ -30,6 +30,8 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <!-- 获取访问手机振动器权限，用于导航过程中的震动提示 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
@@ -93,6 +95,12 @@
         <activity
             android:name=".activity.MyRouteActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NavigationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BNaviGuideActivity"
+            android:screenOrientation="portrait" />
 
 
         <receiver
@@ -103,10 +111,10 @@
             </intent-filter>
         </receiver>
 
-        <!--        <service-->
-        <!--            android:name="com.baidu.location.f"-->
-        <!--            android:enabled="true"-->
-        <!--            android:process=":remote" />-->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
         <!--        <service android:name="com.biubike.service.RouteService" />-->
         <service
             android:name="com.baidu.trace.LBSTraceService"

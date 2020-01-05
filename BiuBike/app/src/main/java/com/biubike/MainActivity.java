@@ -33,7 +33,6 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -46,6 +45,17 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteLine.WalkingStep;
+import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.trace.api.entity.OnEntityListener;
 import com.baidu.trace.api.track.DistanceResponse;
 import com.baidu.trace.api.track.HistoryTrackResponse;
@@ -63,6 +73,7 @@ import com.baidu.trace.model.TraceLocation;
 import com.baidu.trace.model.TransportMode;
 import com.biubike.activity.CodeUnlockActivity;
 import com.biubike.activity.MyRouteActivity;
+import com.biubike.activity.NavigationActivity;
 import com.biubike.activity.WalletActivity;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
@@ -117,6 +128,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private OnTrackListener trackDistanceListener = null;
     private OnTrackListener trackHistoryListener = null;
+    private OnGetRoutePlanResultListener bikeRouteListener;
     /**
      * 轨迹监听器(用于接收纠偏后实时位置回调)
      */
@@ -154,13 +166,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Notification notification;
     private RemoteViews contentView;
     private NotificationManager notificationManager;
+    private RoutePlanSearch mSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());//在Application的onCreate()不行，必须在activity的onCreate()中
         setContentView(R.layout.activity_main);
-//        EventBus.getDefault().register(this);
+
         initView();
         initMap();
         initNotification();
@@ -249,6 +261,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!Utils.isServiceWork(this, "com.baidu.trace.LBSTraceService")) {
             getMyLocation();
         }
+
+        mSearch = RoutePlanSearch.newInstance();
+        mSearch.setOnGetRoutePlanResultListener(bikeRouteListener);
     }
 
     /**
@@ -340,6 +355,48 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void initListener() {
 
+
+        bikeRouteListener = new OnGetRoutePlanResultListener() {
+            @Override
+            public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+                //创建WalkingRouteOverlay实例
+                if (walkingRouteResult.getRouteLines().size() > 0) {
+                    List<WalkingStep> stepList = walkingRouteResult.getRouteLines().get(0).getAllStep();
+                    List<LatLng> latLngList = new ArrayList<>();
+                    for (int i = 0; i < stepList.size(); i++) {
+                        WalkingStep walkingStep = stepList.get(i);
+                        latLngList.addAll(walkingStep.getWayPoints());
+                    }
+                    mapUtil.drawHistoryTrack(latLngList, SortType.asc,true);
+                }
+            }
+
+            @Override
+            public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+
+            }
+
+            @Override
+            public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
+
+            }
+
+            @Override
+            public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+
+            }
+
+            @Override
+            public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+
+            }
+
+            @Override
+            public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+
+            }
+        };
+
         trackListener = new OnTrackListener() {
 
             @Override
@@ -424,7 +481,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 }
-                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
+                mapUtil.drawHistoryTrack(trackPoints, SortType.asc,true);
             }
         };
 
@@ -837,6 +894,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         bike_distance.setText(bikeInfo.getDistance());
 
         llPrice.setVisibility(View.GONE);
+
+        PlanNode stNode = PlanNode.withLocation(currentLatLng);
+        PlanNode enNode = PlanNode.withLocation(new LatLng(bikeInfo.getLatitude(), bikeInfo.getLongitude()));
+        mSearch.walkingSearch((new WalkingRoutePlanOption())
+                .from(stNode)
+                .to(enNode));
     }
 
 
@@ -862,7 +925,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void gotoNavigation(View view) {
-//        startActivity(new Intent(this, NavigationActivity.class));
+        startActivity(new Intent(this, NavigationActivity.class));
     }
 
     @Override
@@ -979,7 +1042,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         llBikeLayout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
         MapUtil.getInstance().setMapZoomStatus(currentLatLng, 19);
-
+        getMyLocation();
     }
 
 
@@ -998,6 +1061,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        mSearch.destroy();
         EventBus.getDefault().unregister(this);
 
     }

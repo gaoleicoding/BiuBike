@@ -1,6 +1,7 @@
 package com.biubike.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.bikenavi.BikeNavigateHelper;
+import com.baidu.mapapi.bikenavi.adapter.IBEngineInitListener;
+import com.baidu.mapapi.bikenavi.adapter.IBRoutePlanListener;
+import com.baidu.mapapi.bikenavi.model.BikeRoutePlanError;
+import com.baidu.mapapi.bikenavi.params.BikeNaviLaunchParam;
+import com.baidu.mapapi.bikenavi.params.BikeRouteNodeInfo;
 import com.baidu.mapapi.model.LatLng;
-
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.biubike.R;
 import com.biubike.adapter.PoiHostoryAdapter;
+import com.biubike.adapter.PoiSuggestionAdapter;
 import com.biubike.adapter.RecyclerViewDivider;
 import com.biubike.base.BaseActivity;
 import com.biubike.map.LocationManager;
@@ -38,6 +49,7 @@ public class NavigationActivity extends BaseActivity implements
         OnGetSuggestionResultListener, PoiSuggestionAdapter.OnItemClickListener
         , PoiHostoryAdapter.OnHistoryItemClickListener {
 
+    private String TAG="NavigationActivity";
     private LinearLayout place_search_layout;
     private RelativeLayout titleLayout;
     private EditText place_edit;
@@ -54,19 +66,19 @@ public class NavigationActivity extends BaseActivity implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityList.add(this);
         setContentView(R.layout.activity_navigation);
         providerUtil = new ProviderUtil(this);
         //想使用内置导航，必须初始化导航
-        NavUtil.initNavi(this);
+        mSuggestionSearch = SuggestionSearch.newInstance();
+
         currentAddress = LocationManager.getInstance().getAddress();
-        place_search_layout =  findViewById(R.id.place_search_layout);
-        titleLayout =  findViewById(R.id.title_layout);
+        place_search_layout = findViewById(R.id.place_search_layout);
+        titleLayout = findViewById(R.id.title_layout);
         start_place_edit = findViewById(R.id.start_place_edit);
         destination_edit = findViewById(R.id.destination_edit);
         place_edit = findViewById(R.id.place_edit);
-        recyclerview_poi_history =findViewById(R.id.recyclerview_poi_history);
-        recyclerview_poi =  findViewById(R.id.recyclerview_poi);
+        recyclerview_poi_history = findViewById(R.id.recyclerview_poi_history);
+        recyclerview_poi = findViewById(R.id.recyclerview_poi);
         recyclerview_poi.setLayoutManager(new LinearLayoutManager(this));
         recyclerview_poi.addItemDecoration(new RecyclerViewDivider(
                 this, LinearLayoutManager.HORIZONTAL, 1,
@@ -174,7 +186,7 @@ public class NavigationActivity extends BaseActivity implements
         suggestionInfoList = res.getAllSuggestions();
         if (firstSetAdapter) {
             String from = isStartPoi == true ? "start" : "detination";
-            sugAdapter = new PoiSuggestionAdapter(this, suggestionInfoList, from);
+            sugAdapter = new PoiSuggestionAdapter(NavigationActivity.this, suggestionInfoList, from);
             recyclerview_poi.setAdapter(sugAdapter);
             sugAdapter.setOnClickListener(this);
             firstSetAdapter = false;
@@ -211,11 +223,11 @@ public class NavigationActivity extends BaseActivity implements
             String start = startAddr.equals(getString(R.string.my_position)) ? currentAddress : startAddr;
             String endAddr = destination_edit.getText().toString();
             String end = endAddr.equals(getString(R.string.my_position)) ? currentAddress : endAddr;
-            NavUtil.showChoiceNaviWayDialog(this, startLL, endLL, start, end);
+//            NavUtil.showChoiceNaviWayDialog(this, startLL, endLL, start, end);
+            startBikeNavi();
         }
     }
 
-    @Override
     public void onItemClick(View v, int position, String flag, SuggestionResult.SuggestionInfo info) {
         if (isStartPoi) {
             start_place_edit.setText(info.key);
@@ -225,7 +237,7 @@ public class NavigationActivity extends BaseActivity implements
             endLL = info.pt;
         }
         backFromSearchPlace(place_search_layout);
-        providerUtil.addData(info.key,info.district, info.pt.latitude + "", info.pt.longitude + "");
+        providerUtil.addData(info.key, info.district, info.pt.latitude + "", info.pt.longitude + "");
     }
 
     @Override
@@ -240,5 +252,57 @@ public class NavigationActivity extends BaseActivity implements
         }
         backFromSearchPlace(place_search_layout);
 
+    }
+    /**
+     * 开始骑行导航
+     */
+    private void startBikeNavi() {
+        try {
+            BikeNavigateHelper.getInstance().initNaviEngine(this, new IBEngineInitListener() {
+                @Override
+                public void engineInitSuccess() {
+                    routePlanWithBikeParam();
+                }
+
+                @Override
+                public void engineInitFail() {
+                    BikeNavigateHelper.getInstance().unInitNaviEngine();
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG,"e.getMessage()："+e.getMessage().toString());
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 发起骑行导航算路
+     */
+    private void routePlanWithBikeParam() {
+        /*构造导航起终点参数对象*/
+        BikeRouteNodeInfo bikeStartNode = new BikeRouteNodeInfo();
+        bikeStartNode.setLocation(startLL);
+        BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
+        bikeEndNode.setLocation(endLL);
+        BikeNaviLaunchParam bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
+        BikeNavigateHelper.getInstance().routePlanWithRouteNode(bikeParam, new IBRoutePlanListener() {
+            @Override
+            public void onRoutePlanStart() {
+                Log.d(TAG, "BikeNavi onRoutePlanStart");
+            }
+
+            @Override
+            public void onRoutePlanSuccess() {
+                Log.d(TAG, "BikeNavi onRoutePlanSuccess");
+                Intent intent = new Intent();
+                intent.setClass(NavigationActivity.this, BNaviGuideActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRoutePlanFail(BikeRoutePlanError error) {
+                Log.d(TAG, "BikeNavi onRoutePlanFail");
+            }
+
+        });
     }
 }

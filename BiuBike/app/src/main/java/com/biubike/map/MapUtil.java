@@ -245,8 +245,9 @@ public class MapUtil {
     /**
      * 绘制历史轨迹
      */
-    public void drawHistoryTrack(List<LatLng> points, SortType sortType) {
+    public void drawHistoryTrack(List<LatLng> points, SortType sortType,boolean isClear) {
 
+        if(isClear)
         baiduMap.clear();
         if (points == null || points.size() == 0) {
             if (null != polylineOverlay) {

@@ -397,40 +397,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         };
 
-        trackListener = new OnTrackListener() {
 
-            @Override
-            public void onLatestPointCallback(LatestPointResponse response) {
-                if (StatusCodes.SUCCESS != response.getStatus()) {
-                    return;
-                }
-
-                LatestPoint point = response.getLatestPoint();
-                if (null == point || TraceUtil.isZeroPoint(point.getLocation().getLatitude(), point.getLocation()
-                        .getLongitude())) {
-                    return;
-                }
-
-                currentLatLng = MapUtil.convertTrace2Map(point.getLocation());
-                CurrentLocation.locTime = point.getLocTime();
-                CurrentLocation.latitude = currentLatLng.latitude;
-                CurrentLocation.longitude = currentLatLng.longitude;
-//                trackPoints.add(currentLatLng);
-//                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
-                if (null != mapUtil) {
-                    Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
-                    mapUtil.updateStatus(currentLatLng, true);
-                }
-
-
-                if (isGetLocation) {
-                    showCurrentLocationInfo(currentLatLng);
-                    isGetLocation = false;
-                }
-
-            }
-
-        };
         trackDistanceListener = new OnTrackListener() {
 
             @Override
@@ -484,7 +451,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mapUtil.drawHistoryTrack(trackPoints, SortType.asc,true);
             }
         };
+        trackListener = new OnTrackListener() {
 
+            @Override
+            public void onLatestPointCallback(LatestPointResponse response) {
+                if (StatusCodes.SUCCESS != response.getStatus()) {
+                    return;
+                }
+
+                LatestPoint point = response.getLatestPoint();
+                if (null == point || TraceUtil.isZeroPoint(point.getLocation().getLatitude(), point.getLocation()
+                        .getLongitude())) {
+                    return;
+                }
+
+                currentLatLng = MapUtil.convertTrace2Map(point.getLocation());
+                CurrentLocation.locTime = point.getLocTime();
+                CurrentLocation.latitude = currentLatLng.latitude;
+                CurrentLocation.longitude = currentLatLng.longitude;
+//                trackPoints.add(currentLatLng);
+//                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
+                if (null != mapUtil) {
+                    Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
+                    mapUtil.updateStatus(currentLatLng, true);
+                }
+
+
+                if (isGetLocation) {
+                    showCurrentLocationInfo(currentLatLng);
+                    isGetLocation = false;
+                }
+
+            }
+
+        };
 
         entityListener = new OnEntityListener() {
 
@@ -695,6 +695,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Log.d("gaolei", "Address:" + addressList.get(0).toString());
             }
             addOverLayout(currentLatLng);
+            mapUtil.setMapZoomStatus(currentLatLng,18f);
         } catch (Exception e) {
             Log.d("gaolei", "" + e.getMessage());
         }

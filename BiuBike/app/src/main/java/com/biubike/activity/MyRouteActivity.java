@@ -81,39 +81,8 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
     public void onItemClick(View v, int position) {
         Intent intent = new Intent(MyRouteActivity.this, RouteDetailActivity.class);
         RouteRecord routeRecord = routeList.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putString("totalTime", routeRecord.getCycle_time());
-        bundle.putString("totalDistance", routeRecord.getCycle_distance());
-        bundle.putString("totalPrice", routeRecord.getCycle_price());
-        bundle.putString("totalPrice", routeRecord.getCycle_price());
-        bundle.putLong("startTime", routeRecord.getCycle_start_time());
-        bundle.putLong("endTime", routeRecord.getCycle_end_time());
-        bundle.putString("routePoints", routeRecord.getCycle_points());
-        intent.putExtras(bundle);
+        intent.putExtra("routeRecord", routeRecord);
         startActivity(intent);
-    }
-
-    public List<RouteRecord> getAllPoints() {
-        String sql = "select * from cycle_route order by route_id DESC ";
-        RouteDBHelper helper = new RouteDBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            RouteRecord point = new RouteRecord();
-            point.setCycle_date(cursor.getString(cursor
-                    .getColumnIndex("cycle_date")));
-            point.setCycle_time(cursor.getString(cursor
-                    .getColumnIndex("cycle_time")));
-            point.setCycle_distance(cursor.getString(cursor
-                    .getColumnIndex("cycle_distance")));
-            point.setCycle_price(cursor.getString(cursor
-                    .getColumnIndex("cycle_price")));
-            point.setCycle_points(cursor.getString(cursor
-                    .getColumnIndex("cycle_points")));
-            routeList.add(point);
-        }
-        return routeList;
     }
 
 
@@ -132,20 +101,19 @@ public class MyRouteActivity extends BaseActivity implements MyRouteAdapter.OnIt
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             RouteRecord point = new RouteRecord();
-            point.setCycle_date(cursor.getString(cursor
+            point.setCycleDate(cursor.getString(cursor
                     .getColumnIndex("cycle_date")));
-            point.setCycle_time(cursor.getString(cursor
-                    .getColumnIndex("cycle_time")));
-            point.setCycle_distance(cursor.getString(cursor
-                    .getColumnIndex("cycle_distance")));
-            point.setCycle_price(cursor.getString(cursor
-                    .getColumnIndex("cycle_price")));
-            point.setCycle_start_time(cursor.getLong(cursor
+            point.setCycleStartTime(cursor.getLong(cursor
                     .getColumnIndex("cycle_start_time")));
-            point.setCycle_end_time(cursor.getLong(cursor
+            point.setCycleEndTime(cursor.getLong(cursor
                     .getColumnIndex("cycle_end_time")));
-            point.setCycle_points(cursor.getString(cursor
-                    .getColumnIndex("cycle_points")));
+            point.setCycleTime(cursor.getString(cursor
+                    .getColumnIndex("cycle_time")));
+            point.setCycleDistance(cursor.getString(cursor
+                    .getColumnIndex("cycle_distance")));
+            point.setCyclePrice(cursor.getString(cursor
+                    .getColumnIndex("cycle_price")));
+
             routeList.add(point);
         }
         PageId++;

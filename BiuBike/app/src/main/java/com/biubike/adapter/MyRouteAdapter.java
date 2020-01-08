@@ -46,10 +46,10 @@ public class MyRouteAdapter extends RecyclerView.Adapter<MyRouteAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.itemView.setTag(position);
         RouteRecord routeRecord = list.get(position);
-        holder.bike_time.setText(routeRecord.getCycle_time());
-        holder.bike_distance.setText(routeRecord.getCycle_distance());
-        holder.bike_price.setText(routeRecord.getCycle_price());
-        holder.bike_date.setText(routeRecord.getCycle_date());
+        holder.bike_time.setText(routeRecord.getCycleTime());
+        holder.bike_distance.setText(routeRecord.getCycleDistance());
+        holder.bike_price.setText(routeRecord.getCyclePrice());
+        holder.bike_date.setText(routeRecord.getCycleDate());
     }
 
     @Override

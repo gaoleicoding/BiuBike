@@ -29,11 +29,10 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.trace.api.track.HistoryTrackResponse;
 import com.baidu.trace.api.track.OnTrackListener;
 import com.baidu.trace.api.track.TrackPoint;
-import com.baidu.trace.model.SortType;
 import com.biubike.R;
 import com.biubike.base.BaseActivity;
+import com.biubike.bean.RouteRecord;
 import com.biubike.map.EagleEyeUtil;
-import com.biubike.map.MapUtil;
 import com.biubike.map.TraceUtil;
 import com.biubike.util.Utils;
 
@@ -62,6 +61,7 @@ public class RouteDetailActivity extends BaseActivity {
     private List<TrackPoint> routePoints;
     private List<LatLng> points;
     private List<LatLng> subList;
+    private RouteRecord routeRecord;
 
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
@@ -73,7 +73,7 @@ public class RouteDetailActivity extends BaseActivity {
                     Log.d(TAG, "spanIndex：" + spanIndex);
                     Log.d(TAG, "points.size()：" + routePoints.size());
                     if (currentIndex < routePointsLength) {
-                        subList =  new ArrayList(points.subList(0, currentIndex));
+                        subList = new ArrayList(points.subList(0, currentIndex));
                     }
                     if (subList.size() >= 1) {
                         playTraceHistory(subList);
@@ -121,8 +121,9 @@ public class RouteDetailActivity extends BaseActivity {
         currentBmp = BitmapDescriptorFactory.fromResource(R.mipmap.bike_icon);
 
         Intent intent = getIntent();
-        long startTime = intent.getLongExtra("startTime", 0) / 1000;
-        long endTime = intent.getLongExtra("endTime", 0) / 1000;
+        routeRecord = intent.getParcelableExtra("routeRecord");
+        long startTime = routeRecord.getCycleStartTime() / 1000;
+        long endTime = routeRecord.getCycleStartTime() / 1000;
 
         getTraceHistory(startTime, endTime);
 
@@ -178,10 +179,9 @@ public class RouteDetailActivity extends BaseActivity {
                 }
                 drawRoute(points);
 
-                Intent intent = getIntent();
-                String time = intent.getStringExtra("totalTime");
-                String distance = intent.getStringExtra("totalDistance");
-                String price = intent.getStringExtra("totalPrice");
+                String time = routeRecord.getCycleTime();
+                String distance = routeRecord.getCycleDistance();
+                String price = routeRecord.getCyclePrice();
                 total_time.setText("骑行时长：" + time);
                 total_distance.setText("骑行距离：" + distance);
                 total_price.setText("余额支付：" + price);
@@ -342,4 +342,5 @@ public class RouteDetailActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }

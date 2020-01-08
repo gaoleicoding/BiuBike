@@ -8,70 +8,70 @@ import android.os.Parcelable;
  */
 
 public class RouteRecord implements Parcelable {
-    private String cycle_date;
-    private String cycle_time;
-    private String cycle_distance;
-    private long cycle_start_time;
-    private long cycle_end_time;
+    private String cycleDate;
+    private String cycleTime;
+    private String cycleDistance;
+    private long cycleStartTime;
+    private long cycleEndTime;
+    private String cyclePrice;
+    private String cyclePoints;
 
-    public long getCycle_start_time() {
-        return cycle_start_time;
+
+    public long getCycleStartTime() {
+        return cycleStartTime;
     }
 
-    public void setCycle_start_time(long cycle_start_time) {
-        this.cycle_start_time = cycle_start_time;
+    public void setCycleStartTime(long cycleStartTime) {
+        this.cycleStartTime = cycleStartTime;
     }
 
-    public long getCycle_end_time() {
-        return cycle_end_time;
+    public long getCycleEndTime() {
+        return cycleEndTime;
     }
 
-    public void setCycle_end_time(long cycle_end_time) {
-        this.cycle_end_time = cycle_end_time;
+    public void setCycleEndTime(long cycleEndTime) {
+        this.cycleEndTime = cycleEndTime;
     }
 
-    public String getCycle_price() {
-        return cycle_price;
+    public String getCyclePrice() {
+        return cyclePrice;
     }
 
-    public void setCycle_price(String cycle_price) {
-        this.cycle_price = cycle_price;
+    public void setCyclePrice(String cyclePrice) {
+        this.cyclePrice = cyclePrice;
     }
 
-    public String getCycle_points() {
-        return cycle_points;
+    public String getCyclePoints() {
+        return cyclePoints;
     }
 
-    public void setCycle_points(String cycle_points) {
-        this.cycle_points = cycle_points;
+    public void setCyclePoints(String cyclePoints) {
+        this.cyclePoints = cyclePoints;
     }
 
-    public String getCycle_distance() {
-        return cycle_distance;
+    public String getCycleDistance() {
+        return cycleDistance;
     }
 
-    public void setCycle_distance(String cycle_distance) {
-        this.cycle_distance = cycle_distance;
+    public void setCycleDistance(String cycleDistance) {
+        this.cycleDistance = cycleDistance;
     }
 
-    public String getCycle_date() {
-        return cycle_date;
+    public String getCycleDate() {
+        return cycleDate;
     }
 
-    public void setCycle_date(String cycle_date) {
-        this.cycle_date = cycle_date;
+    public void setCycleDate(String cycleDate) {
+        this.cycleDate = cycleDate;
     }
 
-    public String getCycle_time() {
-        return cycle_time;
+    public String getCycleTime() {
+        return cycleTime;
     }
 
-    public void setCycle_time(String cycle_time) {
-        this.cycle_time = cycle_time;
+    public void setCycleTime(String cycleTime) {
+        this.cycleTime = cycleTime;
     }
-
-    public String cycle_price;
-    public String cycle_points;
 
     @Override
     public int describeContents() {
@@ -80,13 +80,13 @@ public class RouteRecord implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(cycle_date);
-        parcel.writeString(cycle_time);
-        parcel.writeString(cycle_distance);
-        parcel.writeString(cycle_price);
-        parcel.writeLong(cycle_start_time);
-        parcel.writeLong(cycle_end_time);
-        parcel.writeString(cycle_points);
+        parcel.writeString(cycleDate);
+        parcel.writeString(cycleTime);
+        parcel.writeString(cycleDistance);
+        parcel.writeString(cyclePrice);
+        parcel.writeLong(cycleStartTime);
+        parcel.writeLong(cycleEndTime);
+        parcel.writeString(cyclePoints);
     }
 
     public static final Parcelable.Creator<RouteRecord> CREATOR = new Creator<RouteRecord>() {
@@ -98,7 +98,7 @@ public class RouteRecord implements Parcelable {
 
         @Override
         public RouteRecord[] newArray(int size) {
-// TODO Auto-generated method stub
+           // TODO Auto-generated method stub
             return new RouteRecord[size];
         }
     };
@@ -107,12 +107,12 @@ public class RouteRecord implements Parcelable {
     }
 
     private RouteRecord(Parcel source) {
-        cycle_date = source.readString();
-        cycle_time = source.readString();
-        cycle_distance = source.readString();
-        cycle_price = source.readString();
-        cycle_start_time = source.readLong();
-        cycle_end_time = source.readLong();
-        cycle_points = source.readString();
+        cycleDate = source.readString();
+        cycleTime = source.readString();
+        cycleDistance = source.readString();
+        cyclePrice = source.readString();
+        cycleStartTime = source.readLong();
+        cycleEndTime = source.readLong();
+        cyclePoints = source.readString();
     }
 }

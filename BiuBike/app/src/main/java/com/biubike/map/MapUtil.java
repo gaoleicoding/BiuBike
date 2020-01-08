@@ -143,27 +143,6 @@ public class MapUtil {
         return new LatLng(traceLatLng.latitude, traceLatLng.longitude);
     }
 
-    /**
-     * 设置地图中心：使用已有定位信息；
-     */
-    public void setCenter() {
-        if (!TraceUtil.isZeroPoint(CurrentLocation.latitude, CurrentLocation.longitude)) {
-            LatLng currentLatLng = new LatLng(CurrentLocation.latitude, CurrentLocation.longitude);
-            updateStatus(currentLatLng, false);
-            return;
-        }
-        String lastLocation = EagleEyeUtil.get().trackConf.getString(Constants.LAST_LOCATION, null);
-        if (!TextUtils.isEmpty(lastLocation)) {
-            String[] locationInfo = lastLocation.split(";");
-            if (!TraceUtil.isZeroPoint(Double.parseDouble(locationInfo[1]),
-                    Double.parseDouble(locationInfo[2]))) {
-                LatLng currentLatLng = new LatLng(Double.parseDouble(locationInfo[1]),
-                        Double.parseDouble(locationInfo[2]));
-                updateStatus(currentLatLng, false);
-                return;
-            }
-        }
-    }
 
     public void updateStatus(LatLng currentPoint, boolean showMarker) {
         if (null == baiduMap || null == currentPoint) {
@@ -176,11 +155,11 @@ public class MapUtil {
             if (screenPoint.y < 200 || screenPoint.y > Utils.getScreenHeight(ContextUtil.getAppContext()) - 500
                     || screenPoint.x < 200 || screenPoint.x > Utils.getScreenWidth(ContextUtil.getAppContext()) - 200
                     || null == mapStatus) {
-                setMapZoomStatus(currentPoint, 15.0f);
+                setMapZoomStatus(currentPoint, 19f);
             }
         } else if (null == mapStatus) {
             // 第一次定位时，聚焦底图
-            setMapZoomStatus(currentPoint, 15.0f);
+            setMapZoomStatus(currentPoint, 19f);
         }
 
         if (showMarker) {
@@ -245,10 +224,11 @@ public class MapUtil {
     /**
      * 绘制历史轨迹
      */
-    public void drawHistoryTrack(List<LatLng> points, SortType sortType,boolean isClear) {
+    public void drawHistoryTrack(List<LatLng> points, SortType sortType, boolean isClear) {
 
-        if(isClear)
-        baiduMap.clear();
+        if (isClear) {
+            baiduMap.clear();
+        }
         if (points == null || points.size() == 0) {
             if (null != polylineOverlay) {
                 polylineOverlay.remove();
@@ -261,7 +241,7 @@ public class MapUtil {
             OverlayOptions startOptions = new MarkerOptions().position(points.get(0)).icon(bmStart)
                     .zIndex(9).draggable(true);
             baiduMap.addOverlay(startOptions);
-            setMapZoomStatus(points.get(0), 26.0f);
+            setMapZoomStatus(points.get(0), 21.0f);
             return;
         }
 
@@ -297,7 +277,7 @@ public class MapUtil {
         mMoveMarker = (Marker) baiduMap.addOverlay(markerOptions);
 
 //        animateMapStatus(points);
-        }
+    }
 
 
     private void addOverLayout(LatLng startPosition, LatLng endPosition) {
@@ -320,6 +300,16 @@ public class MapUtil {
     public void setMapZoomStatus(LatLng point, float zoom) {
         MapStatus.Builder builder = new MapStatus.Builder();
         mapStatus = builder.target(point).zoom(zoom).build();
+        baiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(mapStatus));
+    }
+
+
+    /**
+     * 设置地图中心：使用已有定位信息；
+     */
+    public void setCenter(LatLng point) {
+        MapStatus.Builder builder = new MapStatus.Builder();
+        mapStatus = builder.target(point).build();
         baiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(mapStatus));
     }
 

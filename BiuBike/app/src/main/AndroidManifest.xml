@@ -102,20 +102,10 @@
             android:name=".activity.BNaviGuideActivity"
             android:screenOrientation="portrait" />
 
-
-        <receiver
-            android:name="com.biubike.service.RouteService$NetWorkReceiver"
-            android:label="NetworkConnection">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <!--        <service android:name="com.biubike.service.RouteService" />-->
         <service
             android:name="com.baidu.trace.LBSTraceService"
             android:enabled="true"

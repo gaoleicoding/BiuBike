@@ -74,9 +74,11 @@ import com.baidu.trace.model.TransportMode;
 import com.biubike.activity.CodeUnlockActivity;
 import com.biubike.activity.MyRouteActivity;
 import com.biubike.activity.NavigationActivity;
+import com.biubike.activity.RouteDetailActivity;
 import com.biubike.activity.WalletActivity;
 import com.biubike.base.BaseActivity;
 import com.biubike.bean.BikeInfo;
+import com.biubike.bean.RouteRecord;
 import com.biubike.callback.AllInterface;
 import com.biubike.custom.LeftDrawerLayout;
 import com.biubike.database.RouteDBHelper;
@@ -90,7 +92,6 @@ import com.biubike.track.model.CurrentLocation;
 import com.biubike.util.NetUtil;
 import com.biubike.util.Utils;
 import com.biubike.util.ViewUtil;
-import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -290,7 +291,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             Log.d("gaolei", "currentLL----------" + currentLatLng);
             Log.d("gaolei", "getAddrStr()----------" + bdLocation.getAddrStr());
-            mapUtil.setMapZoomStatus(currentLatLng, 19);
+            mapUtil.setMapZoomStatus(currentLatLng, 19f);
             addOverLayout(currentLatLng);
             mlocationClient.stop();
 
@@ -367,7 +368,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         WalkingStep walkingStep = stepList.get(i);
                         latLngList.addAll(walkingStep.getWayPoints());
                     }
-                    mapUtil.drawHistoryTrack(latLngList, SortType.asc,true);
+                    mapUtil.drawHistoryTrack(latLngList, SortType.asc, true);
                 }
             }
 
@@ -437,6 +438,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         trackHistoryListener = new OnTrackListener() {
             @Override
             public void onHistoryTrackCallback(HistoryTrackResponse response) {
+                trackPoints.clear();
                 // 历史轨迹回调
                 List<TrackPoint> points = response.getTrackPoints();
                 if (null != points) {
@@ -448,7 +450,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 }
-                mapUtil.drawHistoryTrack(trackPoints, SortType.asc,true);
+                mapUtil.drawHistoryTrack(trackPoints, SortType.asc, true);
+                mapUtil.setCenter(currentLatLng);
             }
         };
         trackListener = new OnTrackListener() {
@@ -473,7 +476,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
                 if (null != mapUtil) {
                     Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
-                    mapUtil.updateStatus(currentLatLng, true);
+                    mapUtil.setCenter(currentLatLng);
                 }
 
 
@@ -503,7 +506,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 CurrentLocation.latitude = currentLatLng.latitude;
                 CurrentLocation.longitude = currentLatLng.longitude;
                 if (null != mapUtil) {
-                    mapUtil.updateStatus(currentLatLng, true);
+                    mapUtil.setCenter(currentLatLng);
                     Toast.makeText(MainActivity.this, "entityListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
                 }
 
@@ -695,7 +698,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Log.d("gaolei", "Address:" + addressList.get(0).toString());
             }
             addOverLayout(currentLatLng);
-            mapUtil.setMapZoomStatus(currentLatLng,18f);
+            mapUtil.setMapZoomStatus(currentLatLng, 19f);
         } catch (Exception e) {
             Log.d("gaolei", "" + e.getMessage());
         }
@@ -940,7 +943,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         .icon(startBmp);
                 // 在地图上添加Marker，并显示
                 mBaiduMap.addOverlay(options);
-                MapUtil.getInstance().setMapZoomStatus(currentLatLng, 22);
+                MapUtil.getInstance().setMapZoomStatus(currentLatLng, 19f);
             }
 
             startTrace();
@@ -1042,7 +1045,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void cancelBook() {
         llBikeLayout.setVisibility(View.GONE);
         prompt.setVisibility(View.GONE);
-        MapUtil.getInstance().setMapZoomStatus(currentLatLng, 19);
+        MapUtil.getInstance().setMapZoomStatus(currentLatLng, 18);
         getMyLocation();
     }
 
@@ -1105,11 +1108,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 getMyLocation();
 
-                Gson gson = new Gson();
-                String routeListStr = gson.toJson(trackPoints);
-                insertCycleData(routeListStr);
+                insertCycleData();
                 notificationManager.cancel(1);
                 trackPoints.clear();
+                startRoutDetail();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -1120,7 +1122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         builder.create().show();
     }
 
-    public void insertCycleData(String routeListStr) {
+    public void insertCycleData() {
         if (trackPoints.size() < 2) return;
         ContentValues values = new ContentValues();
         // 向该对象中插入键值对，其中键是列名，值是希望插入到这一列的值，值必须和数据当中的数据类型一致
@@ -1130,7 +1132,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         values.put("cycle_time", showTime);
         values.put("cycle_distance", showDistance);
         values.put("cycle_price", showPrice);
-        values.put("cycle_points", routeListStr);
         // 创建DatabaseHelper对象
         RouteDBHelper dbHelper = new RouteDBHelper(this);
         // 得到一个可写的SQLiteDatabase对象
@@ -1141,6 +1142,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // 第三个参数：ContentValues对象
         sqliteDatabase.insert("cycle_route", null, values);
         sqliteDatabase.close();
+
+
+    }
+
+    private void startRoutDetail() {
+        Intent intent = new Intent(MainActivity.this, RouteDetailActivity.class);
+        RouteRecord routeRecord = new RouteRecord();
+        routeRecord.setCycleStartTime(startTime);
+        routeRecord.setCycleEndTime(endTime);
+        routeRecord.setCycleTime(showTime);
+        routeRecord.setCycleDistance(showDistance);
+        routeRecord.setCyclePrice(showPrice);
+        intent.putExtra("routeRecord", routeRecord);
+        startActivity(intent);
     }
 
     private void startNotifi(String time, String distance, String price) {

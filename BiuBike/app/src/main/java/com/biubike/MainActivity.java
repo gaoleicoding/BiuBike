@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     private List<LatLng> trackPoints;
     // 查询周期(单位:秒)
-    private int queryInterval = 2000;
+    private int queryInterval = 3000;
     private String showTime;
     private String showDistance;
     private String showPrice;
@@ -451,7 +451,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     }
                 }
                 mapUtil.drawHistoryTrack(trackPoints, SortType.asc, true);
-                mapUtil.setCenter(currentLatLng);
+                if (points.size() > 1) {
+                    TrackPoint trackPoint = points.get(points.size() - 1);
+                    mapUtil.setCenter(new LatLng(trackPoint.getLocation().latitude, trackPoint.getLocation().longitude));
+                }
             }
         };
         trackListener = new OnTrackListener() {
@@ -530,8 +533,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
              */
             @Override
             public void onBindServiceCallback(int errorNo, String message) {
-                ViewUtil.showToast(MainActivity.this,
-                        String.format("onBindServiceCallback, errorNo:%d, message:%s ", errorNo, message));
+//                ViewUtil.showToast(MainActivity.this,
+//                        String.format("onBindServiceCallback, errorNo:%d, message:%s ", errorNo, message));
                 if (!EagleEyeUtil.get().isTraceStarted) {
                     startTrace();
                     startGather();
@@ -681,8 +684,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             @Override
             public void onInitBOSCallback(int errorNo, String message) {
-                ViewUtil.showToast(MainActivity.this,
-                        String.format("onInitBOSCallback, errorNo:%d, message:%s ", errorNo, message));
+//                ViewUtil.showToast(MainActivity.this,
+//                        String.format("onInitBOSCallback, errorNo:%d, message:%s ", errorNo, message));
             }
         };
 

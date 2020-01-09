@@ -75,6 +75,7 @@ public class RouteDetailActivity extends BaseActivity {
                     if (currentIndex < routePointsLength) {
                         subList = new ArrayList(points.subList(0, currentIndex));
                     }
+                    if (subList == null) return;
                     if (subList.size() >= 1) {
                         playTraceHistory(subList);
                     }

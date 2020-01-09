@@ -241,7 +241,7 @@ public class MapUtil {
             OverlayOptions startOptions = new MarkerOptions().position(points.get(0)).icon(bmStart)
                     .zIndex(9).draggable(true);
             baiduMap.addOverlay(startOptions);
-            setMapZoomStatus(points.get(0), 21.0f);
+            setMapZoomStatus(points.get(0), 20);
             return;
         }
 

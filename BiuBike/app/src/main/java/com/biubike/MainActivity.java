@@ -291,7 +291,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             Log.d("gaolei", "currentLL----------" + currentLatLng);
             Log.d("gaolei", "getAddrStr()----------" + bdLocation.getAddrStr());
-            mapUtil.setMapZoomStatus(currentLatLng, 19f);
+            mapUtil.setMapZoomStatus(currentLatLng, 18f);
             addOverLayout(currentLatLng);
             mlocationClient.stop();
 
@@ -475,7 +475,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //                trackPoints.add(currentLatLng);
 //                mapUtil.drawHistoryTrack(trackPoints, SortType.asc);
                 if (null != mapUtil) {
-                    Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MainActivity.this, "trackListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
                     mapUtil.setCenter(currentLatLng);
                 }
 
@@ -507,7 +507,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 CurrentLocation.longitude = currentLatLng.longitude;
                 if (null != mapUtil) {
                     mapUtil.setCenter(currentLatLng);
-                    Toast.makeText(MainActivity.this, "entityListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MainActivity.this, "entityListener:" + currentLatLng.toString(), Toast.LENGTH_LONG).show();
                 }
 
                 if (isGetLocation) {
@@ -561,8 +561,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     editor.apply();
                     EagleEyeUtil.get().registerReceiver();
                 }
-                Toast.makeText(MainActivity.this,
-                        String.format("onStartTraceCallback, errorNo:%d, message:%s ", errorNo, message), Toast.LENGTH_SHORT);
+//                Toast.makeText(MainActivity.this,
+//                        String.format("onStartTraceCallback, errorNo:%d, message:%s ", errorNo, message), Toast.LENGTH_SHORT);
             }
 
             /**
@@ -588,8 +588,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     editor.apply();
                     EagleEyeUtil.get().unregisterPowerReceiver();
                 }
-                ViewUtil.showToast(MainActivity.this,
-                        String.format("onStopTraceCallback, errorNo:%d, message:%s ", errorNo, message));
+//                ViewUtil.showToast(MainActivity.this,
+//                        String.format("onStopTraceCallback, errorNo:%d, message:%s ", errorNo, message));
             }
 
             /**
@@ -610,8 +610,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     editor.putBoolean("is_gather_started", true);
                     editor.apply();
                 }
-                ViewUtil.showToast(MainActivity.this,
-                        String.format("onStartGatherCallback, errorNo:%d, message:%s ", errorNo, message));
+//                ViewUtil.showToast(MainActivity.this,
+//                        String.format("onStartGatherCallback, errorNo:%d, message:%s ", errorNo, message));
             }
 
             /**
@@ -632,8 +632,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     editor.remove("is_gather_started");
                     editor.apply();
                 }
-                ViewUtil.showToast(MainActivity.this,
-                        String.format("onStopGatherCallback, errorNo:%d, message:%s ", errorNo, message));
+//                ViewUtil.showToast(MainActivity.this,
+//                        String.format("onStopGatherCallback, errorNo:%d, message:%s ", errorNo, message));
             }
 
             /**
@@ -698,7 +698,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 Log.d("gaolei", "Address:" + addressList.get(0).toString());
             }
             addOverLayout(currentLatLng);
-            mapUtil.setMapZoomStatus(currentLatLng, 19f);
+            mapUtil.setMapZoomStatus(currentLatLng, 18f);
         } catch (Exception e) {
             Log.d("gaolei", "" + e.getMessage());
         }

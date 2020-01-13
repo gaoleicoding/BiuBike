@@ -1,5 +1,6 @@
 package com.biubike.map;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,9 +11,7 @@ import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.api.entity.LocRequest;
 import com.baidu.trace.api.track.DistanceRequest;
-import com.baidu.trace.api.track.DistanceResponse;
 import com.baidu.trace.api.track.HistoryTrackRequest;
-import com.baidu.trace.api.track.HistoryTrackResponse;
 import com.baidu.trace.api.track.OnTrackListener;
 import com.baidu.trace.api.track.SupplementMode;
 import com.baidu.trace.model.BaseRequest;
@@ -22,6 +21,7 @@ import com.baidu.trace.model.TransportMode;
 import com.biubike.receiver.TrackReceiver;
 import com.biubike.util.ContextUtil;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -31,7 +31,7 @@ public class EagleEyeUtil {
     // 轨迹服务ID
     public long serviceId = 217606;
     // 设备标识
-    public String entityName = "gaolei";
+    public String entityName = "Android"+UUID.randomUUID();
     public AtomicInteger mSequenceGenerator = new AtomicInteger();
     public LocRequest locRequest = null;
     public SharedPreferences trackConf = null;
@@ -63,7 +63,6 @@ public class EagleEyeUtil {
         powerManager = (PowerManager) ContextUtil.getAppContext().getSystemService(Context.POWER_SERVICE);
 
         trackConf = ContextUtil.getApp().getSharedPreferences("track_conf", MODE_PRIVATE);
-        initTrace();
     }
 
     public static class InstanceHolder {
@@ -87,13 +86,14 @@ public class EagleEyeUtil {
      鹰眼为开发者免费存储最近1年的轨迹数据。鹰眼采用多机房多实例分布式存储，并定期自动备份，保障数据存储安全。
      */
 
-    public void initTrace() {
+    public void initTrace(Notification notification) {
 
 
         // 是否需要对象存储服务，默认为：false，关闭对象存储服务。注：鹰眼 Android SDK v3.0以上版本支持随轨迹上传图像等对象数据，若需使用此功能，该参数需设为 true，且需导入bos-android-sdk-1.0.2.jar。
         boolean isNeedObjectStorage = false;
         // 初始化轨迹服务
         mTrace = new Trace(serviceId, entityName, isNeedObjectStorage);
+        mTrace.setNotification(notification);
         // 初始化轨迹服务客户端
         mTraceClient = new LBSTraceClient(ContextUtil.getAppContext());
 

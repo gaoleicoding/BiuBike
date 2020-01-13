@@ -8,8 +8,8 @@ import com.baidu.mapapi.model.LatLng;
 
 public class LocationManager {
 
-    LatLng currentLL;
-    String address;
+    private LatLng currentLL;
+    private String address;
 
     public String getAddress() {
         return address;

@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.baidu.mapapi.model.LatLng;
-import com.biubike.map.Constants;
-import com.biubike.map.EagleEyeUtil;
-import com.biubike.track.model.CurrentLocation;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -24,9 +21,9 @@ public class TraceUtil {
 
     private static DecimalFormat df = new DecimalFormat("######0.00");
 
-    public static final double DISTANCE = 0.0001;
+    private static final double DISTANCE = 0.0001;
 
-    public static final String ENTITY_NAME = "myTrace";
+    private static final String ENTITY_NAME = "myTrace";
 
     public static String getCurProcessName(Context context) {
         int pid = android.os.Process.myPid();
@@ -56,7 +53,7 @@ public class TraceUtil {
      * @return
      */
     public static boolean isEqualToZero(double value) {
-        return Math.abs(value - 0.0) < 0.01 ? true : false;
+        return Math.abs(value - 0.0) < 0.01;
     }
 
     /**
@@ -109,7 +106,7 @@ public class TraceUtil {
      * @return
      */
     public static String formatTime(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
         try {
             return sdf.format(new Timestamp(timestamp));
         } catch (Exception e) {
@@ -120,14 +117,14 @@ public class TraceUtil {
 
     public static String formatSecond(int second) {
         String format = "%1$,02d:%2$,02d:%3$,02d";
-        Integer hours = second / (60 * 60);
-        Integer minutes = second / 60 - hours * 60;
-        Integer seconds = second - minutes * 60 - hours * 60 * 60;
+        int hours = second / (60 * 60);
+        int minutes = second / 60 - hours * 60;
+        int seconds = second - minutes * 60 - hours * 60 * 60;
         Object[] array = new Object[] {hours, minutes, seconds};
         return String.format(format, array);
     }
 
-    public static final String formatDouble(double doubleValue) {
+    public static String formatDouble(double doubleValue) {
         return df.format(doubleValue);
     }
 
@@ -183,13 +180,12 @@ public class TraceUtil {
      */
     public static void saveCurrentLocation() {
         SharedPreferences.Editor editor = EagleEyeUtil.get().trackConf.edit();
-        StringBuffer locationInfo = new StringBuffer();
-        locationInfo.append(CurrentLocation.locTime);
-        locationInfo.append(";");
-        locationInfo.append(CurrentLocation.latitude);
-        locationInfo.append(";");
-        locationInfo.append(CurrentLocation.longitude);
-        editor.putString(Constants.LAST_LOCATION, locationInfo.toString());
+        String locationInfo = CurrentLocation.locTime +
+                ";" +
+                CurrentLocation.latitude +
+                ";" +
+                CurrentLocation.longitude;
+        editor.putString(Constants.LAST_LOCATION, locationInfo);
         editor.apply();
     }
 

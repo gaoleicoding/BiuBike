@@ -88,10 +88,9 @@ import com.biubike.map.EagleEyeUtil;
 import com.biubike.map.LocationManager;
 import com.biubike.map.MapUtil;
 import com.biubike.map.TraceUtil;
-import com.biubike.track.model.CurrentLocation;
+import com.biubike.map.CurrentLocation;
 import com.biubike.util.NetUtil;
 import com.biubike.util.Utils;
-import com.biubike.util.ViewUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -117,7 +116,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     //自定义图标
     private BitmapDescriptor dragLocationIcon, bikeIcon, startBmp;
 
-    //    private LatLng currentLL;
     private LatLng currentLatLng, changeLatLng;
     private LeftDrawerLayout mLeftDrawerLayout;
     private View shadowView;
@@ -130,35 +128,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private OnTrackListener trackDistanceListener = null;
     private OnTrackListener trackHistoryListener = null;
     private OnGetRoutePlanResultListener bikeRouteListener;
-    /**
-     * 轨迹监听器(用于接收纠偏后实时位置回调)
-     */
+    //轨迹监听器(用于接收纠偏后实时位置回调)
     private OnTrackListener trackListener = null;
-
-
-    /**
-     * Entity监听器(用于接收实时定位回调)
-     */
+    //Entity监听器(用于接收实时定位回调)
     private OnEntityListener entityListener = null;
     private OnTraceListener mTraceListener = null;
-
-    /**
-     * 实时定位任务
-     */
+    //实时定位任务
     private RealTimeHandler realTimeHandler = new RealTimeHandler();
     private RealTimeLocRunnable realTimeLocRunnable = null;
-
     private boolean isRealTimeRunning = true;
-    /**
-     * 地图工具
-     */
+    //地图工具
     private MapUtil mapUtil = null;
-
-    /**
-     * 轨迹点集合
-     */
+    //轨迹点集合
     private List<LatLng> trackPoints;
-    // 查询周期(单位:秒)
+    //查询周期(单位:秒)
     private int queryInterval = 3000;
     private String showTime;
     private String showDistance;
@@ -175,8 +158,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
 
         initView();
-        initMap();
         initNotification();
+        initMap();
 
         FragmentManager fm = getSupportFragmentManager();
         LeftMenuFragment mMenuFragment = (LeftMenuFragment) fm.findFragmentById(R.id.id_container_menu);
@@ -775,7 +758,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-
     @Override
     public void onMenuSlide(float offset) {
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
@@ -884,11 +866,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         ImageView nearestIcon = new ImageView(getApplicationContext());
         nearestIcon.setImageResource(R.mipmap.nearest_icon);
         InfoWindow.OnInfoWindowClickListener listener = null;
-        listener = new InfoWindow.OnInfoWindowClickListener() {
-            public void onInfoWindowClick() {
-                showBikeWalkingPlan(bikeInfo);
-                mBaiduMap.hideInfoWindow();
-            }
+        listener = () -> {
+            showBikeWalkingPlan(bikeInfo);
+            mBaiduMap.hideInfoWindow();
         };
         InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(nearestIcon), ll, -108, listener);
         mBaiduMap.showInfoWindow(mInfoWindow);
@@ -1014,7 +994,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         textview_price.setText(getString(R.string.bike_price));
         prompt.setText(getString(R.string.routing_prompt));
 
-
         textview_time.setTextSize(20);
         textview_distance.setTextSize(20);
         textview_price.setTextSize(20);
@@ -1096,26 +1075,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("确认要结束进程吗？");
         builder.setTitle("提示");
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                CodeUnlockActivity.unlockSuccess = false;
+        builder.setPositiveButton("确认", (dialog, which) -> {
+            dialog.dismiss();
+            CodeUnlockActivity.unlockSuccess = false;
 
-                stopRealTimeLoc();
-                stopTrace();
-                stopGather();
+            stopRealTimeLoc();
+            stopTrace();
+            stopGather();
 
-                endTime = System.currentTimeMillis();
+            endTime = System.currentTimeMillis();
 
-                backFromRouteDetail();
+            backFromRouteDetail();
 
-                getMyLocation();
+            getMyLocation();
 
-                insertCycleData();
-                notificationManager.cancel(1);
-                trackPoints.clear();
-                startRoutDetail();
-            }
+            insertCycleData();
+            notificationManager.cancel(1);
+            trackPoints.clear();
+            startRoutDetail();
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1162,7 +1139,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void startNotifi(String time, String distance, String price) {
-//        startForeground(1, notification);
         contentView.setTextViewText(R.id.bike_time, time);
         contentView.setTextViewText(R.id.bike_distance, distance);
         contentView.setTextViewText(R.id.bike_price, price);
@@ -1181,12 +1157,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra("flag", "notification");
         notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        EagleEyeUtil.get().initTrace(notification);
 
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(String channelId, String channelName) {
-
 
         if (notificationManager.getNotificationChannel(channelId) != null) return;
 

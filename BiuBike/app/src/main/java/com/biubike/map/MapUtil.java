@@ -3,7 +3,6 @@ package com.biubike.map;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -20,7 +19,6 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
 import com.baidu.trace.model.TraceLocation;
-import com.biubike.track.model.CurrentLocation;
 import com.biubike.util.ContextUtil;
 import com.biubike.util.Utils;
 
@@ -129,8 +127,8 @@ public class MapUtil {
      * @param latLng
      * @return
      */
-    public static com.baidu.trace.model.LatLng convertMap2Trace(LatLng latLng) {
-        return new com.baidu.trace.model.LatLng(latLng.latitude, latLng.longitude);
+    public static LatLng convertMap2Trace(LatLng latLng) {
+        return new LatLng(latLng.latitude, latLng.longitude);
     }
 
     /**

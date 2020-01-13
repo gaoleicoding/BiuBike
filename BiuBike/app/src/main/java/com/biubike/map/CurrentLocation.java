@@ -1,4 +1,4 @@
-package com.biubike.track.model;
+package com.biubike.map;
 
 /**
  * 当前位置信息

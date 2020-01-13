@@ -59,9 +59,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:theme="@style/TranslucentStatus"
-            android:launchMode="singleTask">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/TranslucentStatus">
 
         </activity>
         <activity
@@ -77,7 +78,7 @@
         <activity
             android:name=".activity.BDInnerNaviActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

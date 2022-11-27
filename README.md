@@ -34,12 +34,12 @@
 
  app扫码下载体验
 
- ![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/download.png)
+ ![image](https://github.com/gaoleicoding/BiuBike/raw/master/material/screenshots/download.png)
 
 app效果图
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/1.gif)
+![image](https://github.com/gaoleicoding/BiuBike/raw/master/material/screenshots/1.gif)
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/2.png)
+![image](https://github.com/gaoleicoding/BiuBike/raw/master/material/screenshots/2.png)
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.png)
+![image](https://github.com/gaoleicoding/BiuBike/raw/master/material/screenshots/3.png)

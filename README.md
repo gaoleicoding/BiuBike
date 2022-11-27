@@ -38,8 +38,8 @@ V2.2.0更新：
 
 app效果图
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.gif)
+![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/1.gif)
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/4.png)
+![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/2.png)
 
-![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/5.png)
+![image](https://github.com/gaoleiandroid1201/BiuBike/raw/master/material/screenshots/3.png)
